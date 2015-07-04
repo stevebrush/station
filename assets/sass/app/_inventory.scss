@@ -5,15 +5,15 @@
     }
 
     .inventory-items {
-        padding-left: 25px;
+        padding-left: 24px;
 
         .inventory-item {
             cursor: pointer;
             line-height: 2;
 
             .fa {
-                margin-right: 10px;
-                margin-left: -24px;
+                margin-right: 8px;
+                margin-left: -23px;
             }
         }
     }
@@ -34,7 +34,7 @@
 
 .quantity-select {
     width: 100%;
-    background-color: $body-bg;
+    background-color: darken($brand-primary, 15%);
     margin-bottom: 20px;
     height: 36px;
     border: 1px solid $body-bg;
@@ -106,7 +106,7 @@
 
 .has-showcase {
     > .panel-body {
-        background-color: lighten($body-bg, 5%);
+        background-color: $brand-primary
     }
 }
 

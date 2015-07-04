@@ -847,8 +847,8 @@
 
 
 
-    app.controller('VesselCtrl', ['playerService', 'vesselService',
-        function (playerService, vesselService) {
+    app.controller('VesselCtrl', ['playerService', 'vesselService', '$sce',
+        function (playerService, vesselService, $sce) {
             var scope = this;
             playerService.getPlayer().then(function (data) {
                 scope.player = data;
@@ -856,6 +856,18 @@
             vesselService.find(scope.vesselId).then(function (data) {
                 scope.vessel = data;
             });
+            scope.take = {
+                label: $sce.trustAsHtml('<span class="fa fa-arrow-up"></span>Take'),
+                onPreview: function () {},
+                onAccept: function () {},
+                onCancel: function () {}
+            };
+            scope.store = {
+                label: $sce.trustAsHtml('<span class="fa fa-arrow-down"></span>Store'),
+                onPreview: function () {},
+                onAccept: function () {},
+                onCancel: function () {}
+            };
         }]);
 
 

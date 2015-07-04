@@ -15,17 +15,18 @@
             color: $brand-primary;
             background-color: $body-bg;
             position: absolute;
-            padding: 0 10px;
+            padding: 3px 10px;
+            border-radius: 5px;
         }
 
         > .panel-title {
-            top: 3px;
+            top: 0px;
             left: 10px;
         }
 
         > .panel-info-heading {
             right: 10px;
-            top: 5px;
+            top: 2px;
         }
     }
 
@@ -44,7 +45,7 @@
 
     > .panel {
         position: absolute;
-        top: 17px;
+        top: 14px;
         left: 0;
         right: 0;
         bottom: 14px;
@@ -60,7 +61,8 @@
             border-right: 0;
             border-left: 0;
             height: 100%;
-            background-color: lighten($body-bg, 10%);
+            background-color: $body-bg;
+            padding: 20px;
         }
     }
 }
