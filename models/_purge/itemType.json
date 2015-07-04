@@ -1,0 +1,14 @@
+{
+    "itemTypes": [
+        {
+            "itemTypeId": 1,
+            "label": "Weapons",
+            "slug": "weapon"
+        },
+        {
+            "itemTypeId": 2,
+            "label": "Electronics",
+            "slug": "electronics"
+        }
+    ]
+}

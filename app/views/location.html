@@ -1,0 +1,89 @@
+<div ng-if="showRoom" class="game-pane">
+    <div class="row-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">{{location.name}}</h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-8">
+                        (Map)
+                    </div>
+                    <div class="col-xs-4">
+                        <div>Keys: 0</div>
+                        <div>Loot: 100%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row-8">
+        <div class="panel panel-default" ng-if="room">
+            <div class="panel-heading">
+                <h4 class="panel-title">{{room.name}}</h4>
+            </div>
+            <div class="panel-body">
+                <div class="room-wrapper">
+                    <div class="content">
+                        <table class="room-controls-table">
+                            <tr>
+                                <td></td>
+                                <td class="room-btn room-btn-top">
+                                    <a href="#/region/{{location.regionId}}" class="btn btn-primary btn-block">Exit</a>
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td class="room-btn room-btn-left">
+                                    <a href="" class="btn btn-primary btn-block"><span class="fa fa-arrow-left fa-icon-only"></span></a>
+                                </td>
+                                <td class="room-td">
+                                    <div class="room">
+                                        <div class="room-vessels">
+                                            <div ng-repeat="vessel in room.vessels" class="vessel-button vessel-button-{{vessel.position}}">
+                                                <button class="btn btn-primary" type="button" ng-click="openVessel(vessel.vesselId)"><span class="fa fa-icon-only fa-search"></span></button>
+                                            </div>
+                                        </div>
+                                        <!--
+                                        <table class="room-table">
+                                            <tbody>
+                                                <tr>
+                                                    <td><button class="btn btn-primary" type="button" ng-click="openVessel(1)"><span class="fa fa-icon-only fa-search"></span></button></td>
+                                                    <td><button class="btn btn-primary" type="button"><span class="fa fa-icon-only fa-search"></span></button></td>
+                                                    <td><button class="btn btn-primary" type="button"><span class="fa fa-icon-only fa-search"></span></button></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><button class="btn btn-primary" type="button"><span class="fa fa-icon-only fa-search"></span></button></td>
+                                                    <td><button class="btn btn-primary" type="button"><span class="fa fa-icon-only fa-search"></span></button></td>
+                                                    <td><button class="btn btn-primary" type="button"><span class="fa fa-icon-only fa-search"></span></button></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><button class="btn btn-primary" type="button"><span class="fa fa-icon-only fa-search"></span></button></td>
+                                                    <td><button class="btn btn-primary" type="button"><span class="fa fa-icon-only fa-search"></span></button></td>
+                                                    <td><button class="btn btn-primary" type="button"><span class="fa fa-icon-only fa-search"></span></button></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        -->
+                                    </div>
+                                </td>
+                                <td class="room-btn room-btn-right">
+                                    <a href="" class="btn btn-primary btn-block"><span class="fa fa-arrow-right fa-icon-only"></span></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td class="room-btn room-btn-bottom">
+                                    <a href="" class="btn btn-primary btn-block"><span class="fa fa-arrow-down fa-icon-only"></span></a>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<st-vessel ng-if="showInventory" vessel-id="vesselId" action="closeVessel"></st-vessel>
