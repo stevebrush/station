@@ -14,7 +14,13 @@ $app->get('/items', function ()
     {
         $db = get_db();
         $stmt = $db->query($sql);
-        $package = $stmt->fetchAll(PDO::FETCH_OBJ);
+        $package = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($package as $k => $v)
+        {
+            $package[$k]['itemId'] = (int) $v['itemId'];
+            $package[$k]['baseValue'] = (int) $v['baseValue'];
+            $package[$k]['baseWeight'] = (int) $v['baseWeight'];
+        }
         $db = null;
         echo json_encode(array(
             "Items" => $package
@@ -28,17 +34,35 @@ $app->get('/items', function ()
 
 
 
-$app->get('/npc/:id', function ($id)
+$app->get('/npc/:id', function ($roomPlacementId)
 {
-    $sql = "SELECT * FROM npc WHERE npcId = $id LIMIT 1";
-    $sql2 = "SELECT * FROM item, npc_item WHERE npc_item.npcId = $id AND item.itemId = npc_item.itemId GROUP BY npc_item.itemId ORDER BY npc_item.itemId DESC";
+    $sql = '
+    SELECT npc.npcId, npc.money,
+    CASE WHEN npc.name IS NULL THEN actor.defaultName ELSE npc.name END AS name
+    FROM npc, actor, npc_room_placement
+    WHERE npc_room_placement.roomPlacementId = ' . $roomPlacementId . '
+    AND npc_room_placement.npcId = npc.npcId
+    AND npc.actorId = actor.actorId
+    LIMIT 1';
+
     try
     {
         $db = get_db();
         $stmt = $db->query($sql);
         $package = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $stmt = $db->query($sql2);
-        $package[0]["items"] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $npcId = $package[0]['npcId'] = (int) $package[0]['npcId'];
+
+        $sql = "SELECT * FROM npc_inventory, inventory, item WHERE npc_inventory.npcId = $npcId AND npc_inventory.inventoryId = inventory.inventoryId AND inventory.itemId = item.itemId GROUP BY item.itemId ORDER BY item.name ASC";
+        $stmt = $db->query($sql);
+        $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($items as $k => $v)
+        {
+            $items[$k]['itemId'] = (int) $v['itemId'];
+            $items[$k]['baseValue'] = (int) $v['baseValue'];
+            $items[$k]['baseWeight'] = (int) $v['baseWeight'];
+            $items[$k]['quantity'] = (int) $v['quantity'];
+        }
+        $package[0]["items"] = $items;
         $db = null;
         echo json_encode(array(
             "NPC" => $package[0]
@@ -101,48 +125,112 @@ $app->get('/location/:id', function ($id)
 {
     $sql = "SELECT * FROM location WHERE locationId = $id LIMIT 1";
     $sql1 = "SELECT * FROM room WHERE room.locationId = $id";
+    $rooms = array();
+
     try
     {
         $db = get_db();
         $stmt = $db->query($sql);
         $package = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $stmt = $db->query($sql1);
-        //$package[0]['rooms'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $rooms = array();
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
             $roomId = $row['roomId'];
-            $stmt = $db->query("SELECT vesselId, position FROM vessel WHERE roomId = $roomId");
-            $row['vessels'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $sql = "SELECT room_placement.position, room_placement.roomPlacementId, '1' as isVessel FROM room_placement, vessel_room_placement WHERE room_placement.roomId = $roomId AND room_placement.roomPlacementId = vessel_room_placement.roomPlacementId GROUP By room_placement.roomPlacementId";
+            $stmt = $db->query($sql);
+            $vessels = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($vessels as $k => $v)
+            {
+                $vessels[$k]['isVessel'] = (int) $v['isVessel'];
+                $vessels[$k]['position'] = (int) $v['position'];
+                $vessels[$k]['roomPlacementId'] = (int) $v['roomPlacementId'];
+            }
+
+            $sql = "SELECT room_placement.position, room_placement.roomPlacementId, actor.isTrader, actor.isEnemy FROM room_placement, npc_room_placement, actor, npc WHERE room_placement.roomId = $roomId AND room_placement.roomPlacementId = npc_room_placement.roomPlacementId AND npc_room_placement.npcId = npc.npcId AND npc.actorId = actor.actorId GROUP By room_placement.roomPlacementId";
+            $stmt = $db->query($sql);
+            $npcs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($npcs as $k => $v)
+            {
+                $npcs[$k]['isTrader'] = (int) $v['isTrader'];
+                $npcs[$k]['isEnemy'] = (int) $v['isEnemy'];
+                $npcs[$k]['position'] = (int) $v['position'];
+                $npcs[$k]['roomPlacementId'] = (int) $v['roomPlacementId'];
+            }
+
+
+            $row['placements'] = array_merge($vessels, $npcs);
             $rooms[] = $row;
+
         }
 
         $package[0]['rooms'] = $rooms;
-
         $db = null;
+
         echo json_encode(array(
             "Location" => $package[0]
         ));
+
     }
     catch (PDOException $e)
     {
-        echo '{"error":{"text":'. $e->getMessage() .'}}';
+        echo '{"error": {"text":'. $e->getMessage() .'}}';
     }
 });
 
 
+$app->get('/room-placement/:id', function ($id) {
+    $sql = "SELECT * FROM room_placement AS rp, vessel_room_placement AS vrp, npc_room_placement as nrp, vessel as v, npc as n WHERE rp.roomPlacementId = $id AND (rp.roomPlacementId = vrp.roomPlacementId OR rp.roomPlacementId = nrp.roomPlacementId) AND ((vrp.vesselId = v.vesselId) OR (nrp.npcId = n.npcId)) GROUP BY rp.roomPlacementId ORDER BY rp.position";
+    $db = get_db();
+        $stmt = $db->query($sql);
+        $package = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $db = null;
+        echo json_encode(array(
+            "RoomPlacement" => $package
+        ));
+});
 
-$app->get('/vessel/:id', function ($id)
+
+
+$app->get('/vessel/:id', function ($roomPlacementId)
 {
-    $sql = "SELECT * FROM vessel, vessel_type WHERE vessel.vesselId = $id AND vessel.vesselTypeId = vessel_type.vesselTypeId GROUP BY vessel.vesselId LIMIT 1";
-    $sql1 = "SELECT * FROM vessel_item, item WHERE vessel_item.vesselId = $id AND vessel_item.itemId = item.itemId GROUP BY item.itemId ORDER BY item.name";
+    $sql = '
+    SELECT v.vesselId, CASE WHEN v.name IS NULL THEN vt.defaultName ELSE v.name END AS name
+    FROM vessel AS v,
+    vessel_type as vt,
+    vessel_room_placement AS vrp
+    WHERE vrp.roomPlacementId = ' . $roomPlacementId . '
+    AND vrp.vesselId = v.vesselId
+    AND v.vesselTypeId = vt.vesselTypeId
+    LIMIT 1';
+
     try
     {
         $db = get_db();
         $stmt = $db->query($sql);
         $package = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $stmt = $db->query($sql1);
-        $package[0]['items'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($package as $k => $v)
+        {
+            $package[$k]['vesselId'] = (int) $v['vesselId'];
+        }
+
+        $vesselId = $package[0]['vesselId'];
+
+        $sql = "SELECT * FROM vessel_inventory, inventory, item WHERE vessel_inventory.vesselId = $vesselId AND vessel_inventory.inventoryId = inventory.inventoryId AND inventory.itemId = item.itemId GROUP BY item.itemId ORDER BY item.name ASC";
+        $stmt = $db->query($sql);
+        $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($items as $k => $v)
+        {
+            $items[$k]['itemId'] = (int) $v['itemId'];
+            $items[$k]['baseValue'] = (int) $v['baseValue'];
+            $items[$k]['baseWeight'] = (int) $v['baseWeight'];
+        }
+
+        $package[0]['items'] = $items;
+
         $db = null;
         echo json_encode(array(
             "Vessel" => $package[0]

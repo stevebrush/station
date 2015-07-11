@@ -1,3 +1,15 @@
+div.room-wrapper-outer {
+    display: table;
+    width: 100%;
+    height: 100%;
+}
+
+div.room-wrapper-inner {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
 div.room-wrapper {
     width: 100%;
     position: relative;
@@ -12,6 +24,19 @@ div.room-wrapper {
         right: 0;
         bottom: 0;
         left: 0;
+    }
+}
+
+.panel.has-room {
+    > .panel-heading > .panel-title {
+        right: 0;
+        left: 0;
+        text-align: center;
+    }
+    > .panel-body {
+        padding: 0;
+        border: 0;
+        box-shadow: inset 0px 15px 0px 0px $brand-primary;
     }
 }
 
@@ -63,7 +88,7 @@ div.room-wrapper {
 }
 
 div.room {
-    border: 15px solid transparent;
+    border: 20px solid transparent;
     border-bottom-color: darken($brand-primary, 18%);
     border-left-color: darken($brand-primary, 13%);
     border-top-color: darken($brand-primary, 8%);
@@ -114,26 +139,26 @@ table.room-table {
     @return (floor($i / 3)) * 33.33333333%;
 }
 
-.room-vessels {
+.room-placements {
     position: relative;
     width: 100%;
     height: 100%;
 
-    .vessel-button {
+    .placement-button {
         position: absolute;
         width: 33.3333333%;
         height: 33.3333333%;
 
         @for $i from 1 through 9 {
-            &.vessel-button-#{$i} {
+            &.placement-button-#{$i} {
                 left: calc-left($i);
                 top: calc-top($i);
             }
         }
 
         > .btn {
-            width: 95%;
-            height: 95%;
+            width: 85%;
+            height: 85%;
             position: absolute;
             top: 0;
             right: 0;
@@ -141,6 +166,14 @@ table.room-table {
             margin: auto;
             bottom: 0;
             padding: 0;
+            font-size: 35px;
+            box-shadow: none;
+            line-height: 1;
+            border-radius: 50%;
+
+            > .fa-crosshairs {
+                margin-top: 1px;
+            }
         }
     }
 }

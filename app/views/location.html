@@ -7,7 +7,14 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-xs-8">
-                        (Map)
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h5 class="panel-title">Map</h5>
+                            </div>
+                            <div class="panel-body">
+
+                            </div>
+                        </div>
                     </div>
                     <div class="col-xs-4">
                         <div>Keys: 0</div>
@@ -18,11 +25,13 @@
         </div>
     </div>
     <div class="row-8">
-        <div class="panel panel-default" ng-if="room">
+        <div class="panel panel-default has-room" ng-if="room">
             <div class="panel-heading">
                 <h4 class="panel-title">{{room.name}}</h4>
             </div>
             <div class="panel-body">
+                <div class="room-wrapper-outer">
+                <div class="room-wrapper-inner">
                 <div class="room-wrapper">
                     <div class="content">
                         <table class="room-controls-table">
@@ -39,9 +48,14 @@
                                 </td>
                                 <td class="room-td">
                                     <div class="room">
-                                        <div class="room-vessels">
-                                            <div ng-repeat="vessel in room.vessels" class="vessel-button vessel-button-{{vessel.position}}">
-                                                <button class="btn btn-primary" type="button" ng-click="openVessel(vessel.vesselId)"><span class="fa fa-icon-only fa-search"></span></button>
+                                        <div class="room-placements">
+                                            <div ng-repeat="placement in room.placements" class="placement-button placement-button-{{placement.position}}">
+                                                <button ng-if="placement.isVessel" class="btn btn-primary" type="button" ng-click="openVessel(placement.roomPlacementId)"><span class="fa fa-icon-only fa-archive"></span></button>
+                                                <button ng-if="placement.isTrader" class="btn btn-primary" type="button" ng-click="openShop(placement.roomPlacementId)"><span class="fa fa-icon-only fa-male"></span></button>
+                                                <button ng-if="placement.isEnemy" class="btn btn-primary" type="button" ng-click="openEnemy(placement.roomPlacementId)"><span class="fa fa-icon-only fa-crosshairs"></span></button>
+                                            </div>
+                                            <div class="placement-button placement-button-4">
+                                                <button class="btn btn-default" type="button" ng-click=""><span class="fa fa-icon-only fa-question"></span></button>
                                             </div>
                                         </div>
                                         <!--
@@ -81,9 +95,13 @@
                         </table>
                     </div>
                 </div>
+                </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<st-vessel ng-if="showInventory" vessel-id="vesselId" action="closeVessel"></st-vessel>
+<st-vessel ng-if="showVessel" room-placement-id="roomPlacementId" action="closeVessel"></st-vessel>
+
+<st-shop ng-if="showShop" room-placement-id="roomPlacementId" action="closeShop"></st-shop>
