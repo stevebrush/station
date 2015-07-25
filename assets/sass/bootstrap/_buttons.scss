@@ -21,6 +21,7 @@
   outline: none !important;
   @include button-size($padding-base-vertical, $padding-base-horizontal, $font-size-base, $line-height-base, $btn-border-radius-base);
   @include user-select(none);
+  box-shadow: 5px 0 5px darken($brand-primary, 30%), 0 3px 3px darken($brand-primary, 45%);
 
   &,
   &:active,
@@ -72,7 +73,7 @@ a.btn {
 }
 .btn-primary {
   @include button-variant($btn-primary-color, $btn-primary-bg, $btn-primary-border);
-  box-shadow: inset 0 0 0px 2px $body-bg;
+  /*box-shadow: inset 0 0 0px 2px $body-bg;*/
 }
 // Success appears as green
 .btn-success {

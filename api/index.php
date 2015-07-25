@@ -124,7 +124,7 @@ $app->get('/regions', function ()
 $app->get('/location/:id', function ($id)
 {
     $sql = "SELECT * FROM location WHERE locationId = $id LIMIT 1";
-    $sql1 = "SELECT * FROM room WHERE room.locationId = $id";
+
     $rooms = array();
 
     try
@@ -132,12 +132,15 @@ $app->get('/location/:id', function ($id)
         $db = get_db();
         $stmt = $db->query($sql);
         $package = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $stmt = $db->query($sql1);
+        $sql = "SELECT roomId, name FROM room WHERE locationId = $id";
+        $stmt = $db->query($sql);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        foreach ($results as $row) {
 
             $roomId = $row['roomId'];
 
+            # Vessels.
             $sql = "SELECT room_placement.position, room_placement.roomPlacementId, '1' as isVessel FROM room_placement, vessel_room_placement WHERE room_placement.roomId = $roomId AND room_placement.roomPlacementId = vessel_room_placement.roomPlacementId GROUP By room_placement.roomPlacementId";
             $stmt = $db->query($sql);
             $vessels = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -148,6 +151,7 @@ $app->get('/location/:id', function ($id)
                 $vessels[$k]['roomPlacementId'] = (int) $v['roomPlacementId'];
             }
 
+            # NPC's.
             $sql = "SELECT room_placement.position, room_placement.roomPlacementId, actor.isTrader, actor.isEnemy FROM room_placement, npc_room_placement, actor, npc WHERE room_placement.roomId = $roomId AND room_placement.roomPlacementId = npc_room_placement.roomPlacementId AND npc_room_placement.npcId = npc.npcId AND npc.actorId = actor.actorId GROUP By room_placement.roomPlacementId";
             $stmt = $db->query($sql);
             $npcs = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -159,8 +163,25 @@ $app->get('/location/:id', function ($id)
                 $npcs[$k]['roomPlacementId'] = (int) $v['roomPlacementId'];
             }
 
-
             $row['placements'] = array_merge($vessels, $npcs);
+
+            # Doors.
+            $sql = '
+                SELECT
+                    CASE
+                		WHEN roomIdFrom = ' . $roomId . ' THEN roomIdTo
+                	END AS nextRoomId,
+                	cardinalDirection,
+                	name,
+                	description
+                FROM door
+                WHERE roomIdFrom = ' . $roomId . '
+            ';
+            $stmt = $db->query($sql);
+            $doors = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $row['doors'] = $doors;
+
             $rooms[] = $row;
 
         }

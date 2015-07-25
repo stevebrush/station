@@ -10,7 +10,8 @@
 
 
 
-    app.controller('MapCtrl', ['$scope', 'regionService',
+    app.controller('MapCtrl', [
+        '$scope', 'regionService',
         function ($scope, regionService) {
             regionService.findAll().then(function (data) {
                 $scope.regions = data;
@@ -18,20 +19,24 @@
             $scope.preview = function (region) {
                 $scope.showcase = region;
             };
-        }]);
+        }
+    ]);
 
 
 
-    app.controller('RegionCtrl', ['$scope', '$routeParams', 'regionService',
+    app.controller('RegionCtrl', [
+        '$scope', '$routeParams', 'regionService',
         function ($scope, $routeParams, regionService) {
             regionService.find($routeParams.id).then(function (data) {
                 $scope.region = data;
             });
-        }]);
+        }
+    ]);
 
 
 
-    app.controller('LocationCtrl', ['$scope', '$routeParams', 'locationService', 'playerService',
+    app.controller('LocationCtrl', [
+        '$scope', '$routeParams', 'locationService', 'playerService',
         function ($scope, $routeParams, locationService, playerService) {
 
             $scope.showRoom = true;
@@ -67,20 +72,34 @@
                 console.log("Open enemy", id);
             };
 
+            $scope.nextRoom = function (id) {
+                console.log("Next room id:", id);
+                for (var i in $scope.location.rooms) {
+                    console.log($scope.location.rooms[i].roomId, id);
+                    if ($scope.location.rooms[i].roomId === id) {
+                        $scope.room = $scope.location.rooms[i];
+                    }
+                }
+            };
+
             playerService.getPlayer().then(function (data) {
                 $scope.player = data;
             });
 
             locationService.find($routeParams.id).then(function (data) {
+                console.log("This location: ", data);
                 $scope.location = data;
                 $scope.room = data.rooms[0];
+                console.log("This room: ", $scope.room);
             });
 
-        }]);
+        }
+    ]);
 
 
 
-    app.controller('ShopCtrl', ['$routeParams', 'playerService', 'npcService', 'inventoryService', '$sce', '$rootScope',
+    app.controller('ShopCtrl', [
+        '$routeParams', 'playerService', 'npcService', 'inventoryService', '$sce', '$rootScope',
         function ($routeParams, playerService, npcService, inventoryService, $sce, $rootScope) {
 
             var $scope = this;
@@ -307,7 +326,9 @@
             $scope.buy = {
                 label: $sce.trustAsHtml("Take"),
                 onPreview: function (item) {
-                    this.label = (item.inCart === true) ? $sce.trustAsHtml('<span class="fa fa-arrow-up"></span>Take Back') : $sce.trustAsHtml('<span class="fa fa-arrow-up"></span>Take');
+                    this.label = (item.inCart === true) ?
+                        $sce.trustAsHtml('<span class="fa fa-arrow-up"></span>Take Back') :
+                        $sce.trustAsHtml('<span class="fa fa-arrow-up"></span>Take');
                 },
                 onAccept: function (item, quantityRequested) {
                     var clone = removeFromCart(item, quantityRequested, $scope.trader);
@@ -319,7 +340,9 @@
             $scope.sell = {
                 label: $sce.trustAsHtml("Offer"),
                 onPreview: function (item) {
-                    this.label = (item.inCart === true) ? $sce.trustAsHtml('<span class="fa fa-arrow-down"></span>Give Back') : $sce.trustAsHtml('<span class="fa fa-arrow-down"></span>Offer');
+                    this.label = (item.inCart === true) ?
+                        $sce.trustAsHtml('<span class="fa fa-arrow-down"></span>Give Back') :
+                        $sce.trustAsHtml('<span class="fa fa-arrow-down"></span>Offer');
                 },
                 onAccept: function (item, quantityRequested) {
                     var clone = removeFromCart(item, quantityRequested, $scope.player);
@@ -334,7 +357,8 @@
                 $rootScope.back();
             };
 
-        }]);
+        }
+    ]);
 
 
 
@@ -398,7 +422,8 @@
 
 
 
-    app.controller('VesselCtrl', ['playerService', 'vesselService', '$sce',
+    app.controller('VesselCtrl', [
+        'playerService', 'vesselService', '$sce',
         function (playerService, vesselService, $sce) {
 
             var scope = this;
@@ -425,11 +450,13 @@
                 onAccept: function () {},
                 onCancel: function () {}
             };
-        }]);
+        }
+    ]);
 
 
 
-    app.controller('PickpocketCtrl', ['$scope', '$routeParams', 'playerService', 'npcService', '$sce', '$rootScope',
+    app.controller('PickpocketCtrl', [
+        '$scope', '$routeParams', 'playerService', 'npcService', '$sce', '$rootScope',
         function ($scope, $routeParams, playerService, npcService, $sce, $rootScope) {
 
             var playerReady = false;
@@ -473,7 +500,8 @@
                 $rootScope.back();
             };
 
-        }]);
+        }
+    ]);
 
 
 

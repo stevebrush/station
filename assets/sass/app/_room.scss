@@ -1,3 +1,8 @@
+$room-bg: darken($brand-primary, 41%);
+$num-rows: 5;
+$row-width: (100 / $num-rows) * 1%;
+$total-rows: $num-rows * $num-rows;
+
 div.room-wrapper-outer {
     display: table;
     width: 100%;
@@ -28,15 +33,25 @@ div.room-wrapper {
 }
 
 .panel.has-room {
-    > .panel-heading > .panel-title {
-        right: 0;
-        left: 0;
+    > .panel-heading {
         text-align: center;
+
+        > .panel-title {
+            position: static;
+            right: 0;
+            left: 0;
+        }
+
+        > .btn {
+            position: static;
+            margin-bottom: 10px;
+        }
     }
     > .panel-body {
         padding: 0;
         border: 0;
-        box-shadow: inset 0px 15px 0px 0px $brand-primary;
+        background-color: transparent;
+        position: static;
     }
 }
 
@@ -47,15 +62,166 @@ div.room-wrapper {
     > tbody > tr > td {
         text-align: center;
         vertical-align: middle;
-        padding: 4px;
+        padding: 0;
         position: relative;
     }
 
     .room-td {
-        border: 1px solid $brand-primary;
+        border: 1px solid darken($brand-primary, 20%);
+        height: 100%;
+
+        .doors {
+            z-index: 1;
+
+            > .btn-door {
+                padding: 0;
+                position: absolute;
+                text-align: center;
+                box-shadow: none;
+                background-color: transparent;
+                border: 0;
+                perspective: 34px;
+                -webkit-perspective: 34px;
+                margin: auto;
+
+                > .btn-door-graphic {
+                    background-color: darken($body-bg, 15%);
+                    border: 1px solid darken($brand-primary, 30%);
+                    margin: auto;
+                    position: absolute;
+                }
+
+                > .btn-door-glow {
+                    background-color: $brand-primary;
+                    position: absolute;
+                    display: none;
+                }
+
+                &.btn-door-0 {
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    height: 34px;
+                    width: 50%;
+
+                    > .btn-door-graphic {
+                        bottom: -5px;
+                        left: 0;
+                        right: 0;
+                        transform: rotateX(-15deg);
+                        -webkit-transform: rotateX(-15deg);
+                        border-bottom: 0;
+                        width: 34px;
+                        height: 30px;
+                        box-shadow: 0px -10px 10px $room-bg inset, 0 0 8px darken($brand-primary, 40%);
+                        border-top-width: 3px;
+                    }
+                }
+                &.btn-door-1 {
+                    height: 50%;
+                    top: 0;
+                    bottom: 0;
+                    right: 0;
+                    width: 34px;
+
+                    > .btn-door-graphic {
+                        left: -5px;
+                        transform: rotateY(-15deg);
+                        -webkit-transform: rotateY(-15deg);
+                        border: 1px solid darken($brand-primary, 27%);
+                        border-left: 0;
+                        width: 30px;
+                        height: 34px;
+                        top: 0;
+                        bottom:0;
+                        box-shadow: 10px 0px 10px $room-bg inset, 0 0 3px darken($brand-primary, 40%);
+                        border-right-width: 3px;
+                    }
+                }
+                &.btn-door-2 {
+                    height: 34px;
+                    width: 50%;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+
+                    > .btn-door-graphic {
+                        top: -5px;
+                        left: 0;
+                        right: 0;
+                        transform: rotateX(15deg);
+                        -webkit-transform: rotateX(15deg);
+                        border-top: 0;
+                        width: 34px;
+                        height: 30px;
+                        box-shadow: 0 10px 10px $room-bg inset, 0 0 8px darken($brand-primary, 40%);
+                        border-bottom-width: 3px;
+                    }
+                    /*
+                    > .btn-door-glow {
+                        width: 42px;
+                        height: 48px;
+                        left: 0;
+                        bottom: 18px;
+                        margin: auto;
+                        right: 0;
+                        transform: rotate3d(-1, 0, 0, 100deg);
+                        background: -moz-linear-gradient(bottom,  $brand-primary 0%, $room-bg 100%);
+                        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,$brand-primary), color-stop(100%,$room-bg));
+                        background: -webkit-linear-gradient(bottom,  $brand-primary 0%,$room-bg 100%);
+                        background: -o-linear-gradient(bottom,  $brand-primary 0%, $room-bg 100%);
+                        background: -ms-linear-gradient(bottom,  $brand-primary 0%, $room-bg 100%);
+                        background: linear-gradient(to top,  $brand-primary 0%, $room-bg 100%);
+                        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=$brand-primary, endColorstr=$room-bg,GradientType=1 );
+                    }
+                    */
+                }
+                &.btn-door-3 {
+                    height: 50%;
+                    top: 0;
+                    bottom: 0;
+                    left: 0;
+                    width: 34px;
+
+                    > .btn-door-graphic {
+                        right: -5px;
+                        top:0;
+                        bottom: 0;
+                        width: 30px;
+                        height: 34px;
+                        transform: rotateY(15deg);
+                        -webkit-transform: rotateY(15deg);
+                        border-right: 0;
+                        box-shadow: -10px 0px 10px $room-bg inset, 0 0 8px darken($brand-primary, 40%);
+                        border-left-width: 3px;
+                    }
+                    /*
+                    > .btn-door-glow {
+                        width: 48px;
+                        height: 42px;
+                        top: 0;
+                        left: 18px;
+                        margin: auto;
+                        bottom: 0;
+                        position: absolute;
+                        transform: rotate3d(0, -1, 0, 100deg);
+                        background: -moz-linear-gradient(left,  $brand-primary 0%, $room-bg 100%);
+                        background: -webkit-gradient(linear, left top, right top, color-stop(0%,$brand-primary), color-stop(100%,$room-bg));
+                        background: -webkit-linear-gradient(left,  $brand-primary 0%,$room-bg 100%);
+                        background: -o-linear-gradient(left,  $brand-primary 0%, $room-bg 100%);
+                        background: -ms-linear-gradient(left,  $brand-primary 0%, $room-bg 100%);
+                        background: linear-gradient(to right,  $brand-primary 0%, $room-bg 100%);
+                        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=$brand-primary, endColorstr=$room-bg,GradientType=1 );
+                    }
+                    */
+                }
+            }
+        }
     }
 
     .room-btn {
+        display:none;
+
         > .btn {
             border-radius: 0;
             padding: 0;
@@ -88,13 +254,12 @@ div.room-wrapper {
 }
 
 div.room {
-    border: 20px solid transparent;
-    border-bottom-color: darken($brand-primary, 18%);
-    border-left-color: darken($brand-primary, 13%);
-    border-top-color: darken($brand-primary, 8%);
-    border-right-color: $brand-primary;
-    background-color: #000;
-    padding: 8px;
+    border: 34px solid transparent;
+    border-bottom-color: darken($brand-primary, 39%);
+    border-left-color: darken($brand-primary, 37%);
+    border-top-color: darken($brand-primary, 34%);
+    border-right-color: darken($brand-primary, 29%);
+    background-color: $room-bg;
     position: absolute;
     top: 0;
     left: 0;
@@ -129,36 +294,68 @@ table.room-table {
 }
 
 @function calc-left($i) {
-    @return (($i % 3) * 33.33333333%);
+    @return ($i % $num-rows) * $row-width;
 }
 
 @function calc-top($i) {
-    @if ($i % 3 == 0) {
-        @return ((floor($i / 3) - 1) * 33.33333333%);
+    @if ($i % $num-rows == 0) {
+        @return ((floor($i / $num-rows) - 1) * $row-width);
     }
-    @return (floor($i / 3)) * 33.33333333%;
+    @return (floor($i / $num-rows)) * $row-width;
 }
 
 .room-placements {
     position: relative;
     width: 100%;
     height: 100%;
+    border: 2px solid transparent;
+    border-bottom-color: darken($brand-primary, 37%);
+    border-left-color: darken($brand-primary, 34%);
+    border-top-color: darken($brand-primary, 29%);
+    border-right-color: darken($brand-primary, 27%);
+    box-shadow: 0 0 30px 0 darken($brand-primary, 38%);
 
     .placement-button {
         position: absolute;
-        width: 33.3333333%;
-        height: 33.3333333%;
+        width: $row-width;
+        height: $row-width;
 
-        @for $i from 1 through 9 {
+        @for $i from 1 through $total-rows {
             &.placement-button-#{$i} {
                 left: calc-left($i);
                 top: calc-top($i);
             }
         }
 
+
+        &.placement-button-12 {
+            width: $row-width * 3;
+            height: $row-width * 3;
+            left: $row-width;
+            top: $row-width;
+
+            > tbody > tr > td {
+                vertical-align: middle;
+                padding: 8px;
+            }
+
+            h4 {
+                margin-bottom: 8px;
+            }
+
+            .btn {
+                width: auto;
+                height: auto;
+                position: static;
+                padding: 6px 12px;
+                font-size: 16px;
+            }
+        }
+
+
         > .btn {
-            width: 85%;
-            height: 85%;
+            width: 80%;
+            height: 80%;
             position: absolute;
             top: 0;
             right: 0;
@@ -166,8 +363,7 @@ table.room-table {
             margin: auto;
             bottom: 0;
             padding: 0;
-            font-size: 35px;
-            box-shadow: none;
+            font-size: 21px;
             line-height: 1;
             border-radius: 50%;
 

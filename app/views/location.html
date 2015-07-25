@@ -1,12 +1,13 @@
 <div ng-if="showRoom" class="game-pane">
-    <div class="row-4">
+    <div class="row-5">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">{{location.name}}</h3>
+                <h4 class="panel-title">{{location.name}}</h4>
             </div>
             <div class="panel-body">
                 <div class="row">
                     <div class="col-xs-8">
+                        <!--
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h5 class="panel-title">Map</h5>
@@ -15,20 +16,24 @@
 
                             </div>
                         </div>
+                        -->
                     </div>
                     <div class="col-xs-4">
+                        <!--
                         <div>Keys: 0</div>
                         <div>Loot: 100%</div>
+                        -->
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row-8">
+    <div class="row-7">
         <div class="panel panel-default has-room" ng-if="room">
-            <div class="panel-heading">
+            <!--div class="panel-heading">
                 <h4 class="panel-title">{{room.name}}</h4>
-            </div>
+                <button type="button" class="btn btn-primary">Scan</button>
+            </div-->
             <div class="panel-body">
                 <div class="room-wrapper-outer">
                 <div class="room-wrapper-inner">
@@ -36,16 +41,6 @@
                     <div class="content">
                         <table class="room-controls-table">
                             <tr>
-                                <td></td>
-                                <td class="room-btn room-btn-top">
-                                    <a href="#/region/{{location.regionId}}" class="btn btn-primary btn-block">Exit</a>
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td class="room-btn room-btn-left">
-                                    <a href="" class="btn btn-primary btn-block"><span class="fa fa-arrow-left fa-icon-only"></span></a>
-                                </td>
                                 <td class="room-td">
                                     <div class="room">
                                         <div class="room-placements">
@@ -54,10 +49,12 @@
                                                 <button ng-if="placement.isTrader" class="btn btn-primary" type="button" ng-click="openShop(placement.roomPlacementId)"><span class="fa fa-icon-only fa-male"></span></button>
                                                 <button ng-if="placement.isEnemy" class="btn btn-primary" type="button" ng-click="openEnemy(placement.roomPlacementId)"><span class="fa fa-icon-only fa-crosshairs"></span></button>
                                             </div>
-                                            <div class="placement-button placement-button-4">
-                                                <button class="btn btn-default" type="button" ng-click=""><span class="fa fa-icon-only fa-question"></span></button>
-                                            </div>
-                                        </div>
+
+                                            <table class="placement-button placement-button-12"><tbody><tr><td>
+                                                <h4 class="panel-title">{{room.name}}</h4>
+                                                <button class="btn btn-default" type="button" ng-click="">Scan</button>
+                                            </td></tr></tbody></table>
+
                                         <!--
                                         <table class="room-table">
                                             <tbody>
@@ -80,17 +77,14 @@
                                         </table>
                                         -->
                                     </div>
+                                    </div>
+                                    <div class="doors">
+                                        <button ng-repeat="door in room.doors" class="btn btn-door btn-door-{{door.cardinalDirection}}" type="button" ng-click="nextRoom(door.nextRoomId)">
+                                            <div class="btn-door-graphic"></div>
+                                            <div class="btn-door-glow"></div>
+                                        </button>
+                                    </div>
                                 </td>
-                                <td class="room-btn room-btn-right">
-                                    <a href="" class="btn btn-primary btn-block"><span class="fa fa-arrow-right fa-icon-only"></span></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td class="room-btn room-btn-bottom">
-                                    <a href="" class="btn btn-primary btn-block"><span class="fa fa-arrow-down fa-icon-only"></span></a>
-                                </td>
-                                <td></td>
                             </tr>
                         </table>
                     </div>
