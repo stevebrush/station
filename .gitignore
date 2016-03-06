@@ -1,8 +1,8 @@
 .DS_Store
-node_modules
-bower_components
-build
 station-dev
 .sass-cache
-.env
+bower_components
+node_modules
 tmp
+.env
+build

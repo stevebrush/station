@@ -1,0 +1,84 @@
+{
+    "map": {
+        "locations": [
+            {
+                "_id": 0,
+                "characters": [],
+                "description": "Friendly outpost aside from the rats. Just needs a woman's touch.",
+                "isDiscovered": false,
+                "name": "Lucky's Garage",
+                "percentExplored": 0.0,
+                "structures": [
+                    {
+                        "_id": 0,
+                        "description": "Not much besides a pile of garbage.",
+                        "entrances": [
+                            {
+                                "isLocked": false,
+                                "isPickable": true,
+                                "keyId": 0,
+                                "name": "Main entrance",
+                                "roomId": 0
+                            },
+                            {
+                                "isLocked": true,
+                                "isPickable": true,
+                                "keyId": 0,
+                                "name": "Back door",
+                                "roomId": 0
+                            }
+                        ],
+                        "name": "Repair Shop",
+                        "percentExplored": 0.0,
+                        "rooms": [
+                            {
+                                "_id": 0,
+                                "description": "Papers strewn beneath broken chairs.",
+                                "characters": [
+                                    {
+                                        "_id": 0,
+                                        "prototypeId": 0
+                                    }
+                                ],
+                                "doors": [
+                                    {
+                                        "_id": 0,
+                                        "position": 0,
+                                        "roomId": 0
+                                    }
+                                ],
+                                "isLocked": false,
+                                "isPickable": true,
+                                "isPillaged": false,
+                                "isScanned": false,
+                                "keyId": 0,
+                                "name": "Reception",
+                                "percentExplored": 0.0,
+                                "vessels": [
+                                    {
+                                        "_id": 0,
+                                        "description": "",
+                                        "items": [
+                                            {
+                                                "_id": 0,
+                                                "description": "",
+                                                "name": "",
+                                                "prototypeId": 0
+                                            }
+                                        ],
+                                        "name": "",
+                                        "prototypeId": 0
+                                    }
+                                ],
+                                "x": 0,
+                                "y": 0
+                            }
+                        ]
+                    }
+                ],
+                "x": 0,
+                "y": 0
+            }
+        ]
+    }
+}

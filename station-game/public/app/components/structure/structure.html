@@ -1,0 +1,84 @@
+<div class="row">
+    <div class="col-sm-12">
+        <st-utilities></st-utilities>
+        <div id="room">
+            <div class="page-header">
+                <h2 class="subheading">{{ structureCtrl.name }}</h2>
+                <h1>{{ structureCtrl.room.name }}</h1>
+                <p>{{ structureCtrl.percentExplored | percentage }} explored</p>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div ng-if="structureCtrl.room.vessels" id="vessels" class="box">
+                        <h3 class="box-title">Vessels:</h3>
+                        <div class="box-body">
+                            <p ng-if="!structureCtrl.room.isScanned">
+                                <a href ng-click="structureCtrl.scanRoom(structureCtrl.room)">Scan Room</a>
+                            </p>
+                            <p ng-if="structureCtrl.room.isScanned">
+                                Items: {{ structureCtrl.room.numItemsFound }} of {{ structureCtrl.room.numItems }} found.
+                            </p>
+                            <ul ng-if="structureCtrl.room.isScanned">
+                                <li ng-repeat="vessel in structureCtrl.room.vessels" ng-class="{ muted: !vessel.items.length }">
+                                    <a href ng-click="structureCtrl.openVessel(vessel)">
+                                        {{ vessel.name }} <span ng-if="!vessel.items.length">(empty)</span>
+                                    </a>
+                                    <ul ng-if="vessel.isOpen && vessel.items.length">
+                                        <li ng-repeat="item in vessel.items">
+                                            <a href ng-click="structureCtrl.selectItem(item)">
+                                                {{ item.name }}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div id="doors" class="box">
+                        <h3 class="box-title">Doors:</h3>
+                        <div class="box-body">
+                            <ul>
+                                <li ng-repeat="door in structureCtrl.room.doors" data-this-room="{{ thisRoom = structureCtrl.getRoomById(door.roomId) }}" ng-class="{ muted: thisRoom.isVisited }">
+                                    <a ng-if="door.isLocked" class="disabled" href ng-click="structureCtrl.openDoor(door)">
+                                        <i class="fa fa-lock"></i> {{ door.name }}
+                                    </a>
+                                    <a ng-if="!door.isLocked" href ng-click="structureCtrl.openDoor(door)">
+                                        {{ door.name }}
+                                    </a>
+                                    <span ng-if="thisRoom.isScanned"> {{ thisRoom.percentExplored | percentage }} explored</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <st-inventory></st-inventory>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <st-log></st-log>
+    </div>
+</div>
+
+<h3>Building Todo:</h3>
+<ul>
+    <li>
+        Data stategy:
+        <ol>
+            <li>Default Models are separated into different documents</li>
+            <li>The server compiles the models (with a shell script) into game-ready documents.</li>
+            <li>Player-specific data is saved explicitly during key events, and only data that is specific to the event (such as exiting a structure)</li>
+        </ol>
+    </li>
+    <li>Ability to exit a structure and re-enter</li>
+    <li>Ability to have more than one entrance to structure</li>
+    <li>Ability to lock an entrance</li>
+    <li>Ability to persist data</li>
+    <li>Ability to reset game data</li>
+</ul>

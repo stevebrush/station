@@ -1,0 +1,16 @@
+{
+  "name": "station-shared",
+  "version": "1.0.0",
+  "description": "Resources shared between game and forge.",
+  "main": "index.js",
+  "scripts": {},
+  "engines": {
+    "node": "0.12.7"
+  },
+  "author": "Steve Brush",
+  "license": "ISC",
+  "dependencies": {
+    "merge": "^1.2.0",
+    "mongoose": "^4.4.4"
+  }
+}

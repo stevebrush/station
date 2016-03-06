@@ -1,0 +1,24 @@
+{
+  "name": "station",
+  "description": "STATION",
+  "main": "index.js",
+  "authors": [
+    "Blackbaud-SteveBrush <steve.brush@blackbaud.com>"
+  ],
+  "license": "ISC",
+  "moduleType": [],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap-sass": "^3.3.6",
+    "angular": "^1.5.0",
+    "font-awesome": "fontawesome#^4.5.0",
+    "angular-ui-router": "^0.2.18"
+  }
+}
