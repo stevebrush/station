@@ -14,6 +14,7 @@
         that.dbObject = undefined;
         that.dbValues = options;
         that.slug = utils.slugify(options.name);
+        that.parent = undefined;
         that.trail = "";
         that.elements = {};
 
@@ -24,6 +25,7 @@
 
             // Receive the database object assigned by this structure's location.
             that.dbObject = dbObject;
+            that.parent = parent;
             that.trail = parent.trail + "|" + that.slug;
 
             if (waiting.hasOwnProperty('rooms')) {

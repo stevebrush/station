@@ -12,7 +12,6 @@
         coordY: Number,
         description: String,
         name: String,
-        percentExplored: Number,
         structures: [structureSchema]
     }, {
         collection : 'Location'

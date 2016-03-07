@@ -20,10 +20,6 @@
             type: Number,
             default: 0
         },
-        numItemsFound: {
-            type: Number,
-            default: 0
-        },
         items: [itemSchema],
         keyId: {
             type: Schema.Types.ObjectId,

@@ -51,10 +51,6 @@
             type: Number,
             default: 0
         },
-        numItemsFound: {
-            type: Number,
-            default: 0
-        },
         vessels: [vesselSchema]
     });
 }());

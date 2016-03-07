@@ -20,6 +20,7 @@
             that.dbValues = options;
             that.slug = utils.slugify(options.name);
             that.trail = "";
+            that.parent = undefined;
 
             waiting = {};
             callbacks = [];

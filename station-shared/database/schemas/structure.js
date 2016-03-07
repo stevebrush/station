@@ -23,12 +23,6 @@
             type: Number,
             default: 0
         },
-        numItemsFound: {
-            type: Number,
-            default: 0
-        },
         rooms: [roomSchema]
-    }, {
-        collection : 'Structure'
     });
 }());

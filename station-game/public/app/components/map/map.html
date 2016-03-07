@@ -1,6 +1,8 @@
 <h1>Map</h1>
 <ul>
     <li ng-repeat="location in mapCtrl.locations">
-        <a ui-sref="location({ id: location._id })">{{ location.name }}</a>
+        <a ui-sref="location({ id: location._id })">
+            {{ location.name }} ({{ location.percentageExplored | percentage }})
+        </a>
     </li>
 </ul>

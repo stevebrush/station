@@ -7,7 +7,6 @@
         vm = this;
 
         LocationService.getLocations().then(function (data) {
-            console.log(data);
             vm.locations = data.locations;
         });
     }

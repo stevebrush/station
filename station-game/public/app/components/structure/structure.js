@@ -27,50 +27,33 @@
         };
     }
 
-    function stInventory() {
-        return {
-            restrict: 'AEC',
-            templateUrl: '../public/app/components/inventory/inventory.html',
-            controller: 'InventoryCtrl as inventoryCtrl'
-        };
-    }
-
-    function stLog() {
-        return {
-            restrict: 'AEC',
-            templateUrl: '../public/app/components/log/log.html',
-            controller: 'LogCtrl as logCtrl'
-        };
-    }
-
-    function stUtilities() {
-        return {
-            restrict: 'AEC',
-            templateUrl: '../public/app/components/utilities/utilities.html',
-            controller: 'UtilitiesCtrl as utilitiesCtrl'
-        };
-    }
-
     function StructureCtrl($state, StructureService, InventoryService, LogService, RoomService, StorageService) {
-        var _vessel,
-            structure,
+        var structure,
             vm;
 
         vm = this;
 
         function updateStructureStats() {
-            var numItemsFound;
 
-            numItemsFound = vm.numItems;
+            var structureNumItemsFound;
+
+            structureNumItemsFound = 0;
 
             structure.rooms.forEach(function (room) {
+                var roomNumItemsFound = room.numItems;
+
                 room.vessels.forEach(function (vessel) {
-                    numItemsFound -= vessel.items.length;
+                    roomNumItemsFound -= vessel.items.length;
+                    vessel.numItemsFound = vessel.numItems - vessel.items.length;
                 });
+
+                room.numItemsFound = roomNumItemsFound;
+                structureNumItemsFound += room.numItemsFound;
             });
 
-            vm.numItemsFound = numItemsFound;
+            vm.numItemsFound = structureNumItemsFound;
             vm.percentExplored = calculatePercentage(vm.numItemsFound, vm.numItems);
+            vm.room.percentExplored = (vm.room.isScanned) ? calculatePercentage(vm.room.numItemsFound, vm.room.numItems) : 0.0;
         }
 
         StructureService.getStructureById($state.params.locationId, $state.params.structureId).then(function (res) {
@@ -86,7 +69,9 @@
 
         vm.openVessel = function (vessel) {
             vessel.isOpen = (vessel.isOpen) ? false : true;
-            _vessel = vessel;
+            vessel.items.forEach(function (item) {
+                item.parent = vessel;
+            });
         };
 
         vm.openDoor = function (door) {
@@ -121,18 +106,40 @@
         };
 
         vm.selectItem = function (item) {
-            _vessel.items.forEach(function (thisItem, i) {
+            item.isSelected = true;
+        };
+
+        vm.takeAllItems = function (vessel) {
+            console.log("Take all: ", vessel.items);
+            vessel.items.forEach(function (item, i) {
+                LogService.addMessage(item.name + " added to inventory.");
+                InventoryService.addItem(item);
+                delete vessel.items[i];
+            });
+
+            cleanArray(vessel.items);
+
+            if (vessel.items.length === 0) {
+                vm.openVessel(vessel);
+            }
+
+            RoomService.getNumItemsFound(vm.room);
+            updateStructureStats();
+        };
+
+        vm.takeItem = function (item) {
+            item.parent.items.forEach(function (thisItem, i) {
                 if (thisItem._id === item._id) {
                     LogService.addMessage(item.name + " added to inventory.");
                     InventoryService.addItem(item);
-                    delete _vessel.items[i];
+                    delete item.parent.items[i];
                 }
             });
 
-            cleanArray(_vessel.items);
+            cleanArray(item.parent.items);
 
-            if (_vessel.items.length === 0) {
-                vm.openVessel(_vessel);
+            if (item.parent.items.length === 0) {
+                vm.openVessel(item.parent);
             }
 
             RoomService.getNumItemsFound(vm.room);
@@ -202,153 +209,6 @@ var i,
         };
     }
 
-    function InventoryCtrl(InventoryService) {
-        var vm;
-
-        vm = this;
-
-        vm.items = InventoryService.getItems();
-    }
-
-    function InventoryService() {
-        var items;
-
-        items = [];
-
-        this.addItem = function (item) {
-            items.push(item);
-        };
-
-        this.getItems = function () {
-            return items;
-        };
-
-        this.getItemById = function (id) {
-            var i,
-                len;
-            id = id.toString();
-            len = items.length;
-            for (i = 0; i < len; ++i) {
-                if (items[i]._id === id) {
-                    return items[i];
-                }
-            }
-        };
-
-        this.removeItemById = function (id) {
-            var i,
-                index,
-                len;
-            index = -1;
-            id = id.toString();
-            len = items.length;
-            for (i = 0; i < len; ++i) {
-                if (items[i]._id === id) {
-                    index = i;
-                    break;
-                }
-            }
-            if (index > -1) {
-                items.splice(index, 1);
-            }
-        };
-    }
-
-    function LogCtrl(LogService) {
-        var vm;
-
-        vm = this;
-
-        vm.messages = LogService.getMessages();
-    }
-
-    function LogService() {
-        var messages;
-
-        messages = [];
-
-        this.addMessage = function (message) {
-            messages.unshift({
-                text: message
-            });
-        };
-
-        this.getMessages = function () {
-            return messages;
-        };
-    }
-
-    function RoomService() {
-        this.getNumItemsFound = function (room) {
-            var i,
-                len1,
-                numItemsFound;
-
-            numItemsFound = room.numItems;
-            len1 = room.vessels.length;
-
-            for (i = 0; i < len1; ++i) {
-                numItemsFound -= room.vessels[i].items.length;
-            }
-
-            room.numItemsFound = numItemsFound;
-
-            room.percentExplored = calculatePercentage(room.numItemsFound, room.numItems);
-
-            if (room.numItemsFound === room.numItems) {
-                room.isVisited = true;
-            }
-
-            return room;
-        };
-    }
-
-    function StorageService() {
-        var securred;
-
-        securred = {};
-
-        this.secure = function (data) {
-            // Stores stuff locally, but not eternally.
-            //console.log("Securing " + data.storageKey, data);
-        };
-        this.save = function () {
-            // Takes the locally "secured" stuff, and saves it eternally.
-        };
-    }
-
-    function UtilitiesCtrl(StorageService) {
-        var vm;
-
-        vm = this;
-
-        vm.save = function () {
-            console.log("Save game1");
-            /**
-                When user clicks "save", retrieve all locally changed items, and push them to local storage.
-
-
-             */
-        };
-
-        vm.reset = function () {
-            console.log("Reset game1");
-        };
-    }
-
-    function filterPercentage($filter) {
-        return function (input, decimals) {
-            if (decimals === undefined) {
-                decimals = 0;
-            }
-            return $filter('number')(input * 100, decimals) + '%';
-        };
-    }
-
-    filterPercentage.$inject = [
-        '$filter'
-    ];
-
     StructureCtrl.$inject = [
         '$state',
         'StructureService',
@@ -363,32 +223,9 @@ var i,
         '$q'
     ];
 
-    InventoryCtrl.$inject = [
-        'InventoryService'
-    ];
-
-    LogCtrl.$inject = [
-        'LogService'
-    ];
-
-    UtilitiesCtrl.$inject = [
-        'StorageService'
-    ];
-
     angular.module('station')
         .controller('StructureCtrl', StructureCtrl)
-        .controller('InventoryCtrl', InventoryCtrl)
-        .controller('LogCtrl', LogCtrl)
-        .controller('UtilitiesCtrl', UtilitiesCtrl)
         .directive('stStructure', stStructure)
-        .directive('stInventory', stInventory)
-        .directive('stLog', stLog)
-        .directive('stUtilities', stUtilities)
-        .filter('percentage', filterPercentage)
-        .service('StorageService', StorageService)
-        .service('StructureService', StructureService)
-        .service('InventoryService', InventoryService)
-        .service('LogService', LogService)
-        .service('RoomService', RoomService);
+        .service('StructureService', StructureService);
 
 }(window, window.angular));

@@ -26,6 +26,7 @@
         that.dbObject = undefined;
         that.dbValues = settings;
         that.trail = "";
+        that.parent = undefined;
         that.slug = utils.slugify(settings.name);
 
         waiting = {};
@@ -36,13 +37,17 @@
             // Receive the database object assigned by this structure's location.
             that.dbObject = dbObject;
             that.trail = parent.trail + "|" + that.slug;
+            that.parent = parent;
 
             // If the vessel has an onCreate callback, let's fire it.
             if (typeof settings.onCreate === "function") {
+
                 onCreateResponse = {};
                 settings.onCreate.call(onCreateResponse);
+
                 if (onCreateResponse.hasOwnProperty('items')) {
                     waiting.items = waiting.items || [];
+
                     onCreateResponse.items.forEach(function (item) {
                         waiting.items.push(item);
                     });
@@ -56,6 +61,10 @@
 
                     // Add it to the structure's document.
                     that.dbObject.items.push(item.dbValues);
+                    that.dbObject.numItems++;
+                    that.parent.dbObject.numItems++;
+                    that.parent.parent.dbObject.numItems++;
+                    that.parent.parent.parent.dbObject.numItems++;
 
                     // Initialize the item object.
                     item.init(that.dbObject.items[that.dbObject.items.length - 1], that);
