@@ -1,13 +1,17 @@
 (function () {
     'use strict';
 
-    var Item,
+    var DatabaseObject,
+        Item,
         merge,
+        Queue,
         templates,
         utils;
 
     merge = require('merge');
     utils = require('../utils');
+    DatabaseObject = require(__dirname + '/DatabaseObject');
+    Queue = require(__dirname + '/Queue');
     Item = require(__dirname + '/Item');
 
     templates = {};
@@ -15,29 +19,20 @@
     function Vessel(options) {
         var defaults,
             settings,
-            that,
-            waiting;
+            that;
 
         defaults = templates[options.name.replace(">", "")];
         settings = merge.recursive(true, defaults, options);
         settings.name = defaults.name;
 
+        DatabaseObject.call(this, settings);
+        Queue.call(this);
+
         that = this;
-        that.dbObject = undefined;
-        that.dbValues = settings;
-        that.trail = "";
-        that.parent = undefined;
-        that.slug = utils.slugify(settings.name);
 
-        waiting = {};
-
-        that.init = function (dbObject, parent) {
-            var onCreateResponse;
-
-            // Receive the database object assigned by this structure's location.
-            that.dbObject = dbObject;
-            that.trail = parent.trail + "|" + that.slug;
-            that.parent = parent;
+        that.ready(function () {
+            var onCreateResponse,
+                temp;
 
             // If the vessel has an onCreate callback, let's fire it.
             if (typeof settings.onCreate === "function") {
@@ -46,42 +41,42 @@
                 settings.onCreate.call(onCreateResponse);
 
                 if (onCreateResponse.hasOwnProperty('items')) {
-                    waiting.items = waiting.items || [];
+                    temp = that.getQueue('items') || [];
 
                     onCreateResponse.items.forEach(function (item) {
-                        waiting.items.push(item);
+                        temp.push(item);
                     });
+
+                    that.enqueue('items', temp);
                 }
             }
 
-            if (waiting.hasOwnProperty('items')) {
+            that.queue('items', function (item) {
 
-                // For each item object...
-                waiting.items.forEach(function (item) {
+                that.db.document().numItems++;
+                that.parent.db.document().numItems++;
+                that.parent.parent.db.document().numItems++;
+                that.parent.parent.parent.db.document().numItems++;
 
-                    // Add it to the structure's document.
-                    that.dbObject.items.push(item.dbValues);
-                    that.dbObject.numItems++;
-                    that.parent.dbObject.numItems++;
-                    that.parent.parent.dbObject.numItems++;
-                    that.parent.parent.parent.dbObject.numItems++;
-
-                    // Initialize the item object.
-                    item.init(that.dbObject.items[that.dbObject.items.length - 1], that);
-                });
-            }
+                // Initialize the item object.
+                item.init(that.db.create('items', item.dbValues), that);
+            });
 
             return that;
-        };
-
-        // Add items to the waiting list.
-        that.items = function (items) {
-            waiting.items = items;
-            return that;
-        };
-
-        return that;
+        });
     }
+
+
+    // Mixins.
+    utils.mixin(Vessel, DatabaseObject);
+    utils.mixin(Vessel, Queue);
+
+
+    Vessel.prototype.items = function (items) {
+        this.enqueue('items', items);
+        return this;
+    };
+
 
     function mayContain(items) {
         var temp;
@@ -117,11 +112,13 @@
         return Vessel.static;
     }
 
+
     Vessel.static = {
         mayContain: mayContain,
         template: template,
         templates: templates
     };
+
 
     module.exports = Vessel;
 }());

@@ -1,9 +1,11 @@
 (function () {
     'use strict';
 
-    var Door,
+    var DatabaseObject,
+        Door,
         Item,
         Location,
+        Lockable,
         merge,
         mongoose,
         myWorld,
@@ -19,7 +21,9 @@
     Item = require(__dirname + '/Item');
     Vessel = require(__dirname + '/Vessel');
     Location = require(__dirname + '/Location');
+    Lockable = require(__dirname + '/Lockable');
     Structure = require(__dirname + '/Structure');
+    DatabaseObject = require(__dirname + '/DatabaseObject');
 
     myWorld = new World();
     Room = require(__dirname + '/Room')(myWorld);
@@ -68,7 +72,7 @@
             });
 
             item.ready(function () {
-                factory.world.key(this);
+                Lockable.addKey(this);
             });
 
             return item;
@@ -88,10 +92,10 @@
                 usedPositions = [];
 
                 // Add the entrance property to the structure.
-                this.parent.dbObject.entrance = new mongoose.Types.ObjectId(this.dbObject._id);
+                this.parent.db.set('entrance', DatabaseObject.createId(this.db.document()._id));
 
                 // Add an exit to the room.
-                this.dbObject.doors.forEach(function (door) {
+                this.db.read('doors').forEach(function (door) {
                     usedPositions.push(door.position);
                 });
 
@@ -106,7 +110,7 @@
                     throw new Error("ERROR! This room doesn't have enough walls to accommodate an exit.");
                 }
 
-                this.dbObject.doors.push({
+                this.db.create('doors', {
                     name: "Exit",
                     isExit: true,
                     position: position
@@ -145,21 +149,15 @@
         world.init = function () {
             if (waiting.hasOwnProperty('locations')) {
                 waiting.locations.forEach(function (location) {
-                    world.elements.locations.push(location.init());
+                    var loc = new require('../models/location')(location.dbValues);
+                    world.elements.locations.push(location.init(loc));
                 });
                 world.elements.locations.forEach(function (location) {
-                    location.dbObject.save();
+                    location.db.save();
+                    console.log("Location:", JSON.stringify(location.db.document()));
                 });
             }
-            console.log("World building complete.", JSON.stringify(world.elements));
-        };
-
-        world.key = function (item) {
-            world.elements.keys[item.trail] = item.dbObject._id;
-        };
-
-        world.getKey = function (trail) {
-            return world.elements.keys[trail];
+            console.log("World building complete.");
         };
 
         world.locations = function (locations) {

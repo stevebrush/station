@@ -1,12 +1,18 @@
 (function () {
     'use strict';
 
+    function lastItem(arr) {
+        return arr[arr.length - 1];
+    }
+
     function mixin(destination, source) {
         var k;
 
         for (k in source.prototype) {
             if (destination.prototype.hasOwnProperty(k) === false) {
                 destination.prototype[k] = source.prototype[k];
+            } else {
+                console.log("ERROR: Mixin " + k + " already exists!");
             }
         }
     }
@@ -16,6 +22,7 @@
     }
 
     module.exports = {
+        lastItem: lastItem,
         mixin: mixin,
         slugify: slugify
     };

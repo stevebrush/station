@@ -1,28 +1,33 @@
 (function () {
     'use strict';
 
-    var utils,
+    var DatabaseObject,
+        utils,
         mongoose;
 
     utils = require('../utils');
+    DatabaseObject = require(__dirname + '/DatabaseObject');
     mongoose = require('mongoose');
 
-    function Lockable(options, world) {
-        console.log("Lockable!");
-        this.world = world;
-    }
+    function Lockable() {}
 
     Lockable.prototype.lock = function (trail) {
-        this.ready(function (mongoose, world, trail) {
-            this.dbObject.isLocked = true;
-            this.dbObject.keyId = new mongoose.Types.ObjectId(world.getKey(trail));
-        }, [
-            mongoose,
-            this.world,
-            this.trail
-        ]);
+        this.ready(function () {
+            this.db.set('isLocked', true);
+            this.db.set('keyId', DatabaseObject.createId(Lockable.getKey(trail)));
+        });
         return this;
     };
+
+    Lockable.addKey = function (item) {
+        Lockable.keys[item.trail] = item.dbObject._id;
+    };
+
+    Lockable.getKey = function (trail) {
+        return Lockable.keys[trail];
+    };
+
+    Lockable.keys = {};
 
     module.exports = Lockable;
 }());

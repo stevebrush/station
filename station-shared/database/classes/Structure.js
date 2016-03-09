@@ -1,71 +1,42 @@
 (function () {
     'use strict';
 
-    var utils;
+    var DatabaseObject,
+        Queue,
+        utils;
+
 
     utils = require('../utils');
+    DatabaseObject = require(__dirname + '/DatabaseObject');
+    Queue = require(__dirname + '/Queue');
+
 
     function Structure(options) {
-        var callbacks,
-            that,
-            waiting;
+        var that;
+
+        DatabaseObject.call(this, options);
+        Queue.call(this);
 
         that = this;
-        that.dbObject = undefined;
-        that.dbValues = options;
-        that.slug = utils.slugify(options.name);
-        that.parent = undefined;
-        that.trail = "";
-        that.elements = {};
 
-        waiting = {};
-        callbacks = [];
-
-        that.init = function (dbObject, parent) {
-
-            // Receive the database object assigned by this structure's location.
-            that.dbObject = dbObject;
-            that.parent = parent;
-            that.trail = parent.trail + "|" + that.slug;
-
-            if (waiting.hasOwnProperty('rooms')) {
-
-                // For each room object...
-                waiting.rooms.forEach(function (room) {
-
-                    // Add it to the structure's document.
-                    that.dbObject.rooms.push(room.dbValues);
-
-                    // Initialize the room object.
-                    room.init(that.dbObject.rooms[that.dbObject.rooms.length - 1], that);
-                });
-            }
-
-            callbacks.forEach(function (callback) {
-                if (typeof callback.directive === "function") {
-                    callback.directive.apply(that, callback.args);
-                }
+        that.ready(function () {
+            that.queue('rooms', function (room) {
+                room.init(that.db.create('rooms', room.dbValues), that);
             });
-
             return that;
-        };
-
-        // Add rooms to the waiting list.
-        that.rooms = function (rooms) {
-            that.elements.rooms = rooms;
-            waiting.rooms = rooms;
-            return that;
-        };
-
-        that.ready = function (callback, args) {
-            callbacks.push({
-                directive: callback,
-                args: args
-            });
-        };
-
-        return that;
+        });
     }
+
+
+    utils.mixin(Structure, DatabaseObject);
+    utils.mixin(Structure, Queue);
+
+
+    Structure.prototype.rooms = function (rooms) {
+        this.enqueue('rooms', rooms);
+        return this;
+    };
+
 
     module.exports = Structure;
 }());

@@ -157,7 +157,7 @@
                 ]),
                 add.location("Charred Towers").structures([
                     add.structure("Hotel").rooms([
-                        add.room("Offices").lock("luckys-garage|repair-shop|lobby|desk|hotel-key")
+                        add.entrance("Offices").lock("luckys-garage|repair-shop|lobby|desk|hotel-key")
                     ])
                 ])
             ])

@@ -3,80 +3,73 @@
 
     var DatabaseObject,
         Lockable,
-        mongoose,
-        utils,
-        World;
+        Queue,
+        utils;
 
-    mongoose = require('mongoose');
+
     utils = require('../utils');
     DatabaseObject = require(__dirname + '/DatabaseObject');
     Lockable = require(__dirname + '/Lockable');
+    Queue = require(__dirname + '/Queue');
 
-    module.exports = function (world) {
 
-        function Room(options) {
-            var that;
+    function Room(options) {
+        var that;
 
-            DatabaseObject.call(this, options);
-            Lockable.call(this, {}, world);
+        DatabaseObject.call(this, options);
+        Lockable.call(this);
+        Queue.call(this);
 
-            that = this;
+        that = this;
 
-            this.ready(function () {
-                if (this.waiting.hasOwnProperty('vessels')) {
+        this.ready(function () {
 
-                    // For each room object...
-                    this.waiting.vessels.forEach(function (vessel) {
-
-                        // Add it to the structure's document.
-                        that.dbObject.vessels.push(vessel.dbValues);
-
-                        // Initialize the vessel object.
-                        vessel.init(that.dbObject.vessels[that.dbObject.vessels.length - 1], that);
-                    });
-                }
-                if (this.waiting.hasOwnProperty('doors')) {
-                    that.parent.ready(function (doors, rooms) {
-                        /*
-                         After all rooms have been created (with IDs),
-                         Loop through all the doors and switch out slug with doorId
-                        */
-                        doors.forEach(function (door) {
-                            rooms.forEach(function (room) {
-                                if (room.slug === door.slug) {
-                                    that.dbObject.doors.push({
-                                        name: room.dbObject.name,
-                                        roomId: new mongoose.Types.ObjectId(room.dbObject._id),
-                                        position: door.position
-                                    });
-                                }
-                            });
-                        });
-                    }, [
-                        this.waiting.doors,
-                        that.parent.elements.rooms
-                    ]);
-                }
+            this.queue('vessels', function (vessel) {
+                vessel.init(this.db.create('vessels', vessel.dbValues), this);
             });
 
-            // Add vessels to the waiting list.
-            this.vessels = function (vessels) {
-                this.waiting.vessels = vessels;
-                return that;
-            };
+            this.parent.ready(function () {
+                /*
+                 After all rooms have been created (with IDs),
+                 Loop through all the doors and switch out slug with doorId
+                */
+                that.queue('doors', function (door) {
+                    that.parent.queue('rooms', function (room) {
+                        if (room.slug === door.slug) {
+                            that.db('doors', {
+                                name: room.dbObject.name,
+                                roomId: DatabaseObject.createId(room.dbObject._id),
+                                position: door.position
+                            });
+                        }
+                    });
+                });
+            });
+        });
+    }
 
-            this.doors = function (doors) {
-                this.waiting.doors = doors;
-                return that;
-            };
 
-            return this;
-        }
+    // Mixins.
+    utils.mixin(Room, DatabaseObject);
+    utils.mixin(Room, Lockable);
+    utils.mixin(Room, Queue);
 
-        Room.prototype = Object.create(DatabaseObject.prototype);
-        utils.mixin(Room, Lockable);
-        Room.prototype.constructor = Room;
 
+    /**
+     * Custom prototype functions.
+     */
+
+    Room.prototype.doors = function (doors) {
+        this.enqueue('doors', doors);
+        return this;
+    };
+
+    Room.prototype.vessels = function (vessels) {
+        this.enqueue('vessels', vessels);
+        return this;
+    };
+
+    module.exports = function () {
         return Room;
     };
 }());
