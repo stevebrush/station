@@ -1,10 +1,6 @@
 (function () {
     'use strict';
 
-    var utils;
-
-    utils = require('../utils');
-
     function Queue() {
         var queue;
 

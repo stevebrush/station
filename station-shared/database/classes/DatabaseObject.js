@@ -34,7 +34,6 @@
                 return _dbObject[documentName];
             },
             save: function () {
-                console.log(_dbObject);
                 _dbObject.save();
             },
             set: function (key, value) {

@@ -69,7 +69,6 @@
         return this;
     };
 
-    module.exports = function () {
-        return Room;
-    };
+
+    module.exports = Room;
 }());

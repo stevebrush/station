@@ -32,7 +32,11 @@
     });
 
     database.connect(function () {
-        console.log("Done with database!");
+        console.log("Database connected.");
+    });
+
+    database.startup(function () {
+        console.log("Database documents created.");
     });
 
     app = express();

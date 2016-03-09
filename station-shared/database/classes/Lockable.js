@@ -2,20 +2,23 @@
     'use strict';
 
     var DatabaseObject,
-        utils,
-        mongoose;
+        utils;
 
     utils = require('../utils');
     DatabaseObject = require(__dirname + '/DatabaseObject');
-    mongoose = require('mongoose');
 
     function Lockable() {}
 
     Lockable.prototype.lock = function (trail) {
         this.ready(function () {
+            var keyId;
+
+            keyId = Lockable.getKey(trail);
+
             this.db.set('isLocked', true);
-            this.db.set('keyId', DatabaseObject.createId(Lockable.getKey(trail)));
+            this.db.set('keyId', DatabaseObject.createId(keyId));
         });
+
         return this;
     };
 
