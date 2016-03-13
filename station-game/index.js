@@ -17,7 +17,7 @@
     http = require('http');
     routes = require('./server/routes');
     express = require('express');
-    Database = require('station-shared').Database;
+    Database = require('./server/database');
     bodyParser = require('body-parser');
     handlebars  = require('express-handlebars');
     mongoose = require('mongoose');

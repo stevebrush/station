@@ -15,7 +15,9 @@
 @import "../components/structure/structure";
 */
 
+
 @import "_meyer-reset";
+@import "../../../bower_components/font-awesome/scss/font-awesome.scss";
 
 @font-face {
     font-family: 'dos';
@@ -29,7 +31,7 @@
 
 $primary-color: #eecc11;
 $primary-color-inverse: #000;
-$primary-color-darkened: darken($primary-color, 30%);
+$primary-color-darkened: darken($primary-color, 25%);
 
 body {
     background-color: $primary-color-inverse;
@@ -128,8 +130,11 @@ p {
 
 .lead {
     color: $primary-color-darkened;
+}
+
+.page-header {
     border-bottom: 1px solid $primary-color-darkened;
-    padding-bottom: 19px;
+    margin-bottom: 20px;
 }
 
 .text-muted {

@@ -4,7 +4,7 @@
         Location;
 
     Api = {};
-    Location = require('station-shared').Database.models.Location;
+    Location = require('../database').models.Location;
 
     function onError(response, error) {
         response.status(500).json({

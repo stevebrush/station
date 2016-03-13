@@ -11,6 +11,10 @@
                 vm.locations = data;
             });
         }
+
+        vm.selectLocation = function (location) {
+            location.isSelected = (location.isSelected === true) ? false : true;
+        };
     }
 
     MapCtrl.$inject = [

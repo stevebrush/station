@@ -32,6 +32,7 @@
 
         vm = this;
 
+        /*
         function updateStructureStats() {
 
             var structureNumItemsFound;
@@ -52,10 +53,12 @@
             vm.structure.percentLooted = calculatePercentage(vm.structure.numItemsFound, vm.structure.numItems);
             vm.room.percentExplored = (vm.room.isScanned) ? calculatePercentage(vm.room.numItemsFound, vm.room.numItems) : 0.0;
         }
+        */
 
         StructureService.findStructureById($state.params.locationId, $state.params.structureId).then(function (data) {
             vm.structure = data;
-            vm.room = vm.findRoomById(vm.structure.entrance);
+            //vm.room = vm.findRoomById(vm.structure.entrance);
+            vm.room = vm.findRoomById($state.params.roomId);
             //updateStructureStats();
         });
 
@@ -177,11 +180,12 @@
                 return false;
             }
 
-            len = vm.structure.rooms.length;
-
-            for (i = 0; i < len; ++i) {
-                if (vm.structure.rooms[i]._id === id) {
-                    return vm.structure.rooms[i];
+            for (var k = 0; k < vm.structure.floors.length; ++k) {
+                len = vm.structure.floors[k].rooms.length;
+                for (i = 0; i < len; ++i) {
+                    if (vm.structure.floors[k].rooms[i]._id === id) {
+                        return vm.structure.floors[k].rooms[i];
+                    }
                 }
             }
 

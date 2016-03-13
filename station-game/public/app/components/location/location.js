@@ -9,6 +9,10 @@
         LocationService.getLocationById($state.params.id).then(function (data) {
             vm.location = data;
         });
+
+        vm.selectStructure = function (structure) {
+            structure.isSelected = (structure.isSelected === true) ? false : true;
+        };
     }
 
     LocationCtrl.$inject = [

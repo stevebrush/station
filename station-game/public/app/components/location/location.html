@@ -1,10 +1,18 @@
-<h1>{{:: locationCtrl.location.name }}</h1>
-<p class="lead">{{:: locationCtrl.location.description }}</p>
+<div class="page-header">
+    <h1>{{:: locationCtrl.location.name }}</h1>
+    <p class="lead">{{:: locationCtrl.location.description }}</p>
+</div>
 <ul>
     <li ng-repeat="structure in locationCtrl.location.structures">
-        <a href ui-sref="structure({ locationId: locationCtrl.location._id, structureId: structure._id })">
-            {{ structure.name }}...
-        </a>
+        <a href ng-click="locationCtrl.selectStructure(structure)">{{:: structure.name }}</a>
+        <ul ng-if="structure.isSelected">
+            <li ng-repeat="entrance in structure.entrances">
+                <p class="lead">{{:: structure.description }}</p>
+                <a class="btn" href ui-sref="structure({ locationId: locationCtrl.location._id, structureId: structure._id, roomId: entrance.roomId })">
+                    Enter
+                </a> <span class="text-muted">({{:: entrance.name }})</span>
+            </li>
+        </ul>
     </li>
     <li>
         <a ui-sref="map">&larr;&nbsp;Map</a>

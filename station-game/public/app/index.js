@@ -22,7 +22,7 @@
                 controller: 'LocationCtrl as locationCtrl'
             })
             .state('structure', {
-                url: '/location/:locationId/structure/:structureId',
+                url: '/location/:locationId/structure/:structureId/room/:roomId',
                 templateUrl: '../public/app/components/structure/structure.html',
                 controller: 'StructureCtrl as structureCtrl'
             })
