@@ -6,9 +6,11 @@
 
         vm = this;
 
-        LocationService.getLocations().then(function (data) {
-            vm.locations = data.locations;
-        });
+        if (!vm.locations) {
+            LocationService.getLocations().then(function (data) {
+                vm.locations = data;
+            });
+        }
     }
 
     MapCtrl.$inject = [

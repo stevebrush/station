@@ -1,3 +1,4 @@
+/*
 @import "_bootswatch-cyborg";
 @import "../../../bower_components/bootstrap-sass/assets/stylesheets/_bootstrap";
 @import "_bootswatch";
@@ -12,3 +13,26 @@
 @import "../components/map/map";
 @import "../components/location/location";
 @import "../components/structure/structure";
+*/
+
+@import "_meyer-reset";
+
+$primary-color: #eecc11;
+
+body {
+    background-color: #000;
+    color: $primary-color;
+    font-family: DOS, Monaco, Menlo, Consolas, "Courier New", monospace;
+    line-height: 20px;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: $primary-color;
+
+    &:hover,
+    &:focus {
+        color: $primary-color;
+    }
+}

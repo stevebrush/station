@@ -1,10 +1,9 @@
 <p><a ui-sref="map">&larr;&nbsp;Back to map</a></p>
 <h1>{{ locationCtrl.location.name }}</h1>
-<h2>Structures:</h2>
 <ul>
     <li ng-repeat="structure in locationCtrl.location.structures">
         <a href ui-sref="structure({ locationId: locationCtrl.location._id, structureId: structure._id })">
-            {{ structure.name }} ({{ structure.percentExplored | percentage }})
+            {{ structure.name }}
         </a>
     </li>
 </ul>

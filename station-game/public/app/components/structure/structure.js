@@ -28,8 +28,7 @@
     }
 
     function StructureCtrl($state, StructureService, InventoryService, LogService, RoomService, StorageService) {
-        var structure,
-            vm;
+        var vm;
 
         vm = this;
 
@@ -39,32 +38,25 @@
 
             structureNumItemsFound = 0;
 
-            structure.rooms.forEach(function (room) {
+            vm.structure.rooms.forEach(function (room) {
                 var roomNumItemsFound = room.numItems;
-
                 room.vessels.forEach(function (vessel) {
                     roomNumItemsFound -= vessel.items.length;
                     vessel.numItemsFound = vessel.numItems - vessel.items.length;
                 });
-
                 room.numItemsFound = roomNumItemsFound;
                 structureNumItemsFound += room.numItemsFound;
             });
 
-            vm.numItemsFound = structureNumItemsFound;
-            vm.percentExplored = calculatePercentage(vm.numItemsFound, vm.numItems);
+            vm.structure.numItemsFound = structureNumItemsFound;
+            vm.structure.percentLooted = calculatePercentage(vm.structure.numItemsFound, vm.structure.numItems);
             vm.room.percentExplored = (vm.room.isScanned) ? calculatePercentage(vm.room.numItemsFound, vm.room.numItems) : 0.0;
         }
 
-        StructureService.getStructureById($state.params.locationId, $state.params.structureId).then(function (res) {
-            structure = res.structure;
-            vm.name = structure.name;
-            vm.room = vm.getRoomById(structure.entrance);
-            vm.numItems = structure.numItems;
-            vm.numItemsFound = structure.numItemsFound;
+        StructureService.findStructureById($state.params.locationId, $state.params.structureId).then(function (data) {
+            vm.structure = data;
+            vm.room = vm.findRoomById(vm.structure.entrance);
             updateStructureStats();
-            StorageService.secure(structure);
-            console.log("Structure:", structure);
         });
 
         vm.openVessel = function (vessel) {
@@ -75,31 +67,47 @@
         };
 
         vm.openDoor = function (door) {
-            var room;
+            var key,
+                prevRoom,
+                room;
 
-            if (door.isExit) {
-                LogService.addMessage("Exiting structure...");
+            door.entryAttempted = true;
+            room = vm.findRoomById(door.roomId);
+
+            if (door.isLocked) {
+                key = InventoryService.findItemById(door.keyId);
+
+                if (key) {
+                    door.isLocked = false;
+                    prevRoom = vm.room;
+
+                    // Also unlock the next room's door.
+                    room.doors.forEach(function (door) {
+                        if (door.roomId === prevRoom._id) {
+                            door.isLocked = false;
+                        }
+                    });
+
+                    // Set the view's room data.
+                    vm.room = room;
+
+                    LogService.addMessage("Used key to " + room.name + ".");
+                } else {
+                    LogService.addMessage("Door to " + room.name + " is locked.");
+                }
+
                 return;
             }
 
-            room = vm.getRoomById(door.roomId);
+            if (door.isExit) {
+                LogService.addMessage("Exiting structure...");
+                $state.go('location', { 'id': $state.params.locationId });
+                return;
+            }
 
             if (room === undefined) {
                 console.log("Room not found...");
                 return;
-            }
-
-            if (room.isLocked) {
-                if (InventoryService.getItemById(room._id)) {
-                    door.isLocked = false;
-                    room.isLocked = false;
-                    InventoryService.removeItemById(room._id);
-                    LogService.addMessage("Used key to " + room.name + ".");
-                } else {
-                    LogService.addMessage("Door to " + room.name + " is locked.");
-                    door.isLocked = true;
-                    return;
-                }
             }
 
             vm.room = room;
@@ -110,7 +118,6 @@
         };
 
         vm.takeAllItems = function (vessel) {
-            console.log("Take all: ", vessel.items);
             vessel.items.forEach(function (item, i) {
                 LogService.addMessage(item.name + " added to inventory.");
                 InventoryService.addItem(item);
@@ -153,7 +160,7 @@
             updateStructureStats();
         };
 
-        vm.getRoomById = function (id) {
+        vm.findRoomById = function (id) {
             var i,
                 len;
 
@@ -161,51 +168,15 @@
                 return false;
             }
 
-            len = structure.rooms.length;
+            len = vm.structure.rooms.length;
 
             for (i = 0; i < len; ++i) {
-                if (structure.rooms[i]._id === id) {
-                    return structure.rooms[i];
+                if (vm.structure.rooms[i]._id === id) {
+                    return vm.structure.rooms[i];
                 }
             }
-        };
-    }
 
-    function StructureService($http, $q) {
-        var structure;
-
-        this.getStructureById = function (locationId, structureId) {
-            var deferred;
-
-            deferred = $q.defer();
-
-            if (structure !== undefined) {
-                if (structure.id === structureId) {
-                    deferred.resolve(structure);
-                }
-            } else {
-
-                $http.get('/api/location/' + locationId + '/structure/' + structureId).then(function (res) {
-                    deferred.resolve(res.data);
-                    /*
-var i,
-                        len;
-                    len = res.data.structures.length;
-                    for (i = 0; i < len; ++i) {
-                        if (res.data.structures[i].id === id) {
-                            structure = res.data.structures[i];
-                            deferred.resolve(structure);
-                        }
-                    }
-*/
-                });
-            }
-
-            return deferred.promise;
-        };
-
-        this.getStructure = function () {
-            return structure;
+            return false;
         };
     }
 
@@ -218,14 +189,8 @@ var i,
         'StorageService'
     ];
 
-    StructureService.$inject = [
-        '$http',
-        '$q'
-    ];
-
     angular.module('station')
         .controller('StructureCtrl', StructureCtrl)
-        .directive('stStructure', stStructure)
-        .service('StructureService', StructureService);
+        .directive('stStructure', stStructure);
 
 }(window, window.angular));

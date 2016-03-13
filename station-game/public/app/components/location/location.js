@@ -7,7 +7,7 @@
         vm = this;
 
         LocationService.getLocationById($state.params.id).then(function (data) {
-            vm.location = data.location;
+            vm.location = data;
         });
     }
 
