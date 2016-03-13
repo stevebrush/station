@@ -9,15 +9,20 @@
         };
     }
 
-    function InventoryCtrl(InventoryService) {
+    function InventoryCtrl($rootScope, InventoryService) {
         var vm;
 
         vm = this;
+
+        vm.goBack = function () {
+            $rootScope.state.back();
+        };
 
         vm.items = InventoryService.getItems();
     }
 
     InventoryCtrl.$inject = [
+        '$rootScope',
         'InventoryService'
     ];
 

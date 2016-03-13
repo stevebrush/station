@@ -1,8 +1,9 @@
 <h1>Map</h1>
+<p class="lead">Choose a location to travel.</p>
 <ul>
     <li ng-repeat="location in mapCtrl.locations">
         <a ui-sref="location({ id: location._id })">
-            {{ location.name }}
+            {{ location.name }}...
         </a>
     </li>
 </ul>

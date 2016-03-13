@@ -40,6 +40,14 @@ module.exports = function (grunt) {
                 }]
                 */
             },
+            fonts: {
+                files: [{
+                    expand: true,
+                    cwd: 'public/app/fonts',
+                    src: ['*'],
+                    dest: '<%= buildPath %>/fonts/'
+                }]
+            },
             data: {
                 files: [{
                     expand: true,
@@ -55,7 +63,17 @@ module.exports = function (grunt) {
                     module: 'station.templates',
                     quoteChar: '\'',
                     indentString: '    ',
-                    singleModule: true
+                    singleModule: true,
+                    htmlmin: {
+                        collapseBooleanAttributes: true,
+                        collapseWhitespace: true,
+                        removeAttributeQuotes: true,
+                        removeComments: true,
+                        removeEmptyAttributes: true,
+                        removeRedundantAttributes: true,
+                        removeScriptTypeAttributes: true,
+                        removeStyleLinkTypeAttributes: true
+                    }
                 },
                 src: ['public/app/views/**/*.html', 'public/app/components/**/*.html'],
                 dest: 'tmp/templates.js'

@@ -1,10 +1,10 @@
-<div id="inventory" class="box">
-    <h4 class="box-title">Inventory</h4>
-    <div class="box-body">
-        <ul>
-            <li ng-repeat="item in inventoryCtrl.items">
-                {{ item.name }}
-            </li>
-        </ul>
-    </div>
+<h1>Inventory</h1>
+<p><a href ng-click="inventoryCtrl.goBack()">&larr;&nbsp;Back</a></p>
+<ul ng-show="inventoryCtrl.items.length">
+    <li ng-repeat="item in inventoryCtrl.items">
+        {{ item.name }}
+    </li>
+</ul>
+<div ng-hide="inventoryCtrl.items.length">
+    (No items found.)
 </div>

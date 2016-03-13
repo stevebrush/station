@@ -25,7 +25,25 @@
                 url: '/location/:locationId/structure/:structureId',
                 templateUrl: '../public/app/components/structure/structure.html',
                 controller: 'StructureCtrl as structureCtrl'
+            })
+            .state('inventory', {
+                url: '/inventory',
+                templateUrl: '../public/app/components/inventory/inventory.html',
+                controller: 'InventoryCtrl as inventoryCtrl'
             });
+    }
+
+    function Run($rootScope, $location, $state) {
+        $rootScope.state = {};
+        $rootScope.$on('$stateChangeSuccess', function (ev, to, toParams, from, fromParams) {
+            $rootScope.state.back = function () {
+                if (from.name) {
+                    $state.go(from.name, fromParams);
+                } else {
+                    $state.go('map');
+                }
+            };
+        });
     }
 
     ConfigRoutes.$inject = [
@@ -33,9 +51,17 @@
         '$urlRouterProvider'
     ];
 
+    Run.$injext = [
+        '$rootScope',
+        '$location',
+        '$state'
+    ];
+
     angular.module('station', [
         'ui.router',
         'station.templates'
-    ]).config(ConfigRoutes);
+    ])
+        .config(ConfigRoutes)
+        .run(Run);
 
 }(window.angular));

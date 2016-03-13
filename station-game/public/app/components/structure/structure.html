@@ -1,67 +1,48 @@
-<div class="row">
-    <div class="col-sm-12">
-        <div id="room">
-            <div class="page-header">
-                <div class="panel panel-default panel-body">
-                    <h4>{{:: structureCtrl.structure.name }}</h4>
-                    <div class="text-muted">
-                        <p>{{ structureCtrl.structure.percentLooted | percentage }} looted</p>
-                        <p>{{ structureCtrl.structure.numItems - structureCtrl.structure.numItemsFound }} items remaining</p>
-                    </div>
-                </div>
-                <h1>{{ structureCtrl.room.name }}</h1>
-                <p ng-if="structureCtrl.room.isScanned" class="lead">{{ structureCtrl.room.description }}</p>
-                <div ng-if="!structureCtrl.room.isScanned">
-                    <p class="lead">???</p>
-                    <p>
-                        <a href class="" ng-click="structureCtrl.scanRoom(structureCtrl.room)">Scan Room</a>
-                    </p>
-                </div>
-            </div>
-            <ul ng-show="structureCtrl.room.isScanned">
-                <li ng-repeat="door in structureCtrl.room.doors">
-                    <a class="" href ng-click="structureCtrl.openDoor(door)" data-this-room="{{ thisRoom = structureCtrl.findRoomById(door.roomId) }}">
-                        <div ng-show="door.isExit">{{::door.name }}</div>
-                        <div ng-hide="door.isExit">
-                            <div ng-hide="door.entryAttempted || thisRoom.isScanned">Door</div>
-                            <div ng-show="door.entryAttempted || thisRoom.isScanned">
-                                <span ng-show="thisRoom.isScanned">{{::door.name }} ({{:: door.position }})</span>
-                                <span ng-hide="thisRoom.isScanned">Door</span>
-                                <span ng-show="door.isLocked">(Locked)</span>
-                            </div>
-                        </div>
+<div id="room">
+    <h1>{{ structureCtrl.room.name }} <span class="text-muted">({{:: structureCtrl.structure.name }})</span></h1>
+    <p class="lead" ng-show="structureCtrl.room.description">
+        <span ng-show="structureCtrl.room.isScanned">{{ structureCtrl.room.description }}</span>
+        <span ng-hide="structureCtrl.room.isScanned">???</span>
+    </p>
+    <p ng-hide="structureCtrl.room.isScanned">
+        <a class="btn" href ng-click="structureCtrl.scanRoom(structureCtrl.room)">Scan Room</a>
+    </p>
+    <ul ng-show="structureCtrl.room.isScanned">
+        <li ng-repeat="vessel in structureCtrl.room.vessels">
+            <a class="btn" href ng-click="structureCtrl.openVessel(vessel)" ng-class="{'btn-muted': !vessel.items.length}">
+                {{ vessel.name }}
+            </a>
+            <span class="text-muted" ng-show="!vessel.items.length">(Empty)</span>
+            <ul ng-show="vessel.isOpen && vessel.items.length">
+                <li ng-repeat="item in vessel.items">
+                    <a href ng-click="structureCtrl.selectItem(item)">
+                        {{ item.name }}
                     </a>
-                </li>
-                <li ng-repeat="vessel in structureCtrl.room.vessels">
-                    <a class="" href ng-click="structureCtrl.openVessel(vessel)">
-                        {{ vessel.name }} <span ng-show="!vessel.items.length">(Empty)</span>
-                    </a>
-                    <ul ng-show="vessel.isOpen && vessel.items.length">
-                        <li ng-repeat="item in vessel.items">
-                            <a class="" href ng-click="structureCtrl.selectItem(item)">
-                                {{ item.name }}
-                            </a>
-                            <ul class="panel panel-default panel-body" ng-show="item.isSelected">
-                                <li>
-                                    <p>{{ item.description }}</p>
-                                    <a class="" href ng-click="structureCtrl.takeItem(item)">Take</a> <a class="" href ng-click="item.isSelected = false">Cancel</a>
-                                </li>
-                            </ul>
-                        </li>
+                    <ul ng-show="item.isSelected">
                         <li>
-                            <a class="" href ng-click="structureCtrl.takeAllItems(vessel)">(Take all)</a>
+                            <p>{{ item.description }}</p>
+                            <a class="btn" href ng-click="structureCtrl.takeItem(item)">Take</a> <a class="btn btn-muted" href ng-click="item.isSelected = false">Cancel</a>
                         </li>
                     </ul>
                 </li>
+                <li>
+                    <a class="btn" href ng-click="structureCtrl.takeAllItems(vessel)">Take all</a>
+                </li>
             </ul>
-        </div>
-    </div>
+        </li>
+        <li ng-repeat="door in structureCtrl.room.doors">
+            <a href ng-click="structureCtrl.openDoor(door)" data-this-room="{{ thisRoom = structureCtrl.findRoomById(door.roomId) }}">
+                <span ng-show="door.isExit">&larr;&nbsp;Exit to {{::door.name }}</span>
+                <span ng-hide="door.isExit">
+                    <span ng-hide="door.entryAttempted || thisRoom.isScanned">Door...</span>
+                    <span ng-show="door.entryAttempted || thisRoom.isScanned">
+                        <span ng-show="thisRoom.isScanned">{{::door.name }}...</span><span ng-hide="thisRoom.isScanned">Door...</span>
+                    </span>
+                </span>
+            </a>
+            <span class="text-muted" ng-show="door.entryAttempted && door.isLocked">(Locked)</span>
+            <span class="text-muted" ng-show="door.isPrevious">(Back)</span>
+        </li>
+    </ul>
 </div>
-<div class="row">
-    <div class="col-sm-12">
-        <st-inventory></st-inventory>
-    </div>
-    <div class="col-sm-12">
-        <st-log></st-log>
-    </div>
-</div>
+<st-log></st-log>

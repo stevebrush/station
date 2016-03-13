@@ -11,14 +11,16 @@
 
             deferred = $q.defer();
 
+/*
             if (locations.length) {
                 deferred.resolve(locations);
             } else {
+*/
                 $http.get('/api/location').then(function (res) {
                     locations = res.data.locations;
                     deferred.resolve(locations);
                 });
-            }
+//            }
 
             return deferred.promise;
         };

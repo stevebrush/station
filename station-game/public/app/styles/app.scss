@@ -17,22 +17,171 @@
 
 @import "_meyer-reset";
 
+@font-face {
+    font-family: 'dos';
+    src: url('../fonts/Perfect-DOS-VGA-437-Win.ttf');
+}
+
+@font-face {
+    font-family: 'm-plus';
+    src: url('../fonts/mplus-1m-regular.ttf');
+}
+
 $primary-color: #eecc11;
+$primary-color-inverse: #000;
+$primary-color-darkened: darken($primary-color, 30%);
 
 body {
-    background-color: #000;
+    background-color: $primary-color-inverse;
     color: $primary-color;
-    font-family: DOS, Monaco, Menlo, Consolas, "Courier New", monospace;
+    font-family: 'm-plus', monospace;
+    font-size: 16px;
     line-height: 20px;
     margin: 0;
     padding: 0;
+    letter-spacing: -0.5px;
 }
 
 a {
     color: $primary-color;
 
     &:hover,
-    &:focus {
+    &:focus,
+    &:active {
         color: $primary-color;
     }
+}
+
+h1, h2, h3, h4, h5, h6 {
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    font-size: 40px;
+    line-height: 40px;
+}
+
+li {
+    margin-bottom: 20px;
+
+    ul {
+        margin-top: 20px;
+        margin-left: 20px;
+    }
+}
+
+p {
+    margin-bottom: 20px;
+}
+
+.btn {
+    text-transform: uppercase;
+    text-decoration: none;
+    background-color: $primary-color;
+    color: $primary-color-darkened;
+    font-weight: bold;
+    display: inline-block;
+    padding-left: 10px;
+    padding-right: 10px;
+    height: 20px;
+
+    &:hover,
+    &:focus,
+    &:active {
+        color: $primary-color-darkened;
+    }
+
+    &:before {
+        content: "< ";
+    }
+    &:after {
+        content: " >"
+    }
+
+    &.btn-muted {
+        background-color: $primary-color-darkened;
+        color: $primary-color-inverse;
+    }
+}
+
+.container {
+    padding: 40px 20px;
+
+    /*
+    li {
+        display: block;
+
+        &:after {
+            content: "";
+            clear: both;
+            display: block;
+        }
+
+        a {
+            span {
+                display: inline-block;
+                float: left;
+                margin-right: 2px;
+            }
+        }
+    }
+    */
+}
+
+.lead {
+    color: $primary-color-darkened;
+    border-bottom: 1px solid $primary-color-darkened;
+    padding-bottom: 19px;
+}
+
+.text-muted {
+    color: $primary-color-darkened;
+}
+
+#header {
+    background-color: $primary-color;
+    color: $primary-color-inverse;
+    height: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    .navbar-brand {
+        float: left;
+        margin: 0 20px 0 0;
+    }
+
+    .nav {
+        float: left;
+
+        li {
+            display: inline-block;
+            float: left;
+            margin: 0;
+
+            a {
+                display: block;
+                color: $primary-color-darkened;
+                font-weight: bold;
+                text-decoration: none;
+
+                u {
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+}
+
+#log {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    border-top: 1px solid $primary-color;
+    overflow: auto;
+    padding: 20px;
 }

@@ -56,7 +56,7 @@
         StructureService.findStructureById($state.params.locationId, $state.params.structureId).then(function (data) {
             vm.structure = data;
             vm.room = vm.findRoomById(vm.structure.entrance);
-            updateStructureStats();
+            //updateStructureStats();
         });
 
         vm.openVessel = function (vessel) {
@@ -68,22 +68,30 @@
 
         vm.openDoor = function (door) {
             var key,
-                prevRoom,
                 room;
 
             door.entryAttempted = true;
             room = vm.findRoomById(door.roomId);
+
+            // Set the previous room.
+            if (room.doors) {
+                room.doors.forEach(function (door) {
+                    door.isPrevious = false;
+                    if (door.roomId === vm.room._id) {
+                        door.isPrevious = true;
+                    }
+                });
+            }
 
             if (door.isLocked) {
                 key = InventoryService.findItemById(door.keyId);
 
                 if (key) {
                     door.isLocked = false;
-                    prevRoom = vm.room;
 
                     // Also unlock the next room's door.
                     room.doors.forEach(function (door) {
-                        if (door.roomId === prevRoom._id) {
+                        if (door.roomId === vm.room._id) {
                             door.isLocked = false;
                         }
                     });
@@ -93,7 +101,7 @@
 
                     LogService.addMessage("Used key to " + room.name + ".");
                 } else {
-                    LogService.addMessage("Door to " + room.name + " is locked.");
+                    LogService.addMessage("Door is locked.");
                 }
 
                 return;
@@ -110,6 +118,7 @@
                 return;
             }
 
+            door.isPrevious = true;
             vm.room = room;
         };
 
@@ -131,7 +140,7 @@
             }
 
             RoomService.getNumItemsFound(vm.room);
-            updateStructureStats();
+            //updateStructureStats();
         };
 
         vm.takeItem = function (item) {
@@ -150,14 +159,14 @@
             }
 
             RoomService.getNumItemsFound(vm.room);
-            updateStructureStats();
+            //updateStructureStats();
         };
 
         vm.scanRoom = function (room) {
             LogService.addMessage("Scanning " + room.name + "...");
             room.isScanned = true;
             RoomService.getNumItemsFound(room);
-            updateStructureStats();
+            //updateStructureStats();
         };
 
         vm.findRoomById = function (id) {
