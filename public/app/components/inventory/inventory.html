@@ -1,5 +1,7 @@
-<h1>Inventory</h1>
-<p><a href ng-click="inventoryCtrl.goBack()">&larr;&nbsp;Back</a></p>
+<div class="page-header">
+    <h1>Inventory</h1>
+    <p><a href ng-click="inventoryCtrl.goBack()">&larr;&nbsp;Back</a></p>
+</div>
 <ul ng-show="inventoryCtrl.items.length">
     <li ng-repeat="item in inventoryCtrl.items">
         {{ item.name }}

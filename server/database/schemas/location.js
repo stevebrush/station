@@ -8,8 +8,6 @@
     structureSchema = require(__dirname + '/structure');
 
     module.exports = mongoose.Schema({
-        coordX: Number,
-        coordY: Number,
         description: String,
         name: String,
         structures: [structureSchema]

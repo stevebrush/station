@@ -11,10 +11,6 @@
             default: "Main Entrance"
         },
         description: String,
-        isLocked: {
-            type: Boolean,
-            default: false
-        },
         roomId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Room'

@@ -2,7 +2,6 @@
     'use strict';
 
     var DatabaseObject,
-        merge,
         Queue,
         utils;
 
@@ -10,7 +9,6 @@
     utils = require('../utils');
     DatabaseObject = require(__dirname + '/DatabaseObject');
     Queue = require(__dirname + '/Queue');
-    merge = require('merge');
 
 
     function Room(options) {
@@ -21,14 +19,14 @@
 
         that = this;
 
-        this.ready(function () {
+        that.ready(function () {
 
-            this.queue('vessels', function (vessel) {
-                vessel.init(that.db.create('vessels', vessel.dbValues), that);
+            that.queue('vessels', function (vessel) {
+                vessel.init(that.db.addTo('vessels', vessel.db.values), that);
             });
 
             that.queue('doors', function (door) {
-                door.init(that.db.create('doors', door.dbValues), that);
+                door.init(that.db.addTo('doors', door.db.values), that);
             });
 
             // When the floor's ready...
@@ -45,7 +43,7 @@
                     that.parent.queue('rooms', function (room) {
                         if (room.slug === door.slug) {
                             found = true;
-                            door.db.set('name', room.dbValues.name);
+                            door.db.set('name', room.db.values.name);
                             door.db.set('roomId', DatabaseObject.createId(room.db.document()._id));
                         }
                     });
@@ -63,10 +61,6 @@
     utils.mixin(Room, DatabaseObject);
     utils.mixin(Room, Queue);
 
-
-    /**
-     * Custom prototype functions.
-     */
 
     Room.prototype.doors = function (doors) {
         this.enqueue('doors', doors);

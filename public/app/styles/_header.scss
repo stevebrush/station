@@ -1,0 +1,37 @@
+#header {
+    background-color: $primary-color;
+    color: $primary-color-inverse;
+    height: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    .navbar-brand {
+        float: left;
+        margin: 0 20px 0 0;
+    }
+
+    .nav {
+        float: left;
+
+        li {
+            display: inline-block;
+            float: left;
+            margin: 0;
+
+            a {
+                display: block;
+                color: $primary-color-darkened;
+                font-weight: bold;
+                text-decoration: none;
+
+                u {
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+}

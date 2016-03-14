@@ -1,6 +1,10 @@
 (function () {
     'use strict';
 
+    var merge;
+
+    merge = require('merge');
+
     function lastItem(arr) {
         return arr[arr.length - 1];
     }
@@ -23,6 +27,7 @@
 
     module.exports = {
         lastItem: lastItem,
+        merge: merge,
         mixin: mixin,
         slugify: slugify
     };

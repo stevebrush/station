@@ -1,0 +1,11 @@
+#log {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    border-top: 1px solid $primary-color;
+    overflow: auto;
+    padding: 20px;
+}

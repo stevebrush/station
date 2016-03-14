@@ -2,13 +2,10 @@
     'use strict';
 
     var DatabaseObject,
-        merge,
         utils;
 
-    merge = require('merge');
     utils = require('../utils');
     DatabaseObject = require(__dirname + '/DatabaseObject');
-
 
     function Entrance(options) {
         var that;
@@ -26,24 +23,27 @@
             positions = ['n', 's', 'e', 'w'];
             positionsLength = positions.length;
 
+            // Loop through the structure's floors.
             that.parent.queue('floors', function (floor) {
                 if (floor.slug === that.settings.floorSlug) {
+
+                    // Floor found, now loop through the floor's rooms.
                     floor.queue('rooms', function (room) {
                         var i,
                             position,
                             usedPositions;
 
+                        usedPositions = [];
+
                         if (room.slug === that.settings.roomSlug) {
 
-                            usedPositions = [];
-
                             // Add the entrance to the structure.
-                            that.parent.db.create('entrances', merge.recursive(true, that.dbValues, {
+                            that.parent.db.addTo('entrances', utils.merge.recursive(true, that.db.values, {
                                 roomId: DatabaseObject.createId(room.db.document()._id)
                             }));
 
                             // Add an exit to the room.
-                            room.db.read('doors').forEach(function (door) {
+                            room.db.get('doors').forEach(function (door) {
                                 usedPositions.push(door.position);
                             });
 
@@ -58,7 +58,7 @@
                                 throw new Error("ERROR! This room doesn't have enough walls to accommodate an exit.");
                             }
 
-                            room.db.create('doors', {
+                            room.db.addTo('doors', {
                                 name: room.parent.parent.parent.db.document().name,
                                 isExit: true,
                                 position: position

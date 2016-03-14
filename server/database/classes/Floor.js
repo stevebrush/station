@@ -25,7 +25,7 @@
 
         that.ready(function () {
             that.queue('rooms', function (room) {
-                room.init(that.db.create('rooms', room.dbValues), that);
+                room.init(that.db.addTo('rooms', room.db.values), that);
             });
             return that;
         });

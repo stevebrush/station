@@ -2,21 +2,15 @@
     'use strict';
 
     var mongoose,
-        roomSchema,
-        Schema;
+        roomSchema;
 
     mongoose = require('mongoose');
     roomSchema = require(__dirname + '/room');
-    Schema = mongoose.Schema;
 
-    module.exports = Schema({
+    module.exports = mongoose.Schema({
         name: {
             type: String,
             default: "Floor"
-        },
-        numItems: {
-            type: Number,
-            default: 0
         },
         rooms: [roomSchema]
     });

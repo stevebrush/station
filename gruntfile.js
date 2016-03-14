@@ -30,25 +30,10 @@ module.exports = function (grunt) {
             }
         },
         copy: {
-            html: {
-                /*
-                files: [{
-                    expand: true,
-                    cwd: 'public/app/',
-                    src: ['index.html'],
-                    dest: '<%= buildPath %>/'
-                }]
-                */
-            },
             fonts: {
                 files: [{
                     expand: true,
                     cwd: 'public/app/fonts',
-                    src: ['*'],
-                    dest: '<%= buildPath %>/fonts/'
-                }, {
-                    expand: true,
-                    cwd: 'bower_components/font-awesome/fonts/',
                     src: ['*'],
                     dest: '<%= buildPath %>/fonts/'
                 }]
@@ -115,10 +100,6 @@ module.exports = function (grunt) {
             scripts: {
                 files: ['public/app/**/*.js'],
                 tasks: ['concat_sourcemap:app', 'uglify:app']
-            },
-            html: {
-                files: ['public/app/**/*.html'],
-                tasks: ['copy:html']
             },
             templates: {
                 files: ['public/app/components/**/*.html'],

@@ -1,47 +1,25 @@
 (function () {
-    'use strict';
+    "use strict";
 
-    var utils;
+    var DatabaseObject,
+        utils;
+
 
     utils = require('../utils');
+    DatabaseObject = require(__dirname + '/DatabaseObject');
 
 
     function Item(options) {
-        var callbacks,
-            that,
-            waiting;
+        var that;
+
+        DatabaseObject.call(this, options);
 
         that = this;
-        that.dbObject = undefined;
-        that.dbValues = options;
-        that.slug = utils.slugify(options.name);
-        that.trail = "";
-
-        callbacks = [];
-        waiting = {};
-
-        that.init = function (dbObject, parent) {
-            that.dbObject = dbObject;
-            that.trail = parent.trail + "|" + that.slug;
-
-            callbacks.forEach(function (callback) {
-                if (typeof callback.directive === "function") {
-                    callback.directive.apply(that, callback.args);
-                }
-            });
-
-            return that;
-        };
-
-        that.ready = function (callback, args) {
-            callbacks.push({
-                directive: callback,
-                args: args
-            });
-        };
-
-        return that;
     }
+
+
+    utils.mixin(Item, DatabaseObject);
+
 
     Item.static = {};
 
@@ -55,6 +33,7 @@
     };
 
     Item.static.templates = {};
+
 
     module.exports = Item;
 }());

@@ -17,9 +17,7 @@
         vm.save = function () {
             console.log("Save game1");
             /**
-                When user clicks "save", retrieve all locally changed items, and push them to local storage.
-
-
+             * When user clicks "save", retrieve all locally changed items, and push them to local storage.
              */
         };
 

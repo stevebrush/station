@@ -8,13 +8,15 @@
     Schema = mongoose.Schema;
 
     module.exports = Schema({
-        categoryId: {
-            type: Schema.Types.ObjectId,
-            ref: 'ItemCategory'
-        },
         description: String,
-        name: String,
-        quantity: Number,
+        name: {
+            type: String,
+            default: "Thing"
+        },
+        quantity: {
+            type: Number,
+            default: 1
+        },
         value: Number,
         weight: Number
     });

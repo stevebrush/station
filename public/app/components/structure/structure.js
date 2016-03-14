@@ -11,10 +11,6 @@
         return arr;
     }
 
-    function calculatePercentage(part, total) {
-        return (part && part > 0) ? (part / total).toFixed(2) : 0.0;
-    }
-
     function stStructure() {
         return {
             restrict: 'AEC',
@@ -27,39 +23,14 @@
         };
     }
 
-    function StructureCtrl($state, StructureService, InventoryService, LogService, RoomService, StorageService) {
+    function StructureCtrl($state, StructureService, InventoryService, LogService, StorageService) {
         var vm;
 
         vm = this;
 
-        /*
-        function updateStructureStats() {
-
-            var structureNumItemsFound;
-
-            structureNumItemsFound = 0;
-
-            vm.structure.rooms.forEach(function (room) {
-                var roomNumItemsFound = room.numItems;
-                room.vessels.forEach(function (vessel) {
-                    roomNumItemsFound -= vessel.items.length;
-                    vessel.numItemsFound = vessel.numItems - vessel.items.length;
-                });
-                room.numItemsFound = roomNumItemsFound;
-                structureNumItemsFound += room.numItemsFound;
-            });
-
-            vm.structure.numItemsFound = structureNumItemsFound;
-            vm.structure.percentLooted = calculatePercentage(vm.structure.numItemsFound, vm.structure.numItems);
-            vm.room.percentExplored = (vm.room.isScanned) ? calculatePercentage(vm.room.numItemsFound, vm.room.numItems) : 0.0;
-        }
-        */
-
-        StructureService.findStructureById($state.params.locationId, $state.params.structureId).then(function (data) {
+        StructureService.getStructureById($state.params.locationId, $state.params.structureId).then(function (data) {
             vm.structure = data;
-            //vm.room = vm.findRoomById(vm.structure.entrance);
             vm.room = vm.findRoomById($state.params.roomId);
-            //updateStructureStats();
         });
 
         vm.openVessel = function (vessel) {
@@ -87,7 +58,7 @@
             }
 
             if (door.isLocked) {
-                key = InventoryService.findItemById(door.keyId);
+                key = InventoryService.getItemById(door.keyId);
 
                 if (key) {
                     door.isLocked = false;
@@ -126,7 +97,7 @@
         };
 
         vm.selectItem = function (item) {
-            item.isSelected = true;
+            item.isSelected = (item.isSelected) ? false : true;
         };
 
         vm.takeAllItems = function (vessel) {
@@ -141,9 +112,6 @@
             if (vessel.items.length === 0) {
                 vm.openVessel(vessel);
             }
-
-            RoomService.getNumItemsFound(vm.room);
-            //updateStructureStats();
         };
 
         vm.takeItem = function (item) {
@@ -160,18 +128,16 @@
             if (item.parent.items.length === 0) {
                 vm.openVessel(item.parent);
             }
-
-            RoomService.getNumItemsFound(vm.room);
-            //updateStructureStats();
         };
 
         vm.scanRoom = function (room) {
-            LogService.addMessage("Scanning " + room.name + "...");
+            LogService.addMessage(room.name + " scanned.");
             room.isScanned = true;
-            RoomService.getNumItemsFound(room);
-            //updateStructureStats();
         };
 
+        /**
+         * Returns a room within the structure, based on its ID.
+         */
         vm.findRoomById = function (id) {
             var i,
                 len;
@@ -198,7 +164,6 @@
         'StructureService',
         'InventoryService',
         'LogService',
-        'RoomService',
         'StorageService'
     ];
 

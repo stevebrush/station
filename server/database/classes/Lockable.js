@@ -7,7 +7,11 @@
     utils = require('../utils');
     DatabaseObject = require(__dirname + '/DatabaseObject');
 
-    function Lockable() {}
+    function Lockable() {
+        var that;
+
+        that = this;
+    }
 
     Lockable.prototype.lock = function (trail) {
         this.ready(function () {
@@ -26,7 +30,7 @@
     };
 
     Lockable.addKey = function (item) {
-        Lockable.keys[item.trail] = item.dbObject._id;
+        Lockable.keys[item.trail] = item.db.document()._id;
     };
 
     Lockable.getKey = function (trail) {

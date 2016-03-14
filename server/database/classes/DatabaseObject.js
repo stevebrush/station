@@ -1,12 +1,10 @@
 (function () {
     'use strict';
 
-    var merge,
-        mongoose,
+    var mongoose,
         utils;
 
 
-    merge = require('merge');
     mongoose = require('mongoose');
     utils = require('../utils');
 
@@ -18,39 +16,39 @@
         _dbObject = undefined;
         that = this;
 
-        this.settings = merge.recursive(true, this.defaults || {}, options);
-        this.callbacks = [];
-        this.dbValues = this.settings;
-        this.parent = undefined;
-        this.isReady = false;
-        this.slug = utils.slugify(this.settings.name);
-        this.trail = "";
+        that.settings = utils.merge.recursive(true, that.defaults || {}, options);
+        that.callbacks = [];
+        that.parent = undefined;
+        that.isReady = false;
+        that.trail = "";
 
-        this.db = {
-            create: function (documentName, obj) {
+        // Methods to interact with database.
+        that.db = {
+            addTo: function (documentName, obj) {
                 _dbObject[documentName].push(obj);
                 return utils.lastItem(_dbObject[documentName]);
             },
             document: function () {
                 return _dbObject;
             },
-            read: function (documentName) {
-                return _dbObject[documentName];
+            get: function (key) {
+                return _dbObject[key];
             },
             save: function () {
                 _dbObject.save();
             },
             set: function (key, value) {
                 _dbObject[key] = value
-            }
+            },
+            values: that.settings
         };
 
-        this.init = function (dbObject, parent) {
+        that.init = function (dbObject, parent) {
             _dbObject = dbObject;
 
-            this.parent = parent;
-            this.slug = utils.slugify(this.settings.name);
-            this.trail = (parent === undefined) ? this.slug : parent.trail + "|" + this.slug;
+            that.parent = parent;
+            that.slug = utils.slugify(that.settings.name);
+            that.trail = (parent === undefined) ? that.slug : parent.trail + "|" + that.slug;
 
             function doCallbacks() {
                 var callbacks;
@@ -74,13 +72,16 @@
             }
 
             doCallbacks();
-            this.isReady = true;
+            that.isReady = true;
 
             return this;
         };
     }
 
-
+    /**
+     * Adds any number of callbacks to this object's queue,
+     * to be executed at the end of its initialization.
+     */
     DatabaseObject.prototype.ready = function (callback, args) {
         if (this.isReady) {
             callback.apply(this, args);
@@ -92,6 +93,9 @@
         });
     };
 
+    /**
+     * Generates a mongoose-recognized document ID.
+     */
     DatabaseObject.createId = function (str) {
         return new mongoose.Types.ObjectId(str);
     };

@@ -1,33 +1,14 @@
-/*
-@import "_bootswatch-cyborg";
-@import "../../../bower_components/bootstrap-sass/assets/stylesheets/_bootstrap";
-@import "_bootswatch";
-
-.container {
-    max-width: 340px;
-}
-.page-header {
-    text-align: center;
-}
-
-@import "../components/map/map";
-@import "../components/location/location";
-@import "../components/structure/structure";
-*/
-
-
-@import "_meyer-reset";
-@import "../../../bower_components/font-awesome/scss/font-awesome.scss";
-
-@font-face {
-    font-family: 'dos';
-    src: url('../fonts/Perfect-DOS-VGA-437-Win.ttf');
-}
-
 @font-face {
     font-family: 'm-plus';
     src: url('../fonts/mplus-1m-regular.ttf');
 }
+
+@font-face {
+    font-family: 'm-plus-medium';
+    src: url('../fonts/mplus-1m-medium.ttf');
+}
+
+@import "_meyer-reset";
 
 $primary-color: #eecc11;
 $primary-color-inverse: #000;
@@ -55,6 +36,7 @@ a {
 }
 
 h1, h2, h3, h4, h5, h6 {
+    font-family: 'm-plus-medium', monospace;
     text-transform: uppercase;
     margin-bottom: 20px;
     font-size: 40px;
@@ -141,52 +123,6 @@ p {
     color: $primary-color-darkened;
 }
 
-#header {
-    background-color: $primary-color;
-    color: $primary-color-inverse;
-    height: 20px;
-    padding-left: 20px;
-    padding-right: 20px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
 
-    .navbar-brand {
-        float: left;
-        margin: 0 20px 0 0;
-    }
-
-    .nav {
-        float: left;
-
-        li {
-            display: inline-block;
-            float: left;
-            margin: 0;
-
-            a {
-                display: block;
-                color: $primary-color-darkened;
-                font-weight: bold;
-                text-decoration: none;
-
-                u {
-                    text-decoration: underline;
-                }
-            }
-        }
-    }
-}
-
-#log {
-    position: fixed;
-    width: 100%;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 120px;
-    border-top: 1px solid $primary-color;
-    overflow: auto;
-    padding: 20px;
-}
+@import "_header";
+@import "_log";

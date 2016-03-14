@@ -6,7 +6,7 @@
 
         structures = [];
 
-        this.findStructureById = function (locationId, structureId) {
+        this.getStructureById = function (locationId, structureId) {
             var deferred,
                 found;
 

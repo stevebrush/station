@@ -18,10 +18,9 @@
     routes = require('./server/routes');
     express = require('express');
     Database = require('./server/database');
+    mongoose = require('mongoose');
     bodyParser = require('body-parser');
     handlebars  = require('express-handlebars');
-    mongoose = require('mongoose');
-
 
     environment = process.env.NODE_ENV || 'development';
     port = process.env.PORT || 5000;

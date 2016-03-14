@@ -3,63 +3,52 @@
 
     var DatabaseObject,
         Item,
-        merge,
         Queue,
-        templates,
         utils;
 
-    merge = require('merge');
     utils = require('../utils');
     DatabaseObject = require(__dirname + '/DatabaseObject');
     Queue = require(__dirname + '/Queue');
     Item = require(__dirname + '/Item');
 
-    templates = {};
-
     function Vessel(options) {
-        var defaults,
-            settings,
-            that;
+        var that;
 
-        defaults = templates[options.name.replace(">", "")];
-        settings = merge.recursive(true, defaults, options);
-        settings.name = defaults.name;
+        // Is the client asking for a template?
+        if (options.name.indexOf(">") === 0) {
+            this.defaults = Vessel.static.templates[options.name.replace(">", "")];
+            options.name = this.defaults.name;
+        }
 
-        DatabaseObject.call(this, settings);
+        DatabaseObject.call(this, options);
         Queue.call(this);
 
         that = this;
 
         that.ready(function () {
-            var onCreateResponse,
+            var sandbox,
                 temp;
 
             // If the vessel has an onCreate callback, let's fire it.
-            if (typeof settings.onCreate === "function") {
+            if (typeof that.settings.onCreate === "function") {
 
-                onCreateResponse = {};
-                settings.onCreate.call(onCreateResponse);
+                // Pass in an empty object (sandbox) for the onCreate context.
+                // We'll then check it for various properties once it's returned.
+                sandbox = {};
+                that.settings.onCreate.call(sandbox);
 
-                if (onCreateResponse.hasOwnProperty('items')) {
+                if (sandbox.hasOwnProperty('items')) {
                     temp = that.getQueue('items') || [];
-
-                    onCreateResponse.items.forEach(function (item) {
+                    sandbox.items.forEach(function (item) {
                         temp.push(item);
                     });
-
                     that.enqueue('items', temp);
                 }
             }
 
+            // Initialize items.
             that.queue('items', function (item) {
-
-                that.db.document().numItems++;
-                that.parent.db.document().numItems++;
-                that.parent.parent.db.document().numItems++;
-                that.parent.parent.parent.db.document().numItems++;
-
-                // Initialize the item object.
-                item.init(that.db.create('items', item.dbValues), that);
+                item.init(that.db.addTo('items', item.db.values), that);
             });
 
             return that;
@@ -78,7 +67,14 @@
     };
 
 
-    function mayContain(items) {
+
+    Vessel.static = {};
+
+    /**
+     * Allow a random number of templated items in a vessel template.
+     * Also determine if the item should exist in the vessel, at random.
+     */
+    Vessel.static.mayContain = function (items) {
         var temp;
 
         temp = [];
@@ -92,7 +88,7 @@
                 itemTemplate = Item.static.templates[item.name.replace(">", "")];
 
                 if (itemTemplate !== undefined) {
-                    item = merge.recursive(true, itemTemplate, item);
+                    item = utils.merge.recursive(true, itemTemplate, item);
                     item.name = itemTemplate.name;
                 }
             }
@@ -105,19 +101,15 @@
         });
 
         return temp;
-    }
-
-    function template(name, options) {
-        templates[name] = options;
-        return Vessel.static;
-    }
-
-
-    Vessel.static = {
-        mayContain: mayContain,
-        template: template,
-        templates: templates
     };
+
+    Vessel.static.template = function (name, options) {
+        Vessel.static.templates[name] = options;
+        return Vessel.static;
+    };
+
+    Vessel.static.templates = {};
+
 
 
     module.exports = Vessel;

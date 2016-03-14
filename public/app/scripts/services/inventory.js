@@ -14,16 +14,19 @@
             return items;
         };
 
-        this.findItemById = function (id) {
+        this.getItemById = function (id) {
             var i,
                 len;
+
             id = id.toString();
             len = items.length;
+
             for (i = 0; i < len; ++i) {
                 if (items[i]._id === id) {
                     return items[i];
                 }
             }
+
             return false;
         };
 
@@ -31,15 +34,18 @@
             var i,
                 index,
                 len;
+
             index = -1;
             id = id.toString();
             len = items.length;
+
             for (i = 0; i < len; ++i) {
                 if (items[i]._id === id) {
                     index = i;
                     break;
                 }
             }
+
             if (index > -1) {
                 items.splice(index, 1);
             }

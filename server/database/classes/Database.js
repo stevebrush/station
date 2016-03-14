@@ -28,8 +28,6 @@
     Database.models = {};
     Database.models.Location = require('../models/location');
 
-    Database.schemas = {};
-
 
     module.exports = Database;
 }());

@@ -2,12 +2,10 @@
     "use strict";
 
     var DatabaseObject,
-        model,
         Queue,
         utils;
 
 
-    model = require('../models/location');
     utils = require('../utils');
     DatabaseObject = require(__dirname + '/DatabaseObject');
     Queue = require(__dirname + '/Queue');
@@ -23,7 +21,7 @@
 
         that.ready(function () {
             that.queue('structures', function (structure) {
-                structure.init(that.db.create('structures', structure.dbValues), that);
+                structure.init(that.db.addTo('structures', structure.db.values), that);
             });
             return that;
         });

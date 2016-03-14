@@ -21,8 +21,8 @@
 
         that.ready(function () {
             that.queue('floors', function (floor, i) {
-                floor.dbValues.name = "Floor " + (parseInt(i) + 1);
-                floor.init(that.db.create('floors', floor.dbValues), that);
+                floor.db.values.name = "Floor " + (parseInt(i) + 1);
+                floor.init(that.db.addTo('floors', floor.db.values), that);
             });
             that.queue('entrances', function (entrance) {
                 entrance.init(undefined, that);

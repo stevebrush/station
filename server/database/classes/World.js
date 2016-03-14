@@ -15,19 +15,19 @@
 
     function World() {
 
-        var model,
-            self;
+        var locationModel,
+            that;
 
         Queue.call(this);
 
-        self = this;
-        model = require('../models/location');
+        that = this;
+        locationModel = require('../models/location');
 
-        self.init = function (callback) {
-            this.queue('locations', function (location) {
+        that.init = function (callback) {
+            that.queue('locations', function (location) {
                 var loc;
 
-                loc = new model(location.dbValues);
+                loc = new locationModel(location.db.values);
 
                 location.init(loc);
                 location.db.save();
@@ -35,10 +35,10 @@
                 console.log("Location:", JSON.stringify(location.db.document()));
             });
 
-            console.log("World building complete.");
+            console.log("World building complete!");
 
             if (typeof callback === "function") {
-                callback.call(self);
+                callback.call(that);
             }
         };
     }
@@ -53,7 +53,6 @@
     };
 
     World.Item = Item.static;
-
     World.Vessel = Vessel.static;
 
 
