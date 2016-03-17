@@ -8,7 +8,10 @@
     Schema = mongoose.Schema;
 
     module.exports = Schema({
-        description: String,
+        description: {
+            type: String,
+            default: "An indescribable object."
+        },
         name: {
             type: String,
             default: "Thing"

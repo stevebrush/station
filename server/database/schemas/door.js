@@ -33,5 +33,7 @@
             type: Schema.Types.ObjectId,
             ref: 'Room'
         },
+    }, {
+        _id: false
     });
 }());

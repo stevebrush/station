@@ -13,5 +13,7 @@
             default: "Floor"
         },
         rooms: [roomSchema]
+    }, {
+        _id: false
     });
 }());

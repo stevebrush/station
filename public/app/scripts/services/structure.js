@@ -1,44 +1,41 @@
 (function (window, angular) {
     "use strict";
 
-    function StructureService($http, $q) {
-        var structures;
+    function Structure(Location) {
+        function instance(options) {
+            var callbacks,
+                that;
 
-        structures = [];
+            that = this;
+            callbacks = [];
 
-        this.getStructureById = function (locationId, structureId) {
-            var deferred,
-                found;
+            that.location = new Location({
+                locationId: options.locationId
+            });
 
-            deferred = $q.defer();
-            found = false;
-
-            if (structures.length > 0) {
-                structures.forEach(function (structure) {
-                    if (structure._id === structureId) {
-                        found = true;
-                        deferred.resolve(structure);
-                    }
+            that.location.ready(function (data) {
+                that.location.getStructureById(options.structureId).then(function (data) {
+                    that.model = data;
+                    callbacks.forEach(function (callback) {
+                        callback.call(that, that.model);
+                    });
                 });
-            }
+            });
 
-            if (!found) {
-                $http.get('/api/location/' + locationId + '/structure/' + structureId).then(function (res) {
-                    structures.push(res.data.structure);
-                    deferred.resolve(res.data.structure);
-                });
-            }
-
-            return deferred.promise;
-        };
+            that.ready = function (callback) {
+                if (typeof callback === "function") {
+                    callbacks.push(callback);
+                }
+            };
+        }
+        return instance;
     }
 
-    StructureService.$inject = [
-        '$http',
-        '$q'
+    Structure.$inject = [
+        'Location'
     ];
 
     angular.module('station')
-        .service('StructureService', StructureService);
+        .factory('Structure', Structure);
 
 }(window, window.angular));

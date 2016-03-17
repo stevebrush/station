@@ -1,3 +1,4 @@
+/*jshint node:true */
 (function () {
     'use strict';
 
@@ -9,6 +10,10 @@
 
     function Entrance(options) {
         var that;
+
+        this.defaults = {
+            floorSlug: "floor-1"
+        };
 
         DatabaseObject.call(this, options);
 
@@ -25,6 +30,10 @@
 
             // Loop through the structure's floors.
             that.parent.queue('floors', function (floor) {
+                var found;
+
+                found = false;
+
                 if (floor.slug === that.settings.floorSlug) {
 
                     // Floor found, now loop through the floor's rooms.
@@ -36,6 +45,8 @@
                         usedPositions = [];
 
                         if (room.slug === that.settings.roomSlug) {
+
+                            found = true;
 
                             // Add the entrance to the structure.
                             that.parent.db.addTo('entrances', utils.merge.recursive(true, that.db.values, {
@@ -65,6 +76,10 @@
                             });
                         }
                     });
+
+                    if (found === false) {
+                        throw new Error("No entrance found with that room slug: " + that.settings.roomSlug);
+                    }
                 }
             });
 

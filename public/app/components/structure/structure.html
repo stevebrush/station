@@ -1,36 +1,16 @@
 <div class="page-header">
-    <h1>{{ structureCtrl.room.name }} <span class="text-muted">({{:: structureCtrl.structure.name }})</span></h1>
+    <h2 class="text-muted">{{:: structureCtrl.structure.name }}</h2>
+    <h1>{{ structureCtrl.room.name }}</h1>
     <p class="lead" ng-show="structureCtrl.room.isScanned && structureCtrl.room.description">
         {{ structureCtrl.room.description }}
     </p>
-    <p ng-hide="structureCtrl.room.isScanned">
-        <a class="btn" href ng-click="structureCtrl.scanRoom(structureCtrl.room)">Scan Room</a>
-    </p>
 </div>
-<ul ng-show="structureCtrl.room.isScanned">
-    <li ng-repeat="vessel in structureCtrl.room.vessels">
-        <a class="btn" href ng-click="structureCtrl.openVessel(vessel)" ng-class="{'btn-muted': !vessel.items.length}">
-            {{:: vessel.name }}
-        </a>
-        <span class="text-muted" ng-show="!vessel.items.length">(Empty)</span>
-        <ul ng-show="vessel.isOpen && vessel.items.length">
-            <li ng-repeat="item in vessel.items">
-                <a href ng-click="structureCtrl.selectItem(item)">
-                    {{ item.name }}
-                </a>
-                <ul ng-show="item.isSelected">
-                    <li>
-                        <p>{{ item.description }}</p>
-                        <a class="btn" href ng-click="structureCtrl.takeItem(item)">Take</a> <a class="btn btn-muted" href ng-click="item.isSelected = false">Cancel</a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a class="btn" href ng-click="structureCtrl.takeAllItems(vessel)">Take all</a>
-            </li>
-        </ul>
-    </li>
+<p ng-hide="structureCtrl.room.isScanned">
+    <a class="btn" href ng-click="structureCtrl.scanRoom(structureCtrl.room)">Scan Room</a>
+</p>
+<ul class="nav-showcase" ng-show="structureCtrl.room.isScanned">
     <li ng-repeat="door in structureCtrl.room.doors">
+        <span class="text-muted">[{{:: door.position }}]</span>
         <a href ng-click="structureCtrl.openDoor(door)" data-this-room="{{ thisRoom = structureCtrl.findRoomById(door.roomId) }}">
             <span ng-show="door.isExit">&larr;&nbsp;Exit to {{::door.name }}</span>
             <span ng-hide="door.isExit">
@@ -43,5 +23,28 @@
         <span class="text-muted" ng-show="door.entryAttempted && door.isLocked">(Locked)</span>
         <span class="text-muted" ng-show="door.isPrevious">(Back)</span>
     </li>
+    <li ng-repeat="vessel in structureCtrl.room.vessels">
+        <a class="btn" href ng-click="structureCtrl.openVessel(vessel)" ng-class="{'btn-muted': !vessel.items.length}">
+            {{:: vessel.name }}
+        </a>
+        <span class="text-muted" ng-show="!vessel.items.length">(Empty)</span>
+        <ul class="nav-showcase" ng-show="vessel.isOpen && vessel.items.length">
+            <li ng-repeat="item in vessel.items">
+                <a href ng-click="structureCtrl.selectItem(item)">
+                    {{ item.name }}
+                </a>
+                <ul ng-show="item.isSelected">
+                    <li>
+                        <p>{{ item.description }}</p>
+                        <a class="btn" href ng-click="structureCtrl.takeItem(item)">Take</a>
+                        <a class="btn btn-muted" href ng-click="item.isSelected = false">Cancel</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a class="btn" href ng-click="structureCtrl.takeAllItems(vessel)">Take all</a>
+                <a class="btn btn-muted" href ng-click="vessel.isOpen = false">Cancel</a>
+            </li>
+        </ul>
+    </li>
 </ul>
-<st-log></st-log>

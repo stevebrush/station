@@ -15,5 +15,7 @@
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Room'
         }
+    }, {
+        _id: false
     });
 }());

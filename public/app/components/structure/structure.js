@@ -23,22 +23,21 @@
         };
     }
 
-    function StructureCtrl($state, StructureService, InventoryService, LogService, StorageService) {
-        var vm;
+    function StructureCtrl($state, Structure, InventoryService, LogService, StorageService) {
+        var structure,
+            vm;
 
         vm = this;
 
-        StructureService.getStructureById($state.params.locationId, $state.params.structureId).then(function (data) {
+        structure = new Structure({
+            locationId: $state.params.locationId,
+            structureId: $state.params.structureId
+        });
+
+        structure.ready(function (data) {
             vm.structure = data;
             vm.room = vm.findRoomById($state.params.roomId);
         });
-
-        vm.openVessel = function (vessel) {
-            vessel.isOpen = (vessel.isOpen) ? false : true;
-            vessel.items.forEach(function (item) {
-                item.parent = vessel;
-            });
-        };
 
         vm.openDoor = function (door) {
             var key,
@@ -96,6 +95,18 @@
             vm.room = room;
         };
 
+        vm.openVessel = function (vessel) {
+            vessel.isOpen = (vessel.isOpen) ? false : true;
+            vessel.items.forEach(function (item) {
+                item.parent = vessel;
+            });
+        };
+
+        vm.scanRoom = function (room) {
+            LogService.addMessage(room.name + " scanned.");
+            room.isScanned = true;
+        };
+
         vm.selectItem = function (item) {
             item.isSelected = (item.isSelected) ? false : true;
         };
@@ -130,11 +141,6 @@
             }
         };
 
-        vm.scanRoom = function (room) {
-            LogService.addMessage(room.name + " scanned.");
-            room.isScanned = true;
-        };
-
         /**
          * Returns a room within the structure, based on its ID.
          */
@@ -161,7 +167,7 @@
 
     StructureCtrl.$inject = [
         '$state',
-        'StructureService',
+        'Structure',
         'InventoryService',
         'LogService',
         'StorageService'
