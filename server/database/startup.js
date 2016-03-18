@@ -143,9 +143,15 @@
 
                             // Bathroom
                             add.room("Bathrooms", "Pitted and broken wall tiles covered in gunk.").doors([
-                                add.door("w", "waiting-room")
+                                add.door("w", "waiting-room"),
+                                add.ramp("s", "attic")
                             ])
 
+                        ]),
+                        add.floor().rooms([
+                            add.room("Attic", "Dusty chests full of opera clothing.").doors([
+                                add.ramp("n", "bathrooms")
+                            ])
                         ])
                     ]).entrances([
                         add.entrance("waiting-room", "floor-1")

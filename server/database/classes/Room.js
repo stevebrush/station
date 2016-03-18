@@ -29,8 +29,8 @@
                 door.init(that.db.addTo('doors', door.db.values), that);
             });
 
-            // When the floor's ready...
-            that.parent.ready(function () {
+            // When the structure's ready...
+            that.parent.parent.ready(function () {
                 /*
                  After all rooms have been created (with IDs),
                  Loop through all the doors and switch out slug with doorId
@@ -40,11 +40,16 @@
 
                     found = false;
 
-                    that.parent.queue('rooms', function (room) {
-                        if (room.slug === door.slug) {
-                            found = true;
-                            door.db.set('name', room.db.values.name);
-                            door.db.set('roomId', DatabaseObject.createId(room.db.document()._id));
+                    // Find the appropriate room, if it exists.
+                    that.parent.parent.queue('floors', function (floor) {
+                        if (!found) {
+                            floor.queue('rooms', function (room) {
+                                if (room.slug === door.slug) {
+                                    found = true;
+                                    door.db.set('name', room.db.values.name);
+                                    door.db.set('roomId', DatabaseObject.createId(room.db.document()._id));
+                                }
+                            });
                         }
                     });
 

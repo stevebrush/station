@@ -17,6 +17,10 @@
             type: Boolean,
             default: false
         },
+        isRamp: {
+            type: Boolean,
+            default: false
+        },
         keyId: {
             type: Schema.Types.ObjectId,
             ref: 'Item'

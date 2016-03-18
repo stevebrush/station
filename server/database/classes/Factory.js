@@ -51,6 +51,15 @@
         return new Floor();
     };
 
+    Factory.ramp = function (position, roomSlug) {
+        return new Door({
+            name: roomSlug,
+            position: position,
+            slug: roomSlug,
+            isRamp: true
+        });
+    };
+
     Factory.room = function (name, description) {
         return new Room({
             name: name,
