@@ -49,6 +49,7 @@
                             found = true;
 
                             // Add the entrance to the structure.
+                            room.db.document().isEntrance = true;
                             that.parent.db.addTo('entrances', utils.merge.recursive(true, that.db.values, {
                                 roomId: DatabaseObject.createId(room.db.document()._id)
                             }));

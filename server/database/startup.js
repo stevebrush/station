@@ -138,19 +138,29 @@
                             add.room("Garage", "Empty except for a tireless car.").vessels([
                                 add.vessel(">toolbox")
                             ]).doors([
-                                add.door("n", "waiting-room")
+                                add.door("n", "waiting-room"),
+                                add.ramp("w", "roof")
                             ]),
 
                             // Bathroom
                             add.room("Bathrooms", "Pitted and broken wall tiles covered in gunk.").doors([
                                 add.door("w", "waiting-room"),
-                                add.ramp("s", "attic")
+                                add.ramp("s", "attic"),
+                                add.door("e", "cavity")
+                            ]),
+
+                            // Cavity
+                            add.room("Cavity", "asdf").doors([
+                                add.door("w", "bathrooms")
                             ])
 
                         ]),
                         add.floor().rooms([
                             add.room("Attic", "Dusty chests full of opera clothing.").doors([
                                 add.ramp("n", "bathrooms")
+                            ]),
+                            add.room("Roof", "Eh?").doors([
+                                add.ramp("e", "garage")
                             ])
                         ])
                     ]).entrances([

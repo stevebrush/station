@@ -29,6 +29,20 @@
                 door.init(that.db.addTo('doors', door.db.values), that);
             });
 
+            // Assign each room a floor number.
+            that.parent.ready(function () {
+                var thisFloor;
+
+                thisFloor = this;
+
+                thisFloor.parent.queue('floors', function (floor, i) {
+                    if (floor.slug === thisFloor.slug) {
+                        that.db.document().floor = i;
+                    }
+                });
+            });
+
+
             // When the structure's ready...
             that.parent.parent.ready(function () {
                 /*

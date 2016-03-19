@@ -12,6 +12,14 @@
     module.exports = mongoose.Schema({
         description: String,
         doors: [doorSchema],
+        floor: {
+            type: Number,
+            default: 0
+        },
+        isEntrance: {
+            type: Boolean,
+            default: false
+        },
         isScanned: {
             type: Boolean,
             default: false
