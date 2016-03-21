@@ -1,41 +1,52 @@
 (function (window, angular) {
     "use strict";
 
-    function Structure(Location) {
-        function instance(options) {
-            var callbacks,
-                that;
+    function StructureService($q, Location) {
+        var locationId,
+            service,
+            structure;
 
-            that = this;
-            callbacks = [];
+        service = {};
 
-            that.location = new Location({
-                locationId: options.locationId
-            });
+        service.setLocationId = function (id) {
+            locationId = id;
+            return service;
+        };
 
-            that.location.ready(function (data) {
-                that.location.getStructureById(options.structureId).then(function (data) {
-                    that.model = data;
-                    callbacks.forEach(function (callback) {
-                        callback.call(that, that.model);
+        service.getStructureById = function (id) {
+            var deferred,
+                location,
+                structure;
+
+            deferred = $q.defer();
+
+            if (service.structure && service.structure._id === id) {
+                deferred.resolve(service.structure);
+            } else {
+                console.log("Fetching new structure data...");
+                location = new Location({
+                    locationId: locationId
+                });
+                location.ready(function (data) {
+                    location.getStructureById(id).then(function (data) {
+                        service.structure = data;
+                        deferred.resolve(data);
                     });
                 });
-            });
+            }
 
-            that.ready = function (callback) {
-                if (typeof callback === "function") {
-                    callbacks.push(callback);
-                }
-            };
-        }
-        return instance;
+            return deferred.promise;
+        };
+
+        return service;
     }
 
-    Structure.$inject = [
+    StructureService.$inject = [
+        '$q',
         'Location'
     ];
 
     angular.module('station')
-        .factory('Structure', Structure);
+        .service('StructureService', StructureService);
 
 }(window, window.angular));

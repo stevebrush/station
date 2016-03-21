@@ -7,20 +7,51 @@
             scope: true,
             bindToController: {},
             templateUrl: '../public/app/components/header/header.html',
-            controller: 'HeaderCtrl as headerCtrl'
+            controller: 'HeaderController as headerCtrl'
         };
     }
 
-    function HeaderCtrl() {
+    function HeaderController($scope, $rootScope, HeaderService) {
         var vm;
 
         vm = this;
+        vm.showBackButton = false;
+
+        $scope.$on('header:updated', function (e, data) {
+            vm.title = data.title;
+        });
+
+        vm.goBack = function () {
+            $rootScope.state.back();
+        };
     }
 
-    HeaderCtrl.$inject = [];
+    function HeaderService($rootScope) {
+        var service;
+
+        service = {};
+        service.title = "";
+
+        service.setTitle = function (val) {
+            service.title = val;
+            $rootScope.$broadcast('header:updated', service);
+        };
+
+        return service;
+    }
+
+    HeaderController.$inject = [
+        '$scope',
+        '$rootScope',
+        'HeaderService'
+    ];
+    HeaderService.$inject = [
+        '$rootScope'
+    ];
 
     angular.module('station')
-        .controller('HeaderCtrl', HeaderCtrl)
-        .directive('stHeader', stHeader);
+        .controller('HeaderController', HeaderController)
+        .directive('stHeader', stHeader)
+        .service('HeaderService', HeaderService);
 
 }(window, window.angular));

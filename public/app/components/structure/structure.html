@@ -1,74 +1,64 @@
 <div class="page-header">
-    <h2>{{:: structureCtrl.structure.name }} > {{ structureCtrl.room.name }}</h2>
-    <p class="lead" ng-show="structureCtrl.room.isScanned && structureCtrl.room.description">
+    <h1>{{ structureCtrl.room.name }}</h1>
+</div>
+<div class="row" ng-cloak>
+  <div class="col-sm-6">
+    <p ng-hide="structureCtrl.room.isScanned">
+        <a class="btn" href ng-click="structureCtrl.scanRoom(structureCtrl.room)">Scan Room</a>
+    </p>
+    <p class="lead" ng-if="structureCtrl.room.isScanned && structureCtrl.room.description">
         {{ structureCtrl.room.description }}
     </p>
-</div>
-<p ng-hide="structureCtrl.room.isScanned">
-    <a class="btn" href ng-click="structureCtrl.scanRoom(structureCtrl.room)">Scan Room</a>
-</p>
-<ul class="nav-showcase" ng-show="structureCtrl.room.isScanned">
-    <li ng-repeat="vessel in structureCtrl.room.vessels">
-        <a class="btn" href ng-click="structureCtrl.openVessel(vessel)" ng-class="{'btn-muted': !vessel.items.length}">
-            {{:: vessel.name }}
-        </a>
-        <span class="text-muted" ng-show="!vessel.items.length">(Empty)</span>
-        <ul class="nav-showcase" ng-show="vessel.isOpen && vessel.items.length">
-            <li ng-repeat="item in vessel.items">
-                <a href ng-click="structureCtrl.selectItem(item)">
-                    {{ item.name }}
-                </a>
-                <ul ng-show="item.isSelected">
-                    <li>
-                        <p>{{ item.description }}</p>
-                        <a class="btn" href ng-click="structureCtrl.takeItem(item)">Take</a>
-                        <a class="btn btn-muted" href ng-click="item.isSelected = false">Cancel</a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a class="btn" href ng-click="structureCtrl.takeAllItems(vessel)">Take all</a>
-                <a class="btn btn-muted" href ng-click="vessel.isOpen = false">Cancel</a>
-            </li>
-        </ul>
-    </li>
-    <li ng-repeat="door in structureCtrl.room.doors">
-        <span>[{{:: door.position }}]</span>
-        <a href ng-click="structureCtrl.openDoor(door)" data-this-room="{{ thisRoom = structureCtrl.findRoomById(door.roomId) }}">
-            <span ng-show="door.isExit">Exit to {{::door.name }}...</span>
-            <span ng-hide="door.isExit">
-                <span ng-hide="door.entryAttempted || thisRoom.isScanned">
-                  <span ng-if="door.isRamp">Stairs...</span>
-                  <span ng-if="!door.isRamp">Door...</span>
-                </span>
-                <span ng-show="door.entryAttempted || thisRoom.isScanned">
-                    <span ng-if="thisRoom.isScanned">{{::door.name }}...</span>
-                    <span ng-if="!thisRoom.isScanned">
+    <ul class="nav-showcase" ng-if="structureCtrl.room.isScanned">
+        <li ng-repeat="vessel in structureCtrl.room.vessels">
+            <a class="btn" href ng-click="structureCtrl.openVessel(vessel)" ng-class="{'btn-muted': !vessel.items.length}">
+                {{:: vessel.name }}
+            </a>
+            <span class="text-muted" ng-if="!vessel.items.length">(Empty)</span>
+            <ul class="nav-showcase" ng-if="vessel.isOpen && vessel.items.length">
+                <li ng-repeat="item in vessel.items">
+                    <a href ng-click="structureCtrl.selectItem(item)">
+                        {{ item.name }}
+                    </a>
+                    <ul ng-show="item.isSelected">
+                        <li>
+                            <p>{{ item.description }}</p>
+                            <a class="btn" href ng-click="structureCtrl.takeItem(item)">Take</a>
+                            <a class="btn btn-muted" href ng-click="item.isSelected = false">Cancel</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a class="btn" href ng-click="structureCtrl.takeAllItems(vessel)">Take all</a>
+                    <a class="btn btn-muted" href ng-click="vessel.isOpen = false">Cancel</a>
+                </li>
+            </ul>
+        </li>
+        <li style="display: none;" ng-repeat="door in structureCtrl.room.doors">
+            <span>[{{:: door.position }}]</span>
+            <a href ng-click="structureCtrl.openDoor(door)" data-this-room="{{ thisRoom = structureCtrl.findRoomById(door.roomId) }}">
+                <span ng-show="door.isExit">Exit to {{::door.name }}...</span>
+                <span ng-hide="door.isExit">
+                    <span ng-hide="door.entryAttempted || thisRoom.isScanned">
                       <span ng-if="door.isRamp">Stairs...</span>
                       <span ng-if="!door.isRamp">Door...</span>
                     </span>
+                    <span ng-show="door.entryAttempted || thisRoom.isScanned">
+                        <span ng-if="thisRoom.isScanned">{{::door.name }}...</span>
+                        <span ng-if="!thisRoom.isScanned">
+                          <span ng-if="door.isRamp">Stairs...</span>
+                          <span ng-if="!door.isRamp">Door...</span>
+                        </span>
+                    </span>
                 </span>
-            </span>
-        </a>
-        <span class="text-muted" ng-show="door.entryAttempted && door.isLocked">(Locked)</span>
-        <span class="text-muted" ng-show="door.isPrevious">(Back)</span>
-    </li>
-</ul>
-<div class="row">
-  <div class="col-sm-6">
-    <div class="dungeon-map">
-      <div class="dungeon-map-floor-menu">
-        <div class="dungeon-map-floor-menu-item" ng-repeat="floor in structureCtrl.minimap.floors" ng-class="{ 'text-muted': $index !== structureCtrl.room.floor }">F{{ $index + 1 }}</div>
-      </div>
-      <div class="dungeon-map-floor" ng-repeat="floor in structureCtrl.minimap.floors" ng-if="$index === structureCtrl.room.floor">
-        <div class="dungeon-map-room" ng-repeat="room in floor.rooms" style="top: {{:: room.y }}px; left: {{:: room.x }}px; width: {{:: room.width }}px; height: {{:: room.height }}px" ng-class="{ selected: room._id === structureCtrl.room._id }">
-          <div ng-repeat="door in room.doors" class="dungeon-map-door dungeon-map-door-{{:: door.position}}" ng-class="{ 'dungeon-map-ramp': door.isRamp, 'dungeon-map-exit': door.isExit }">
-          </div>
-        </div>
-      </div>
-    </div>
+            </a>
+            <span class="text-muted" ng-show="door.entryAttempted && door.isLocked">(Locked)</span>
+            <span class="text-muted" ng-show="door.isPrevious">(Back)</span>
+        </li>
+    </ul>
   </div>
-  <div class="col-sm-6">
+  <div class="col-sm-6" ng-if="structureCtrl.isReady">
+    <st-minimap data-location-id="{{:: structureCtrl.locationId }}" data-structure-id="{{ structureCtrl.structure._id }}"></st-minimap>
     <ul class="directional-controls">
       <li ng-repeat="door in structureCtrl.controls.doors" class="direction-{{:: door.position}}">
         <a ng-if="door.roomId || door.isExit" class="btn" href ng-click="structureCtrl.openDoor(door)">{{:: door.position }}</a>

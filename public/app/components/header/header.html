@@ -1,5 +1,6 @@
 <header id="header" class="navbar">
-    <ul class="nav">
-        <li><a href ui-sref="inventory"><u>I</u>nventory</a></li>
+    <ul ng-if="headerCtrl.showBackButton" class="nav">
+        <li><a href ng-click="headerCtrl.goBack()">Back</li>
     </ul>
+    <span class="navbar-title">{{:: headerCtrl.title }}</span>
 </header>

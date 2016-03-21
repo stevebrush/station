@@ -1,0 +1,13 @@
+<div class="dungeon-map">
+  <div class="dungeon-map-floor-menu">
+    <a href class="btn dungeon-map-floor-menu-item" ng-repeat="floor in minimapCtrl.structure.floors" ng-class="{ 'btn-muted': $index !== structureCtrl.room.floor }">F{{ $index + 1 }}</a>
+  </div>
+  <div class="dungeon-map-floor-container" ng-repeat="floor in minimapCtrl.structure.floors" ng-if="$index === structureCtrl.room.floor">
+      <div id="dungeon-map-floor" class="hidden">
+        <div class="dungeon-map-room" ng-repeat="room in floor.rooms" style="top: {{:: room.y }}px; left: {{:: room.x }}px; width: {{:: room.width }}px; height: {{:: room.height }}px" ng-class="{ selected: room._id === structureCtrl.room._id }">
+          <div ng-repeat="door in room.doors" class="dungeon-map-door dungeon-map-door-{{:: door.position}}" ng-class="{ 'dungeon-map-ramp': door.isRamp, 'dungeon-map-exit': door.isExit }">
+          </div>
+        </div>
+      </div>
+  </div>
+</div>

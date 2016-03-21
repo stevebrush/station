@@ -1,8 +1,24 @@
 #log {
-    width: 100%;
     height: 120px;
     border-top: 1px solid $color-primary;
-    overflow: auto;
-    padding: 20px;
     margin-top: 20px;
+    position: relative;
+
+    .cover {
+        content: " ";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 38px;
+        z-index: 1;
+        background: linear-gradient(transparent, #fff);
+    }
+
+    ul {
+        margin: 0;
+        padding: 20px;
+        overflow: auto;
+        height: 100%;
+    }
 }

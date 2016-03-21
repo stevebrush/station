@@ -2,12 +2,18 @@
     background-color: $color-primary;
     color: $color-primary-inverse;
     height: 20px;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
 
-    .navbar-brand {
-        float: left;
-        margin: 0 20px 0 0;
+    .navbar-title {
+        text-align: center;
+        white-space: nowrap;
+        margin: 0 auto;
+        position: absolute;
+        display: block;
+        width: 100%;
+        left: 0;
+        right: 0;
     }
 
     .nav {

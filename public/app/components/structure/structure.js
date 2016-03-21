@@ -1,6 +1,7 @@
 (function (window, angular) {
     "use strict";
 
+/*
     Array.prototype.move = function (old_index, new_index) {
         while (old_index < 0) {
             old_index += this.length;
@@ -17,6 +18,7 @@
         this.splice(new_index, 0, this.splice(old_index, 1)[0]);
         return this; // for testing purposes
     };
+*/
 
     function cleanArray(arr) {
         for (var i = 0; i < arr.length; ++i) {
@@ -28,34 +30,20 @@
         return arr;
     }
 
-    function stStructure() {
-        return {
-            restrict: 'AEC',
-            scope: true,
-            bindToController: {
-                "id": "@"
-            },
-            templateUrl: '../public/app/components/structure/structure.html',
-            controller: 'StructureCtrl as structureCtrl'
-        };
-    }
-
-    function StructureCtrl($state, Structure, InventoryService, LogService) {
-        var structure,
+    function StructureCtrl($scope, $state, StructureService, InventoryService, LogService, HeaderService) {
+        var elemMinimapRoom,
+            structure,
             vm;
 
         vm = this;
+        vm.locationId = $state.params.locationId;
 
-        structure = new Structure({
-            locationId: $state.params.locationId,
-            structureId: $state.params.structureId
-        });
-
-        structure.ready(function (data) {
+        StructureService.setLocationId($state.params.locationId).getStructureById($state.params.structureId).then(function (data) {
             vm.structure = data;
             vm.room = vm.findRoomById($state.params.roomId);
-            vm.minimap = generateMinimap(data);
+            HeaderService.setTitle(vm.structure.name);
             vm.controls = buildControls(vm.room);
+            vm.isReady = true;
         });
 
         function buildControls(room) {
@@ -80,136 +68,6 @@
                 }
             });
             return room;
-        }
-
-        function generateMinimap(structure) {
-            var floors = JSON.parse(JSON.stringify(structure.floors));
-
-            function getRoomById(id) {
-                var found;
-                found = false;
-                floors.forEach(function (floor) {
-                    floor.rooms.forEach(function (room) {
-                        if (room._id === id) {
-                            found = room;
-                        }
-                    });
-                });
-                return found;
-            }
-
-            function setRoomDefaultCoords(room, x, y) {
-                room.defaultsSet = true;
-                room.x = x;
-                room.y = y;
-                room.doors.forEach(function (door) {
-                    var nextRoom;
-                    nextRoom = getRoomById(door.roomId);
-                    if (room.defaultsSet === false) {
-                        setRoomDefaultCoords(nextRoom, x, y);
-                    }
-                });
-            }
-
-            function addCoordsToRoom(room) {
-                room.isChecked = true;
-                room.doors.forEach(function (door) {
-                    var nextRoom;
-                    nextRoom = getRoomById(door.roomId);
-
-                    if (nextRoom.isChecked === false) {
-
-                        // Update this door's coordinates.
-                        switch (door.position) {
-                            case "n":
-                            nextRoom.y = room.y - 1;
-                            break;
-                            case "s":
-                            nextRoom.y = room.y + 1;
-                            break;
-                            case "e":
-                            nextRoom.x = room.x + 1;
-                            break;
-                            case "w":
-                            nextRoom.x = room.x - 1;
-                            break;
-                        }
-
-                        // The next room is on another floor.
-                        if (door.isRamp) {
-
-                            // Set all rooms default coordinates to the door on the previous side of the ramp.
-                            setRoomDefaultCoords(nextRoom, room.x, room.y);
-                            // switch (door.position) {
-                            //     case "n":
-                            //     setRoomDefaultCoords(nextRoom, room.x, room.y - 1);
-                            //     break;
-                            //     case "s":
-                            //     setRoomDefaultCoords(nextRoom, room.x, room.y + 1);
-                            //     break;
-                            //     case "e":
-                            //     setRoomDefaultCoords(nextRoom, room.x + 1, room.y);
-                            //     break;
-                            //     case "w":
-                            //     setRoomDefaultCoords(nextRoom, room.x - 1, room.y);
-                            //     break;
-                            // }
-                            addCoordsToRoom(nextRoom);
-                            return;
-                        }
-                        addCoordsToRoom(nextRoom);
-                    }
-                });
-            }
-
-            // Set some defaults.
-            floors.forEach(function (floor) {
-                floor.rooms.forEach(function (room) {
-                    room.x = 0;
-                    room.y = 0;
-                    room.isChecked = false;
-                });
-            });
-
-            // Determine room coordinates.
-            floors.forEach(function (floor) {
-                floor.rooms.forEach(function (room) {
-                    addCoordsToRoom(room);
-                });
-            });
-
-            // Determine room dimensions.
-            floors.forEach(function (floor) {
-                floor.rooms.forEach(function (room) {
-                    var height,
-                        left,
-                        margin,
-                        top,
-                        width;
-
-                    width = 20;
-                    height = 20;
-                    margin = 4;
-
-                    // Get the width of the rooms.
-                    left = room.x * (width + margin);
-                    top = room.y * (height + margin);
-
-                    // Add surrounding margins.
-                    left = (left >= 0) ? left + margin: left - margin;
-                    top = (top >= 0) ? top + margin: top - margin;
-
-                    room.x = left;
-                    room.y = top;
-                    room.width = width;
-                    room.height = height;
-                });
-            });
-
-
-            return {
-                floors: floors
-            };
         }
 
         vm.openDoor = function (door) {
@@ -266,8 +124,53 @@
 
             door.isPrevious = true;
             vm.room = room;
+            console.log(vm.room.name);
             vm.controls = buildControls(room);
+            $scope.$digest();
         };
+
+        var getDoorByPosition = function (position) {
+            var found;
+            found = false;
+            vm.room.doors.forEach(function (door) {
+                if (door.position === position) {
+                    found = door;
+                    return;
+                }
+            });
+            return found;
+        };
+
+        var $document = angular.element(document);
+        $document.ready(function () {
+            $document.on('keydown', function (event) {
+                var door;
+                switch (event.which) {
+                    // left
+                    case 37:
+                    door = getDoorByPosition('w');
+                    break;
+                    // up
+                    case 38:
+                    door = getDoorByPosition('n');
+                    break;
+
+                    // right
+                    case 39:
+                    door = getDoorByPosition('e');
+                    break;
+
+                    // down
+                    case 40:
+                    door = getDoorByPosition('s');
+                    break;
+                }
+
+                if (door) {
+                    vm.openDoor(door);
+                }
+            });
+        });
 
         vm.openVessel = function (vessel) {
             vessel.isOpen = (vessel.isOpen) ? false : true;
@@ -362,14 +265,15 @@
     }
 
     StructureCtrl.$inject = [
+        '$scope',
         '$state',
-        'Structure',
+        'StructureService',
         'InventoryService',
-        'LogService'
+        'LogService',
+        'HeaderService'
     ];
 
     angular.module('station')
-        .controller('StructureCtrl', StructureCtrl)
-        .directive('stStructure', stStructure);
+        .controller('StructureCtrl', StructureCtrl);
 
 }(window, window.angular));
