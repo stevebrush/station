@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function MapCtrl(LocationService) {
+    function MapCtrl(LocationService, HeaderService) {
         var vm;
 
         vm = this;
@@ -9,6 +9,9 @@
         if (!vm.locations) {
             LocationService.getLocations().then(function (data) {
                 vm.locations = data;
+                HeaderService.set({
+                    title: "Map"
+                });
             });
         }
 
@@ -18,7 +21,8 @@
     }
 
     MapCtrl.$inject = [
-        'LocationService'
+        'LocationService',
+        'HeaderService'
     ];
 
     angular.module('station')

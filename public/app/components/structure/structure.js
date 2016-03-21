@@ -41,7 +41,9 @@
         StructureService.setLocationId($state.params.locationId).getStructureById($state.params.structureId).then(function (data) {
             vm.structure = data;
             vm.room = vm.findRoomById($state.params.roomId);
-            HeaderService.setTitle(vm.structure.name);
+            HeaderService.set({
+                title: vm.structure.name
+            });
             vm.controls = buildControls(vm.room);
             vm.isReady = true;
         });
@@ -102,6 +104,8 @@
 
                     // Set the view's room data.
                     vm.room = room;
+                    vm.controls = buildControls(room);
+                    door.isPrevious = true;
 
                     LogService.addMessage("Used key to " + room.name + ".");
                 } else {
@@ -124,53 +128,52 @@
 
             door.isPrevious = true;
             vm.room = room;
-            console.log(vm.room.name);
             vm.controls = buildControls(room);
-            $scope.$digest();
         };
 
-        var getDoorByPosition = function (position) {
-            var found;
-            found = false;
-            vm.room.doors.forEach(function (door) {
-                if (door.position === position) {
-                    found = door;
-                    return;
-                }
-            });
-            return found;
-        };
+        // var getDoorByPosition = function (position) {
+        //     var found;
+        //     found = false;
+        //     console.log("Opening door for:", vm.room.name);
+        //     vm.room.doors.forEach(function (door) {
+        //         if (door.position === position) {
+        //             found = door;
+        //             return;
+        //         }
+        //     });
+        //     return found;
+        // };
 
-        var $document = angular.element(document);
-        $document.ready(function () {
-            $document.on('keydown', function (event) {
-                var door;
-                switch (event.which) {
-                    // left
-                    case 37:
-                    door = getDoorByPosition('w');
-                    break;
-                    // up
-                    case 38:
-                    door = getDoorByPosition('n');
-                    break;
-
-                    // right
-                    case 39:
-                    door = getDoorByPosition('e');
-                    break;
-
-                    // down
-                    case 40:
-                    door = getDoorByPosition('s');
-                    break;
-                }
-
-                if (door) {
-                    vm.openDoor(door);
-                }
-            });
-        });
+        // var $document = angular.element(document);
+        // $document.ready(function () {
+        //     $document.on('keydown', function (event) {
+        //         var door;
+        //         switch (event.which) {
+        //             // left
+        //             case 37:
+        //             door = getDoorByPosition('w');
+        //             break;
+        //             // up
+        //             case 38:
+        //             door = getDoorByPosition('n');
+        //             break;
+        //
+        //             // right
+        //             case 39:
+        //             door = getDoorByPosition('e');
+        //             break;
+        //
+        //             // down
+        //             case 40:
+        //             door = getDoorByPosition('s');
+        //             break;
+        //         }
+        //
+        //         if (door) {
+        //             vm.openDoor(door);
+        //         }
+        //     });
+        // });
 
         vm.openVessel = function (vessel) {
             vessel.isOpen = (vessel.isOpen) ? false : true;

@@ -35,6 +35,7 @@
                             mapFloor.style.top = Math.round((mapPaneHeight) - mapRoom.offsetTop - (mapRoom.clientHeight / 2)) - 1 + 'px';
                             mapFloor.style.left = Math.round((mapPaneWidth) - mapRoom.offsetLeft - (mapRoom.clientWidth / 2)) - 1 + 'px';
                             mapFloor.className = '';
+
                         }, 0);
                     };
 

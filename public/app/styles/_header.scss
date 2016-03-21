@@ -18,6 +18,8 @@
 
     .nav {
         float: left;
+        z-index: 1;
+        position: relative;
 
         li {
             display: inline-block;
@@ -28,6 +30,10 @@
                 display: block;
                 color: $color-primary-inverse;
                 text-decoration: none;
+
+                &:before {
+                    content: "< ";
+                }
 
                 u {
                     text-decoration: underline;
