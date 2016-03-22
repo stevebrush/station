@@ -28,6 +28,14 @@
             type: String,
             default: "Room"
         },
-        vessels: [vesselSchema]
+        vessels: [vesselSchema],
+        x: {
+            type: Number,
+            default: 0
+        },
+        y: {
+            type: Number,
+            default: 0
+        }
     });
 }());

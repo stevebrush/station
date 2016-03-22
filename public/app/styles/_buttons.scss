@@ -1,0 +1,30 @@
+.btn {
+    border: 1px solid transparent;
+    text-decoration: none;
+    display: block;
+    line-height:1;
+    padding: 10px;
+    height: 36px;
+    width: 100%;
+    text-align: center;
+    background-color: $color-primary-inverse;
+    color: $color-primary;
+    border-color: $color-primary;
+
+    &:hover,
+    &:focus,
+    &:active {
+        color: $color-primary;
+    }
+
+    &.btn-muted,
+    &.btn-disabled {
+        border-color: $color-primary-muted;
+        background-color: $color-primary-inverse;
+        color: $color-primary-muted;
+    }
+
+    &.btn-disabled {
+        cursor: default;
+    }
+}

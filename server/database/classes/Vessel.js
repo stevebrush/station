@@ -85,7 +85,7 @@
             // Is this item referencing a template?
             if (item.name.indexOf(">") === 0) {
 
-                itemTemplate = Item.static.templates[item.name.replace(">", "")];
+                itemTemplate = Item.static.getTemplateValues(item.name);
 
                 if (itemTemplate !== undefined) {
                     item = utils.merge.recursive(true, itemTemplate, item);

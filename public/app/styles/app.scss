@@ -1,10 +1,5 @@
 @import "_meyer-reset";
-
-$color-primary: #000;
-$color-primary-inverse: #fff;
-$color-primary-darkened: darken($color-primary, 25%);
-$color-primary-muted: lighten($color-primary, 70%);
-$color-primary-lightened: lighten($color-primary, 94%);
+@import "_variables";
 
 * {
     box-sizing: border-box;
@@ -14,8 +9,8 @@ body {
     background-color: $color-primary-inverse;
     color: $color-primary;
     font-family: monospace;
-    font-size: 16px;
-    line-height: 20px;
+    font-size: 13px;
+    line-height: 1.45;
     margin: 0;
     padding: 0;
 }
@@ -31,7 +26,7 @@ a {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 ul {
@@ -53,353 +48,41 @@ p {
     margin-bottom: 10px;
 }
 
-.btn {
-    border: 1px solid transparent;
-    text-decoration: none;
-    display: block;
-    line-height:1;
-    padding: 13px 20px;
-    height: 44px;
-    margin-bottom: 4px;
-    width: 100%;
-    text-align: center;
-    background-color: $color-primary-inverse;
-    color: $color-primary;
-    border-color: $color-primary;
-    border-radius: 8px;
-
-    &:hover,
-    &:focus,
-    &:active {
-        color: $color-primary;
-    }
-
-    &.btn-muted,
-    &.btn-disabled {
-        border-color: $color-primary-muted;
-        background-color: $color-primary-inverse;
-        color: $color-primary-muted;
-    }
-
-    &.btn-disabled {
-        cursor: default;
-    }
-}
-
 .container {
-    padding: 10px;
     margin: 0 auto;
+    max-width: 375px;
 }
 
-.page-header {
-    text-align: center;
-}
-
-ul.nav-showcase {
-    > li {
-        > ul {
-            margin: 0;
-            padding: 0;
-
-            > li {
-                background-color: $color-primary-lightened;
-                padding: 10px;
-            }
-
-            &.nav-showcase {
-                background-color: $color-primary-lightened;
-                padding: 10px;
-
-                > li {
-                    border: 0;
-                    padding: 0;
-
-                    > ul {
-                        background-color: $color-primary-inverse;
-                    }
-                }
-            }
-        }
-    }
-}
-
-.lead {
-    color: $color-primary-darkened;
-}
-
-.text-muted {
-    color: $color-primary-muted;
-}
-
-.row {
-    margin-left: -10px;
-    margin-right: -10px;
-
-    > * {
-        min-height: 1px;
-    }
-
-    .col-sm-6 {
-        width: 50%;
-        padding-left: 10px;
-        padding-right: 10px;
-        float: left;
-    }
-
-    &:after,
-    &:before {
-        display: table;
-        content: " ";
-        clear:both;
-    }
-}
-
-ul.directional-controls {
-    position: relative;
-    height: 92px;
-    width: 140px;
-    margin: 10px auto 0;
-
-    > li {
-        margin: 0;
-
-        &.direction-n {
-            > a {
-                top: 0;
-                left: 50%;
-                margin-left: -22px;
-            }
-        }
-
-        &.direction-s {
-            > a {
-                bottom: 0;
-                left: 50%;
-                margin-left: -22px;
-            }
-        }
-
-        &.direction-e {
-            > a {
-                right: 0;
-                bottom: 0;
-            }
-        }
-
-        &.direction-w {
-            > a {
-                left: 0;
-                bottom: 0;
-            }
-        }
-
-        > a {
-            position: absolute;
-            width: 44px;
-            height: 44px;
-            display: block;
-            padding: 0;
-            line-height: 42px;
-            text-align: center;
-            text-transform: uppercase;
-            margin: 0;
-        }
-    }
-}
-
-.dungeon-map {
-    height: 170px;
-    padding: 10px;
-    background-color: $color-primary-lightened;
-    border: 1px solid $color-primary;
-    border-bottom-width: 3px;
-
-    .dungeon-map-floor-menu {
-        padding-right: 5px;
-        width: 1px;
-        display: table-cell;
-        vertical-align: top;
-
-        > .dungeon-map-floor-menu-item {
-            padding: 0 5px;
-            line-height: 30px;
-            height: 30px;
-        }
-    }
-
-    .dungeon-map-floor-container {
-        display: table-cell;
-        vertical-align: top;
-        width: 10000px;
-        height: 145px;
-        overflow: hidden;
-        position: relative;
-        background-color: $color-primary-lightened;
-        background-size: 16px 16px;
-        background-image: linear-gradient(to right, $color-primary-muted 1px, transparent 1px), linear-gradient(to bottom, $color-primary-muted 1px, transparent 1px);
-
-        #dungeon-map-floor {
-            position: absolute;
-            transition: left 200ms ease-in, right 200ms ease-in, top 200ms ease-in, bottom 200ms ease-in;
-
-            &:after,
-            &:before {
-                display: table;
-                content: " ";
-                clear:both;
-            }
-        }
-
-        &:after,
-        &:before {
-            display: table;
-            content: " ";
-            clear:both;
-        }
-    }
-
-    .dungeon-map-room {
-        border: 1px solid transparent;
-        position: absolute;
-        background-color: $color-primary-muted;
-
-        &.selected {
-            background-color: $color-primary;
-            border-color: $color-primary;
-            box-shadow: 0 0px 0px 1px $color-primary-inverse inset;
-
-            > .dungeon-map-door {
-                background-color: $color-primary;
-            }
-        }
-
-        .dungeon-map-door {
-            background-color: $color-primary-muted;
-            position: absolute;
-
-            &.dungeon-map-door-n {
-                height: 3px;
-                width: 10px;
-                top: -4px;
-                left: 50%;
-                margin-left: -5px;
-            }
-            &.dungeon-map-door-s {
-                height: 3px;
-                width: 10px;
-                bottom: -4px;
-                left: 50%;
-                margin-left: -5px;
-            }
-            &.dungeon-map-door-e {
-                height: 10px;
-                width: 3px;
-                right: -4px;
-                top: 50%;
-                margin-top: -5px;
-            }
-            &.dungeon-map-door-w {
-                height: 10px;
-                width: 3px;
-                left: -4px;
-                top: 50%;
-                margin-top: -5px;
-            }
-
-            &.dungeon-map-exit {
-                background-color: transparent;
-                width: 0;
-            	height: 0;
-            	border-top: 6px solid transparent;
-            	border-bottom: 6px solid transparent;
-            	border-left: 6px solid $color-primary;
-                margin-top: -6px;
-                left: -8px;
-            }
-
-            &.dungeon-map-ramp {
-                background-color: $color-primary-muted;
-
-                &.dungeon-map-door-s {
-                    right: 1px;
-                    bottom: 1px;
-                    left: auto;
-                    margin: 0;
-                    background-size: 3px 1px;
-                    background-image: linear-gradient(to right, $color-primary-inverse 1px, transparent 1px);
-                    height: 8px;
-                    width: 20px;
-                }
-
-                &.dungeon-map-door-n {
-                    left: 1px;
-                    top: 1px;
-                    margin: 0;
-                    background-size: 3px 1px;
-                    background-image: linear-gradient(to right, $color-primary-inverse 1px, transparent 1px);
-                    height: 8px;
-                    width: 20px;
-                }
-
-                &.dungeon-map-door-e {
-                    right: 1px;
-                    left: auto;
-                    top: 1px;
-                    margin: 0;
-                    background-size: 1px 3px;
-                    background-image: linear-gradient($color-primary-inverse 1px, transparent 1px);
-                    height: 20px;
-                    width: 8px;
-                }
-
-                &.dungeon-map-door-w {
-                    left: 1px;
-                    bottom: 1px;
-                    top: auto;
-                    margin: 0;
-                    background-size: 1px 3px;
-                    background-image: linear-gradient($color-primary-inverse 1px, transparent 1px);
-                    height: 20px;
-                    width: 8px;
-                }
-            }
-        }
-    }
-}
-
-#utilities {
-    background-color: #000;
-    padding: 5px 10px;
-    margin: 0;
-    overflow: hidden;
-    position: fixed;
+#game-pane {
+    position: absolute;
     width: 100%;
+    margin: 36px 0 46px;
     bottom: 0;
-    left: 0;
-    right: 0;
+    top: 0;
 
-    > li {
-        padding: 0 5px;
-        width: 33.33333%;
-        float: left;
-        margin: 0;
-    }
-    .btn {
-        margin: 0;
-        border-color: transparent;
+    > .container {
+        position: relative;
+        height: 100%;
     }
 }
 
-[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-  display: none !important;
+#main {
+    overflow: auto;
+    height: 80%;
+    position: absolute;
+    padding: 10px;
+    width: 100%;
 }
 
-.hidden {
-    visibility: hidden !important;
-}
-.visible {
-    visibility: visible !important;
-}
 
+@import "_common";
+@import "_grid";
+@import "_inventory";
+@import "_showcase";
+@import "_directional-controls";
+@import "_modal";
+@import "_utilities";
+@import "_buttons";
+@import "_minimap";
 @import "_header";
 @import "_log";

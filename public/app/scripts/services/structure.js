@@ -1,4 +1,4 @@
-(function (window, angular) {
+(function (angular) {
     "use strict";
 
     function StructureService($q, Location) {
@@ -23,7 +23,6 @@
             if (service.structure && service.structure._id === id) {
                 deferred.resolve(service.structure);
             } else {
-                console.log("Fetching new structure data...");
                 location = new Location({
                     locationId: locationId
                 });
@@ -49,4 +48,4 @@
     angular.module('station')
         .service('StructureService', StructureService);
 
-}(window, window.angular));
+}(window.angular));

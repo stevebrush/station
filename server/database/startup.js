@@ -14,25 +14,38 @@
         var Station;
 
         // Clear the database documents before we begin.
+        Database.models.Config.collection.remove();
         Database.models.Location.collection.remove();
 
         // Item templates.
         World
             .Item
                 .template("ballpoint-pen", {
-                    name: "Ballpoint Pen"
+                    name: "Ballpoint Pen",
+                    value: 0.5
+                })
+                .template("cogs", {
+                    name: "Cogs",
+                    value: 1,
+                    onCreate: function () {
+                        World.Config.set("moneyId", this.db.get('_id'));
+                    }
                 })
                 .template("gold-flecks", {
-                    name: "Gold Flecks"
+                    name: "Gold Flecks",
+                    value: 10
                 })
                 .template("notebook-paper", {
-                    name: "Notebook Paper"
+                    name: "Notebook Paper",
+                    value: 0.25
                 })
                 .template("wrench", {
-                    name: "Wrench"
+                    name: "Wrench",
+                    value: 1
                 })
                 .template("nails", {
-                    name: "Nails"
+                    name: "Nails",
+                    value: 1
                 });
 
         // Vessel templates.
@@ -65,6 +78,11 @@
                                 name: ">notebook-paper",
                                 quantity: World.Item.getRandomQuantity(3),
                                 chance: 0.99
+                            },
+                            {
+                                name: ">cogs",
+                                quantity: World.Item.getRandomQuantity(5),
+                                chance: 0.49
                             }
                         ]);
                     }
@@ -77,6 +95,11 @@
                             {
                                 name: ">gold-flecks",
                                 quantity: World.Item.getRandomQuantity(50),
+                                chance: 0.69
+                            },
+                            {
+                                name: ">cogs",
+                                quantity: World.Item.getRandomQuantity(13),
                                 chance: 0.99
                             }
                         ]);
@@ -91,6 +114,11 @@
                                 name: ">gold-flecks",
                                 quantity: World.Item.getRandomQuantity(20),
                                 chance: 0.87
+                            },
+                            {
+                                name: ">cogs",
+                                quantity: World.Item.getRandomQuantity(50),
+                                chance: 0.99
                             }
                         ]);
                     }
@@ -109,6 +137,11 @@
                                 name: ">nails",
                                 quantity: World.Item.getRandomQuantity(8),
                                 chance: 0.9
+                            },
+                            {
+                                name: ">cogs",
+                                quantity: World.Item.getRandomQuantity(13),
+                                chance: 0.29
                             }
                         ]);
                     }
@@ -150,7 +183,7 @@
                             ]),
 
                             // Cavity
-                            add.room("Cavity", "asdf").doors([
+                            add.room("Cavity", "A dark recess.").doors([
                                 add.door("w", "bathrooms")
                             ])
 

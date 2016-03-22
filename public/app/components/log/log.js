@@ -4,8 +4,20 @@
     function stLog() {
         return {
             restrict: 'AEC',
+            replace: true,
             templateUrl: '../public/app/components/log/log.html',
-            controller: 'LogCtrl as logCtrl'
+            controller: 'LogCtrl as logCtrl',
+            link: function (scope, element, attrs, controller) {
+                // Flash the log when there's a new message.
+                scope.$watch(function () {
+                    return controller.messages[0];
+                }, function (newValue, oldValue) {
+                    element[0].className = "flash";
+                    setTimeout(function () {
+                        element[0].className = "";
+                    }, 1000);
+                });
+            }
         };
     }
 

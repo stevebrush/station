@@ -1,0 +1,36 @@
+.modal {
+    background-color: rgba(255,255,255, .85);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999;
+    padding: 20px;
+
+    > .modal-container {
+        border: 1px solid $color-primary;
+        background-color: $color-primary-lightened;
+
+        > .modal-header {
+            padding: 0 10px;
+            background-color: $color-primary;
+            color: $color-primary-inverse;
+            text-align: center;
+            height: 36px;
+            line-height: 36px;
+        }
+
+        > .modal-body {
+            padding: 10px;
+        }
+
+        > .modal-footer {
+            padding: 10px;
+
+            > .btn {
+                margin: 0;
+            }
+        }
+    }
+}

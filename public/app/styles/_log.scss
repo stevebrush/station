@@ -1,8 +1,10 @@
 #log {
-    height: 120px;
-    border-top: 1px solid $color-primary;
+    height: 20%;
     margin-top: 20px;
-    position: relative;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
 
     .cover {
         content: " ";
@@ -15,9 +17,13 @@
         background: linear-gradient(transparent, #fff);
     }
 
+    &.flash .cover {
+        display: none;
+    }
+
     ul {
         margin: 0;
-        padding: 20px;
+        padding: 10px;
         overflow: auto;
         height: 100%;
     }

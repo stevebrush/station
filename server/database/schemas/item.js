@@ -7,7 +7,7 @@
     mongoose = require('mongoose');
     Schema = mongoose.Schema;
 
-    module.exports = Schema({
+    module.exports = new Schema({
         description: {
             type: String,
             default: "An indescribable object."
@@ -16,11 +16,18 @@
             type: String,
             default: "Thing"
         },
+        prototypeId: String,
         quantity: {
             type: Number,
             default: 1
         },
-        value: Number,
-        weight: Number
+        value: {
+            type: Number,
+            default: 0
+        },
+        weight: {
+            type: Number,
+            default: 0
+        }
     });
 }());

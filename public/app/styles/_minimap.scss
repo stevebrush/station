@@ -1,0 +1,165 @@
+.dungeon-map {
+    height: 165px;
+    padding: 10px;
+    background-color: $color-primary-lightened;
+    border: 1px solid $color-primary;
+    border-bottom-width: 3px;
+
+    .dungeon-map-floor-menu {
+        padding-right: 5px;
+        width: 1px;
+        display: table-cell;
+        vertical-align: top;
+
+        > .dungeon-map-floor-menu-item {
+            padding: 0;
+            line-height: 20px;
+            width: 19px;
+        }
+    }
+
+    .dungeon-map-floor-container {
+        display: table-cell;
+        vertical-align: top;
+        width: 10000px;
+        height: 141px;
+        overflow: hidden;
+        position: relative;
+        background-color: $color-primary-lightened;
+        background-size: 20px 20px;
+        background-image: linear-gradient(to right, $color-primary-muted 1px, transparent 1px), linear-gradient(to bottom, $color-primary-muted 1px, transparent 1px);
+
+        #dungeon-map-floor {
+            position: absolute;
+            transition: left 200ms ease-in, right 200ms ease-in, top 200ms ease-in, bottom 200ms ease-in;
+
+            &:after,
+            &:before {
+                display: table;
+                content: " ";
+                clear:both;
+            }
+        }
+
+        &:after,
+        &:before {
+            display: table;
+            content: " ";
+            clear:both;
+        }
+    }
+
+    .dungeon-map-room {
+        border: 1px solid transparent;
+        position: absolute;
+        background-color: $color-primary-muted;
+        transition: background-color 200ms ease-in, opacity 200ms ease-in;
+
+        &.selected {
+            background-color: $color-primary;
+            border-color: $color-primary;
+            box-shadow: 0 0px 0px 1px $color-primary-inverse inset;
+
+            &.hidden {
+                opacity: 1 !important;
+                background-color: $color-primary-inverse;
+            }
+
+            > .dungeon-map-door {
+                background-color: $color-primary;
+            }
+        }
+
+        .dungeon-map-door {
+            background-color: $color-primary-muted;
+            position: absolute;
+
+            &.dungeon-map-door-n {
+                height: 3px;
+                width: 10px;
+                top: -4px;
+                left: 50%;
+                margin-left: -5px;
+            }
+            &.dungeon-map-door-s {
+                height: 3px;
+                width: 10px;
+                bottom: -4px;
+                left: 50%;
+                margin-left: -5px;
+            }
+            &.dungeon-map-door-e {
+                height: 10px;
+                width: 3px;
+                right: -4px;
+                top: 50%;
+                margin-top: -5px;
+            }
+            &.dungeon-map-door-w {
+                height: 10px;
+                width: 3px;
+                left: -4px;
+                top: 50%;
+                margin-top: -5px;
+            }
+
+            &.dungeon-map-exit {
+                background-color: transparent;
+                width: 0;
+            	height: 0;
+            	border-top: 6px solid transparent;
+            	border-bottom: 6px solid transparent;
+            	border-left: 6px solid $color-primary;
+                margin-top: -6px;
+                left: -8px;
+            }
+
+            &.dungeon-map-ramp {
+                background-color: $color-primary-muted;
+
+                &.dungeon-map-door-s {
+                    right: 1px;
+                    bottom: 1px;
+                    left: auto;
+                    margin: 0;
+                    background-size: 3px 1px;
+                    background-image: linear-gradient(to right, $color-primary-inverse 1px, transparent 1px);
+                    height: 8px;
+                    width: 21px;
+                }
+
+                &.dungeon-map-door-n {
+                    left: 1px;
+                    top: 1px;
+                    margin: 0;
+                    background-size: 3px 1px;
+                    background-image: linear-gradient(to right, $color-primary-inverse 1px, transparent 1px);
+                    height: 8px;
+                    width: 21px;
+                }
+
+                &.dungeon-map-door-e {
+                    right: 1px;
+                    left: auto;
+                    top: 1px;
+                    margin: 0;
+                    background-size: 1px 3px;
+                    background-image: linear-gradient($color-primary-inverse 1px, transparent 1px);
+                    height: 21px;
+                    width: 8px;
+                }
+
+                &.dungeon-map-door-w {
+                    left: 1px;
+                    bottom: 1px;
+                    top: auto;
+                    margin: 0;
+                    background-size: 1px 3px;
+                    background-image: linear-gradient($color-primary-inverse 1px, transparent 1px);
+                    height: 21px;
+                    width: 8px;
+                }
+            }
+        }
+    }
+}

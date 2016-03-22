@@ -1,12 +1,40 @@
-<div class="page-header">
-    <h1>Inventory</h1>
-    <p><a href ng-click="inventoryCtrl.goBack()">&larr;&nbsp;Back</a></p>
+<div>
+  Cogs: {{ inventoryCtrl.money }}
 </div>
-<ul ng-show="inventoryCtrl.items.length">
-    <li ng-repeat="item in inventoryCtrl.items">
-        {{ item.name }}
-    </li>
+<table class="inventory-table" ng-if="inventoryCtrl.items.length">
+    <thead>
+      <tr>
+        <th>
+          Name
+        </th>
+        <th>
+          Description
+        </th>
+        <th>
+          Qty.
+        </th>
+        <th>
+          Value
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="item in inventoryCtrl.items">
+          <td>
+            {{:: item.name }}
+          </td>
+          <td>
+            {{:: item.description }}
+          </td>
+          <td>
+            {{ item.quantity }}
+          </td>
+          <td>
+            {{ item.groupValue }} ({{ item.value }}&nbsp;ea.)
+          </td>
+      </tr>
+    </tbody>
 </ul>
-<div ng-hide="inventoryCtrl.items.length">
+<div ng-if="!inventoryCtrl.items.length">
     (No items found.)
 </div>

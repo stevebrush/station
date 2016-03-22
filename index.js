@@ -53,6 +53,7 @@
     app.use(bodyParser.json());
 
     app.get('/', routes.index);
+    app.get('/api/config', routes.api.getConfig);
     app.get('/api/location', routes.api.getLocations);
     app.get('/api/location/:id', routes.api.getLocation);
     app.get('/api/location/:locationId/structure/:structureId', routes.api.getStructure);

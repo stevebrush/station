@@ -1,0 +1,22 @@
+.row {
+    margin-left: -10px;
+    margin-right: -10px;
+
+    > * {
+        min-height: 1px;
+    }
+
+    .col-sm-6 {
+        width: 50%;
+        padding-left: 10px;
+        padding-right: 10px;
+        float: left;
+    }
+
+    &:after,
+    &:before {
+        display: table;
+        content: " ";
+        clear:both;
+    }
+}

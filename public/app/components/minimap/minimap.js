@@ -41,15 +41,10 @@
 
                     setDimensions();
 
-                    scope.$watch(
-                        "structureCtrl.room",
-                        function handleWatchValueChange(newValue, oldValue) {
-                            setDimensions();
-                        }
-                    );
-
+                    scope.$watch("structureCtrl.room", function (newValue, oldValue) {
+                        setDimensions();
+                    });
                 });
-
             }
         };
     }
@@ -61,100 +56,9 @@
         vm = this;
 
         function generateMinimap(structure) {
-            var floors = JSON.parse(JSON.stringify(structure.floors));
+            var floors;
 
-            function getRoomById(id) {
-                var found;
-                found = false;
-                floors.forEach(function (floor) {
-                    floor.rooms.forEach(function (room) {
-                        if (room._id === id) {
-                            found = room;
-                        }
-                    });
-                });
-                return found;
-            }
-
-            function setRoomDefaultCoords(room, x, y) {
-                room.defaultsSet = true;
-                room.x = x;
-                room.y = y;
-                room.doors.forEach(function (door) {
-                    var nextRoom;
-                    nextRoom = getRoomById(door.roomId);
-                    if (room.defaultsSet === false) {
-                        setRoomDefaultCoords(nextRoom, x, y);
-                    }
-                });
-            }
-
-            function addCoordsToRoom(room) {
-                room.isChecked = true;
-                room.doors.forEach(function (door) {
-                    var nextRoom;
-                    nextRoom = getRoomById(door.roomId);
-
-                    if (nextRoom.isChecked === false) {
-
-                        // Update this door's coordinates.
-                        switch (door.position) {
-                            case "n":
-                            nextRoom.y = room.y - 1;
-                            break;
-                            case "s":
-                            nextRoom.y = room.y + 1;
-                            break;
-                            case "e":
-                            nextRoom.x = room.x + 1;
-                            break;
-                            case "w":
-                            nextRoom.x = room.x - 1;
-                            break;
-                        }
-
-                        // The next room is on another floor.
-                        if (door.isRamp) {
-
-                            // Set all rooms default coordinates to the door on the previous side of the ramp.
-                            setRoomDefaultCoords(nextRoom, room.x, room.y);
-                            // switch (door.position) {
-                            //     case "n":
-                            //     setRoomDefaultCoords(nextRoom, room.x, room.y - 1);
-                            //     break;
-                            //     case "s":
-                            //     setRoomDefaultCoords(nextRoom, room.x, room.y + 1);
-                            //     break;
-                            //     case "e":
-                            //     setRoomDefaultCoords(nextRoom, room.x + 1, room.y);
-                            //     break;
-                            //     case "w":
-                            //     setRoomDefaultCoords(nextRoom, room.x - 1, room.y);
-                            //     break;
-                            // }
-                            addCoordsToRoom(nextRoom);
-                            return;
-                        }
-                        addCoordsToRoom(nextRoom);
-                    }
-                });
-            }
-
-            // Set some defaults.
-            floors.forEach(function (floor) {
-                floor.rooms.forEach(function (room) {
-                    room.x = 0;
-                    room.y = 0;
-                    room.isChecked = false;
-                });
-            });
-
-            // Determine room coordinates.
-            floors.forEach(function (floor) {
-                floor.rooms.forEach(function (room) {
-                    addCoordsToRoom(room);
-                });
-            });
+            floors = structure.floors;
 
             // Determine room dimensions.
             floors.forEach(function (floor) {
@@ -173,8 +77,8 @@
                     left = room.x * (width + margin);
                     top = room.y * (height + margin);
 
-                    room.x = left;
-                    room.y = top;
+                    room.left = left;
+                    room.top = top;
                     room.width = width;
                     room.height = height;
                 });
@@ -186,7 +90,6 @@
         }
 
         StructureService.setLocationId(vm.locationId).getStructureById(vm.structureId).then(function (data) {
-            console.log("Structure fetched for minimap...");
             vm.structure = generateMinimap(data);
         });
     }

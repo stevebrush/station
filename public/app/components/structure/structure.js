@@ -1,25 +1,6 @@
 (function (window, angular) {
     "use strict";
 
-/*
-    Array.prototype.move = function (old_index, new_index) {
-        while (old_index < 0) {
-            old_index += this.length;
-        }
-        while (new_index < 0) {
-            new_index += this.length;
-        }
-        if (new_index >= this.length) {
-            var k = new_index - this.length;
-            while ((k--) + 1) {
-                this.push(undefined);
-            }
-        }
-        this.splice(new_index, 0, this.splice(old_index, 1)[0]);
-        return this; // for testing purposes
-    };
-*/
-
     function cleanArray(arr) {
         for (var i = 0; i < arr.length; ++i) {
             if (arr[i] === undefined) {
@@ -30,9 +11,8 @@
         return arr;
     }
 
-    function StructureCtrl($scope, $state, StructureService, InventoryService, LogService, HeaderService) {
+    function StructureCtrl($state, StructureService, InventoryService, LogService, HeaderService) {
         var elemMinimapRoom,
-            structure,
             vm;
 
         vm = this;
@@ -116,7 +96,7 @@
             }
 
             if (door.isExit) {
-                LogService.addMessage("Exiting structure...");
+                LogService.addMessage("Exited " + vm.structure.name + ".");
                 $state.go('location', { 'id': $state.params.locationId });
                 return;
             }
@@ -129,6 +109,9 @@
             door.isPrevious = true;
             vm.room = room;
             vm.controls = buildControls(room);
+            if (room.isScanned) {
+                LogService.addMessage(room.description);
+            }
         };
 
         // var getDoorByPosition = function (position) {
@@ -184,6 +167,7 @@
 
         vm.scanRoom = function (room) {
             LogService.addMessage(room.name + " scanned.");
+            LogService.addMessage(room.description);
             room.isScanned = true;
         };
 
@@ -197,9 +181,7 @@
                 InventoryService.addItem(item);
                 delete vessel.items[i];
             });
-
             cleanArray(vessel.items);
-
             if (vessel.items.length === 0) {
                 vm.openVessel(vessel);
             }
@@ -213,9 +195,7 @@
                     delete item.parent.items[i];
                 }
             });
-
             cleanArray(item.parent.items);
-
             if (item.parent.items.length === 0) {
                 vm.openVessel(item.parent);
             }
@@ -236,29 +216,7 @@
                 len = vm.structure.floors[k].rooms.length;
                 for (i = 0; i < len; ++i) {
                     if (vm.structure.floors[k].rooms[i]._id === id) {
-
-                        var room = vm.structure.floors[k].rooms[i];
-                        // var positions = ['n', 's', 'e', 'w'];
-                        //
-                        // positions.forEach(function (position) {
-                        //     var found = false;
-                        //     room.doors.forEach(function (door) {
-                        //         if (found) {
-                        //             return;
-                        //         }
-                        //         if (door.position === position) {
-                        //             found = true;
-                        //         }
-                        //     });
-                        //     if (found === false) {
-                        //         room.doors.push({
-                        //             name: "",
-                        //             position: position
-                        //         });
-                        //     }
-                        // });
-
-                        return room;
+                        return vm.structure.floors[k].rooms[i];
                     }
                 }
             }
@@ -268,7 +226,6 @@
     }
 
     StructureCtrl.$inject = [
-        '$scope',
         '$state',
         'StructureService',
         'InventoryService',

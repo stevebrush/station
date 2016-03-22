@@ -15,25 +15,36 @@
 
     function World() {
 
-        var locationModel,
+        var ConfigModel,
+            LocationModel,
             that;
 
         Queue.call(this);
 
         that = this;
-        locationModel = require('../models/location');
+
+        ConfigModel = require('../models/config');
+        LocationModel = require('../models/location');
 
         that.init = function (callback) {
+            var config;
+
+            // Build location documents.
             that.queue('locations', function (location) {
                 var loc;
 
-                loc = new locationModel(location.db.values);
+                loc = new LocationModel(location.db.values);
 
                 location.init(loc);
                 location.db.save();
 
                 console.log("Location:", JSON.stringify(location.db.document()));
             });
+
+            // Build config document.
+            config = new ConfigModel(World.Config.get());
+            console.log("Config:", JSON.stringify(config));
+            config.save();
 
             console.log("World building complete!");
 
@@ -52,6 +63,25 @@
         return this;
     };
 
+
+    // Static methods.
+    World.Config = (function () {
+        var _configurations,
+            that;
+
+        that = this;
+        _configurations = {};
+
+        return {
+            set: function (key, value) {
+                _configurations[key] = value;
+                return that;
+            },
+            get: function () {
+                return _configurations;
+            }
+        };
+    }());
     World.Item = Item.static;
     World.Vessel = Vessel.static;
 

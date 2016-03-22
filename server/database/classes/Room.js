@@ -31,20 +31,111 @@
 
             // Assign each room a floor number.
             that.parent.ready(function () {
-                var thisFloor;
-
-                thisFloor = this;
-
-                thisFloor.parent.queue('floors', function (floor, i) {
-                    if (floor.slug === thisFloor.slug) {
-                        that.db.document().floor = i;
-                    }
-                });
+                that.db.document().floor = that.parent.parent.getQueue('floors').indexOf(this);
             });
-
 
             // When the structure's ready...
             that.parent.parent.ready(function () {
+                var addCoordsToRoom,
+                    floors,
+                    getRoomById,
+                    setRoomDefaultCoords;
+
+                floors = this.getQueue('floors');
+
+                addCoordsToRoom = function (room) {
+                    room.isChecked = true;
+                    room.doors.forEach(function (door) {
+                        var nextRoom;
+                        nextRoom = getRoomById(door.roomId);
+
+                        if (nextRoom.isChecked === false) {
+
+                            // Update this door's coordinates.
+                            switch (door.position) {
+                                case "n":
+                                nextRoom.y = room.y - 1;
+                                break;
+                                case "s":
+                                nextRoom.y = room.y + 1;
+                                break;
+                                case "e":
+                                nextRoom.x = room.x + 1;
+                                break;
+                                case "w":
+                                nextRoom.x = room.x - 1;
+                                break;
+                            }
+
+                            // The next room is on another floor.
+                            if (door.isRamp) {
+
+                                // Set all rooms default coordinates to the door on the previous side of the ramp.
+                                setRoomDefaultCoords(nextRoom, room.x, room.y);
+                                // switch (door.position) {
+                                //     case "n":
+                                //     setRoomDefaultCoords(nextRoom, room.x, room.y - 1);
+                                //     break;
+                                //     case "s":
+                                //     setRoomDefaultCoords(nextRoom, room.x, room.y + 1);
+                                //     break;
+                                //     case "e":
+                                //     setRoomDefaultCoords(nextRoom, room.x + 1, room.y);
+                                //     break;
+                                //     case "w":
+                                //     setRoomDefaultCoords(nextRoom, room.x - 1, room.y);
+                                //     break;
+                                // }
+                                addCoordsToRoom(nextRoom);
+                                return;
+                            }
+                            addCoordsToRoom(nextRoom);
+                        }
+                    });
+                };
+
+                getRoomById = function (id) {
+                    var found;
+                    found = false;
+                    floors.forEach(function (floor) {
+                        floor.db.get('rooms').forEach(function (room) {
+                            if (room._id === id) {
+                                found = room;
+                            }
+                        });
+                    });
+                    return found;
+                };
+
+                setRoomDefaultCoords = function (room, x, y) {
+                    room.defaultsSet = true;
+                    room.x = x;
+                    room.y = y;
+                    room.doors.forEach(function (door) {
+                        var nextRoom;
+                        nextRoom = getRoomById(door.roomId);
+                        if (room.defaultsSet === false) {
+                            setRoomDefaultCoords(nextRoom, x, y);
+                        }
+                    });
+                };
+
+                // Set some defaults.
+                floors.forEach(function (floor) {
+                    floor.db.get('rooms').forEach(function (room) {
+                        room.x = 0;
+                        room.y = 0;
+                        room.isChecked = false;
+                    });
+                });
+
+                // Determine room coordinates.
+                floors.forEach(function (floor) {
+                    floor.db.get('rooms').forEach(function (room) {
+                        addCoordsToRoom(room);
+                    });
+                });
+
                 /*
                  After all rooms have been created (with IDs),
                  Loop through all the doors and switch out slug with doorId

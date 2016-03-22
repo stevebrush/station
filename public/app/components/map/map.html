@@ -3,12 +3,18 @@
 </div>
 <ul class="nav-showcase">
     <li ng-repeat="location in mapCtrl.locations">
-        <a href ng-click="mapCtrl.selectLocation(location)">{{ location.name }}</a>
+        <a class="btn" href ng-click="mapCtrl.selectLocation(location)">{{ location.name }}</a>
         <ul ng-if="location.isSelected">
             <li>
                 <p>{{ location.description }}</p>
-                <a class="btn" href ui-sref="location({ id: location._id })">Travel</a>
-                <a class="btn btn-muted" href ng-click="location.isSelected = false">Cancel</a>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <a class="btn" href ui-sref="location({ id: location._id })">Travel</a>
+                  </div>
+                  <div class="col-sm-6">
+                    <a class="btn btn-muted" href ng-click="location.isSelected = false">Cancel</a>
+                  </div>
+                </div>
             </li>
         </ul>
     </li>

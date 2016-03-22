@@ -1,5 +1,5 @@
-(function (window, angular) {
-    "use strict";
+(function (angular) {
+    'use strict';
 
     function stInventory() {
         return {
@@ -9,25 +9,30 @@
         };
     }
 
-    function InventoryCtrl($rootScope, InventoryService) {
+    function InventoryCtrl(InventoryService, HeaderService) {
         var vm;
 
         vm = this;
 
-        vm.goBack = function () {
-            $rootScope.state.back();
-        };
+        HeaderService.set({
+            title: 'Inventory',
+            showBackButton: true
+        });
 
         vm.items = InventoryService.getItems();
+
+        InventoryService.getMoneyTotal().then(function (data) {
+            vm.money = data.moneyTotal;
+        });
     }
 
     InventoryCtrl.$inject = [
-        '$rootScope',
-        'InventoryService'
+        'InventoryService',
+        'HeaderService'
     ];
 
     angular.module('station')
         .controller('InventoryCtrl', InventoryCtrl)
         .directive('stInventory', stInventory);
 
-}(window, window.angular));
+}(window.angular));

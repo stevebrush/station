@@ -1,0 +1,6 @@
+$color-primary: #000;
+$color-primary-inverse: #fff;
+$color-primary-darkened: darken($color-primary, 25%);
+$color-primary-muted: lighten($color-primary, 70%);
+$color-primary-lightened: lighten($color-primary, 94%);
+$color-highlight: yellow;

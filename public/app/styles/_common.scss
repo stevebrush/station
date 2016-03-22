@@ -1,0 +1,31 @@
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
+.hidden {
+    opacity: 0 !important;
+}
+.visible {
+    opacity: 1 !important;
+}
+
+.text-muted {
+    color: $color-primary-muted;
+}
+
+.flash {
+    animation-name: blinker;
+    animation-duration: 700ms;
+    animation-timing-function: linear;
+    animation-iteration-count: 1;
+}
+
+@keyframes blinker {
+
+    50% {
+        background-color: $color-highlight;
+    }
+    100% {
+        background-color: $color-primary-inverse;
+    }
+}

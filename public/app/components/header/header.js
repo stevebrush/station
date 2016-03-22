@@ -11,7 +11,7 @@
         };
     }
 
-    function HeaderController($scope, $rootScope, HeaderService) {
+    function HeaderController($scope) {
         var vm;
 
         vm = this;
@@ -26,9 +26,7 @@
     }
 
     HeaderController.$inject = [
-        '$scope',
-        '$rootScope',
-        'HeaderService'
+        '$scope'
     ];
 
     angular.module('station')

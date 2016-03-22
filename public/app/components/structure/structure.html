@@ -1,59 +1,46 @@
-<div class="page-header">
-    <h1>{{ structureCtrl.room.name }}</h1>
-</div>
-<div class="row" ng-cloak>
+<div class="row">
   <div class="col-sm-6">
+    <h1>{{ structureCtrl.room.name }}</h1>
     <p ng-hide="structureCtrl.room.isScanned">
         <a class="btn" href ng-click="structureCtrl.scanRoom(structureCtrl.room)">Scan Room</a>
-    </p>
-    <p class="lead" ng-if="structureCtrl.room.isScanned && structureCtrl.room.description">
-        {{ structureCtrl.room.description }}
     </p>
     <ul class="nav-showcase" ng-if="structureCtrl.room.isScanned">
         <li ng-repeat="vessel in structureCtrl.room.vessels">
             <a class="btn" href ng-click="structureCtrl.openVessel(vessel)" ng-class="{'btn-muted': !vessel.items.length}">
-                {{:: vessel.name }}
+                {{:: vessel.name }} <span ng-if="!vessel.items.length">(Empty)</span>
             </a>
-            <span class="text-muted" ng-if="!vessel.items.length">(Empty)</span>
-            <ul class="nav-showcase" ng-if="vessel.isOpen && vessel.items.length">
-                <li ng-repeat="item in vessel.items">
-                    <a href ng-click="structureCtrl.selectItem(item)">
-                        {{ item.name }}
-                    </a>
-                    <ul ng-show="item.isSelected">
-                        <li>
-                            <p>{{ item.description }}</p>
-                            <a class="btn" href ng-click="structureCtrl.takeItem(item)">Take</a>
-                            <a class="btn btn-muted" href ng-click="item.isSelected = false">Cancel</a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a class="btn" href ng-click="structureCtrl.takeAllItems(vessel)">Take all</a>
-                    <a class="btn btn-muted" href ng-click="vessel.isOpen = false">Cancel</a>
-                </li>
-            </ul>
-        </li>
-        <li style="display: none;" ng-repeat="door in structureCtrl.room.doors">
-            <span>[{{:: door.position }}]</span>
-            <a href ng-click="structureCtrl.openDoor(door)" data-this-room="{{ thisRoom = structureCtrl.findRoomById(door.roomId) }}">
-                <span ng-show="door.isExit">Exit to {{::door.name }}...</span>
-                <span ng-hide="door.isExit">
-                    <span ng-hide="door.entryAttempted || thisRoom.isScanned">
-                      <span ng-if="door.isRamp">Stairs...</span>
-                      <span ng-if="!door.isRamp">Door...</span>
-                    </span>
-                    <span ng-show="door.entryAttempted || thisRoom.isScanned">
-                        <span ng-if="thisRoom.isScanned">{{::door.name }}...</span>
-                        <span ng-if="!thisRoom.isScanned">
-                          <span ng-if="door.isRamp">Stairs...</span>
-                          <span ng-if="!door.isRamp">Door...</span>
-                        </span>
-                    </span>
-                </span>
-            </a>
-            <span class="text-muted" ng-show="door.entryAttempted && door.isLocked">(Locked)</span>
-            <span class="text-muted" ng-show="door.isPrevious">(Back)</span>
+            <div class="modal" ng-if="vessel.isOpen && vessel.items.length">
+              <div class="modal-container">
+                <div class="modal-header">
+                  {{:: vessel.name }}
+                </div>
+                <div class="modal-body">
+                  <ul class="nav-showcase">
+                      <li ng-repeat="item in vessel.items">
+                          <a href ng-click="structureCtrl.selectItem(item)">
+                              {{ item.name }}
+                          </a>
+                          <ul ng-show="item.isSelected">
+                              <li>
+                                  <p>{{ item.description }}</p>
+                                  <a class="btn" href ng-click="structureCtrl.takeItem(item)">Take</a>
+                              </li>
+                          </ul>
+                      </li>
+                  </ul>
+                </div>
+                <div class="modal-footer">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <a class="btn" href ng-click="structureCtrl.takeAllItems(vessel)">Take all</a>
+                    </div>
+                    <div class="col-sm-6">
+                      <a class="btn btn-muted" href ng-click="vessel.isOpen = false">Close</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
         </li>
     </ul>
   </div>

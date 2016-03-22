@@ -27,6 +27,7 @@
 
     Database.models = {};
     Database.models.Location = require('../models/location');
+    Database.models.Config = require('../models/config');
 
 
     module.exports = Database;

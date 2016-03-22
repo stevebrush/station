@@ -9,11 +9,14 @@
     </head>
     <body ng-app="{{ module }}">
         <st-header></st-header>
-        <div class="container">
-            {{{ body }}}
-            <ui-view></ui-view>
+        <div id="game-pane">
+            <div class="container">
+                <div id="main">
+                    <ui-view></ui-view>
+                </div>
+                <st-log></st-log>
+            </div>
         </div>
-        <st-log></st-log>
         <st-utilities></st-utilities>
         <script src="/js/app.js"></script>
     </body>
