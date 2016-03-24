@@ -1,10 +1,10 @@
 (function (angular) {
     'use strict';
 
-    function HomeCtrl() {
+    function HomeController() {
 
     }
 
-    angular.module('station').controller('HomeCtrl', HomeCtrl);
+    angular.module('station').controller('HomeController', HomeController);
 
 }(window.angular));

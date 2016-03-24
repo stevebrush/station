@@ -5,21 +5,21 @@
         return {
             restrict: 'AEC',
             templateUrl: '../public/app/components/utilities/utilities.html',
-            controller: 'UtilitiesCtrl as utilitiesCtrl'
+            controller: 'UtilitiesController as utilitiesCtrl'
         };
     }
 
-    function UtilitiesCtrl(StorageService) {
+    function UtilitiesController(StorageService) {
         var vm;
 
         vm = this;
 
     }
 
-    UtilitiesCtrl.$inject = [];
+    UtilitiesController.$inject = [];
 
     angular.module('station')
-        .controller('UtilitiesCtrl', UtilitiesCtrl)
+        .controller('UtilitiesController', UtilitiesController)
         .directive('stUtilities', stUtilities);
 
 }(window, window.angular));

@@ -6,7 +6,7 @@
             restrict: 'AEC',
             replace: true,
             templateUrl: '../public/app/components/log/log.html',
-            controller: 'LogCtrl as logCtrl',
+            controller: 'LogController as logCtrl',
             link: function (scope, element, attrs, controller) {
                 // Flash the log when there's a new message.
                 scope.$watch(function () {
@@ -21,7 +21,7 @@
         };
     }
 
-    function LogCtrl(LogService) {
+    function LogController(LogService) {
         var vm;
 
         vm = this;
@@ -29,12 +29,12 @@
         vm.messages = LogService.getMessages();
     }
 
-    LogCtrl.$inject = [
+    LogController.$inject = [
         'LogService'
     ];
 
     angular.module('station')
-        .controller('LogCtrl', LogCtrl)
+        .controller('LogController', LogController)
         .directive('stLog', stLog);
 
 }(window.angular));

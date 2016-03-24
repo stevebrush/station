@@ -15,19 +15,7 @@
                   {{:: vessel.name }}
                 </div>
                 <div class="modal-body">
-                  <ul class="nav-showcase">
-                      <li ng-repeat="item in vessel.items">
-                          <a href ng-click="structureCtrl.selectItem(item)">
-                              {{ item.name }}
-                          </a>
-                          <ul ng-show="item.isSelected">
-                              <li>
-                                  <p>{{ item.description }}</p>
-                                  <a class="btn" href ng-click="structureCtrl.takeItem(item)">Take</a>
-                              </li>
-                          </ul>
-                      </li>
-                  </ul>
+                  <st-inventory items="vessel.items" actions="[{ Take: 'takeItem' }]"></st-inventory>
                 </div>
                 <div class="modal-footer">
                   <div class="row">

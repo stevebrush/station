@@ -9,27 +9,27 @@
             .state('home', {
                 url: '/',
                 templateUrl: '../public/app/views/home/home.html',
-                controller: 'HomeCtrl as homeCtrl'
+                controller: 'HomeController as homeCtrl'
             })
             .state('map', {
                 url: '/map',
-                templateUrl: '../public/app/components/map/map.html',
-                controller: 'MapCtrl as mapCtrl'
+                templateUrl: '../public/app/views/map/map.html',
+                controller: 'MapController as mapCtrl'
             })
             .state('location', {
                 url: '/location/:id',
-                templateUrl: '../public/app/components/location/location.html',
-                controller: 'LocationCtrl as locationCtrl'
+                templateUrl: '../public/app/views/location/location.html',
+                controller: 'LocationController as locationCtrl'
             })
             .state('structure', {
                 url: '/location/:locationId/structure/:structureId/room/:roomId',
-                templateUrl: '../public/app/components/structure/structure.html',
-                controller: 'StructureCtrl as structureCtrl'
+                templateUrl: '../public/app/views/structure/structure.html',
+                controller: 'StructureController as structureCtrl'
             })
-            .state('inventory', {
-                url: '/inventory',
-                templateUrl: '../public/app/components/inventory/inventory.html',
-                controller: 'InventoryCtrl as inventoryCtrl'
+            .state('backpack', {
+                url: '/backpack',
+                templateUrl: '../public/app/views/backpack/backpack.html',
+                controller: 'BackpackController as backpackCtrl'
             });
     }
 

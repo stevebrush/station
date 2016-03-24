@@ -1,0 +1,9 @@
+.backpack-table {
+    > tbody {
+        > tr {
+            > td {
+                background-color: $color-primary-muted;
+            }
+        }
+    }
+}

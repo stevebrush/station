@@ -102,7 +102,7 @@ module.exports = function (grunt) {
                 tasks: ['concat_sourcemap:app', 'uglify:app']
             },
             templates: {
-                files: ['public/app/components/**/*.html'],
+                files: ['public/app/views/**/*.html', 'public/app/components/**/*.html'],
                 tasks: ['html2js', 'concat_sourcemap:app', 'uglify:app']
             }
         }

@@ -1,0 +1,14 @@
+<table class="table backpack-table">
+  <tr>
+    <td>
+      {{ backpackCtrl.weight }}/{{ backpackCtrl.maxWeight }} Weight
+    </td>
+    <td>
+      {{ backpackCtrl.money }}/{{ backpackCtrl.maxMoney }} Cogs
+    </td>
+  </tr>
+</table>
+<st-inventory items="backpackCtrl.items" actions="[{ Destroy: 'destroyItem' }]"></st-inventory>
+<div ng-if="!backpackCtrl.items.length">
+    (No items found.)
+</div>

@@ -9,14 +9,16 @@
     left: 0;
     right: 0;
 
-    > li {
-        padding: 0 5px;
-        width: 33.33333%;
-        float: left;
-        margin: 0;
-    }
-    .btn {
-        margin: 0;
-        border-color: transparent;
+    ul {
+        > li {
+            padding: 0 5px;
+            width: 33.33333%;
+            float: left;
+            margin: 0;
+        }
+        .btn {
+            margin: 0;
+            border-color: transparent;
+        }
     }
 }

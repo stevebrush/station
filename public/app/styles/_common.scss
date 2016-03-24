@@ -9,6 +9,37 @@
     opacity: 1 !important;
 }
 
+.table {
+    width: 100%;
+    margin-bottom: 10px;
+
+    td,
+    th {
+        text-align: left;
+        padding: 4px 10px;
+        white-space: nowrap;
+        line-height: 1;
+    }
+
+    > thead {
+        > tr {
+            > th {
+
+            }
+        }
+    }
+    > tbody {
+        > tr {
+            > td {
+                &:last-child {
+                    text-align: right;
+                    width: 1px;
+                }
+            }
+        }
+    }
+}
+
 .text-muted {
     color: $color-primary-muted;
 }

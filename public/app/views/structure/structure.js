@@ -1,17 +1,7 @@
 (function (window, angular) {
     "use strict";
 
-    function cleanArray(arr) {
-        for (var i = 0; i < arr.length; ++i) {
-            if (arr[i] === undefined) {
-                arr.splice(i, 1);
-                i--;
-            }
-        }
-        return arr;
-    }
-
-    function StructureCtrl($state, StructureService, InventoryService, LogService, HeaderService) {
+    function StructureController($state, StructureService, BackpackService, LogService, HeaderService, utils) {
         var elemMinimapRoom,
             vm;
 
@@ -30,7 +20,7 @@
 
         function buildControls(room) {
             var positions;
-            room = JSON.parse(JSON.stringify(room));
+            room = utils.clone(room);
             positions = ['n', 's', 'e', 'w'];
             positions.forEach(function (position) {
                 var found = false;
@@ -70,7 +60,7 @@
             }
 
             if (door.isLocked) {
-                key = InventoryService.getItemById(door.keyId);
+                key = BackpackService.getItemById(door.keyId);
 
                 if (key) {
                     door.isLocked = false;
@@ -171,33 +161,16 @@
             room.isScanned = true;
         };
 
-        vm.selectItem = function (item) {
-            item.isSelected = (item.isSelected) ? false : true;
-        };
-
         vm.takeAllItems = function (vessel) {
             vessel.items.forEach(function (item, i) {
+                item.isSelected = false;
                 LogService.addMessage(item.name + " added to inventory.");
-                InventoryService.addItem(item);
+                BackpackService.addItem(item);
                 delete vessel.items[i];
             });
-            cleanArray(vessel.items);
+            utils.cleanArray(vessel.items);
             if (vessel.items.length === 0) {
                 vm.openVessel(vessel);
-            }
-        };
-
-        vm.takeItem = function (item) {
-            item.parent.items.forEach(function (thisItem, i) {
-                if (thisItem._id === item._id) {
-                    LogService.addMessage(item.name + " added to inventory.");
-                    InventoryService.addItem(item);
-                    delete item.parent.items[i];
-                }
-            });
-            cleanArray(item.parent.items);
-            if (item.parent.items.length === 0) {
-                vm.openVessel(item.parent);
             }
         };
 
@@ -225,15 +198,16 @@
         };
     }
 
-    StructureCtrl.$inject = [
+    StructureController.$inject = [
         '$state',
         'StructureService',
-        'InventoryService',
+        'BackpackService',
         'LogService',
-        'HeaderService'
+        'HeaderService',
+        'utils'
     ];
 
     angular.module('station')
-        .controller('StructureCtrl', StructureCtrl);
+        .controller('StructureController', StructureController);
 
 }(window, window.angular));

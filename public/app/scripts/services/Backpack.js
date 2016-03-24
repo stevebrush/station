@@ -1,7 +1,7 @@
 (function (window, angular) {
     "use strict";
 
-    function InventoryService($q, ConfigService) {
+    function BackpackService($q, ConfigService) {
         var items;
 
         items = [];
@@ -98,14 +98,32 @@
             });
             return deferred.promise;
         };
+
+        this.getWeightTotal = function () {
+            var deferred,
+                weight;
+
+            deferred = $q.defer();
+            weight = 0;
+
+            items.forEach(function (item) {
+                weight += item.weight || 0;
+            });
+
+            deferred.resolve({
+                weightTotal: weight
+            });
+
+            return deferred.promise;
+        };
     }
 
-    InventoryService.$inject = [
+    BackpackService.$inject = [
         '$q',
         'ConfigService'
     ];
 
     angular.module('station')
-        .service('InventoryService', InventoryService);
+        .service('BackpackService', BackpackService);
 
 }(window, window.angular));
