@@ -6,14 +6,12 @@
 
         vm = this;
 
-        if (!vm.locations) {
-            LocationService.getLocations().then(function (data) {
-                vm.locations = data;
-                HeaderService.set({
-                    title: "Map"
-                });
+        LocationService.getLocations().then(function (data) {
+            vm.locations = data;
+            HeaderService.set({
+                title: "Map"
             });
-        }
+        });
 
         vm.selectLocation = function (location) {
             location.isSelected = (location.isSelected === true) ? false : true;

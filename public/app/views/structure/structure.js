@@ -8,6 +8,12 @@
         vm = this;
         vm.locationId = $state.params.locationId;
 
+        // Generate the player.
+        // var player;
+        // Player.getPlayer().then(function (data) {
+        //     player = data;
+        // });
+
         StructureService.setLocationId($state.params.locationId).getStructureById($state.params.structureId).then(function (data) {
             vm.structure = data;
             vm.room = vm.findRoomById($state.params.roomId);
@@ -16,6 +22,15 @@
             });
             vm.controls = buildControls(vm.room);
             vm.isReady = true;
+            // Add characters to rooms.
+            // data.characters.forEach(function (character) {
+            //     var char = Character.make(character);
+            //     data.rooms.forEach(function (room) {
+            //         if (char.roomId === room._id) {
+            //             room.characters.push(char);
+            //         }
+            //     });
+            // });
         });
 
         function buildControls(room) {
@@ -60,6 +75,7 @@
             }
 
             if (door.isLocked) {
+                //key = player.backpack.getItemById(door.keyId);
                 key = BackpackService.getItemById(door.keyId);
 
                 if (key) {
@@ -148,30 +164,10 @@
         //     });
         // });
 
-        vm.openVessel = function (vessel) {
-            vessel.isOpen = (vessel.isOpen) ? false : true;
-            vessel.items.forEach(function (item) {
-                item.parent = vessel;
-            });
-        };
-
         vm.scanRoom = function (room) {
             LogService.addMessage(room.name + " scanned.");
             LogService.addMessage(room.description);
             room.isScanned = true;
-        };
-
-        vm.takeAllItems = function (vessel) {
-            vessel.items.forEach(function (item, i) {
-                item.isSelected = false;
-                LogService.addMessage(item.name + " added to inventory.");
-                BackpackService.addItem(item);
-                delete vessel.items[i];
-            });
-            utils.cleanArray(vessel.items);
-            if (vessel.items.length === 0) {
-                vm.openVessel(vessel);
-            }
         };
 
         /**

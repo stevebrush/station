@@ -1,10 +1,19 @@
 (function (window, angular) {
     "use strict";
 
-    function BackpackService($q, ConfigService) {
-        var items;
+    function BackpackService($rootScope, $q, ConfigService) {
+        var items,
+            that;
 
+        that = this;
         items = [];
+
+        function updateGroupValues() {
+            items.forEach(function (item) {
+                item.groupValue = item.quantity * item.value;
+                item.groupWeight = item.quantity * item.weight;
+            });
+        }
 
         this.addItem = function (item) {
             var found;
@@ -26,11 +35,11 @@
                 items.push(item);
             }
 
-            this.updateGroupValues();
+            updateGroupValues();
         };
 
         this.getItems = function () {
-            this.updateGroupValues();
+            updateGroupValues();
             return items;
         };
 
@@ -70,13 +79,7 @@
                 items.splice(index, 1);
             }
 
-            this.updateGroupValues();
-        };
-
-        this.updateGroupValues = function () {
-            items.forEach(function (item) {
-                item.groupValue = item.quantity * item.value;
-            });
+            updateGroupValues();
         };
 
         this.getMoneyTotal = function () {
@@ -107,7 +110,7 @@
             weight = 0;
 
             items.forEach(function (item) {
-                weight += item.weight || 0;
+                weight += (item.weight * item.quantity);
             });
 
             deferred.resolve({
@@ -119,6 +122,7 @@
     }
 
     BackpackService.$inject = [
+        '$rootScope',
         '$q',
         'ConfigService'
     ];

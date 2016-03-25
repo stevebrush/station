@@ -22,7 +22,8 @@
             .Item
                 .template("ballpoint-pen", {
                     name: "Ballpoint Pen",
-                    value: 0.5
+                    value: 0.5,
+                    weight: 0.2
                 })
                 .template("cogs", {
                     name: "Cogs",
@@ -33,19 +34,23 @@
                 })
                 .template("gold-flecks", {
                     name: "Gold Flecks",
-                    value: 10
+                    value: 10,
+                    weight: 0.25
                 })
                 .template("notebook-paper", {
                     name: "Notebook Paper",
-                    value: 0.25
+                    value: 0.25,
+                    weight: 0.1
                 })
                 .template("wrench", {
                     name: "Wrench",
-                    value: 1
+                    value: 1,
+                    weight: 1
                 })
                 .template("nails", {
                     name: "Nails",
-                    value: 1
+                    value: 1,
+                    weight: 0.25
                 });
 
         // Vessel templates.

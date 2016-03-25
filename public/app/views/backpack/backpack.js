@@ -1,7 +1,7 @@
 (function (angular) {
     'use strict';
 
-    function BackpackController(BackpackService, HeaderService) {
+    function BackpackController($scope, BackpackService, HeaderService) {
         var vm;
 
         vm = this;
@@ -24,6 +24,7 @@
     }
 
     BackpackController.$inject = [
+        '$scope',
         'BackpackService',
         'HeaderService'
     ];

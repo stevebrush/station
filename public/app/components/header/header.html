@@ -1,6 +1,8 @@
 <header id="header" class="navbar">
+  <div class="container">
     <ul ng-if="headerCtrl.showBackButton" class="nav">
         <li><a href ng-click="headerCtrl.goBack()">{{ headerCtrl.backButtonTitle }}</li>
     </ul>
     <span class="navbar-title">{{ headerCtrl.title }}</span>
+  </div>
 </header>

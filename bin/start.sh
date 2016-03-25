@@ -6,4 +6,5 @@ set -o errexit # Exit on error
 #npm install station-shared
 source .env
 node index.js
+#mongoexport -d station -c Location --jsonArray --out public/app/data/locations.json
 #open http://localhost:5000/

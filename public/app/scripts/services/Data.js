@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    function LocationService($http, $q) {
+    function DataService($http, $q) {
         var findLocationById,
             locations,
             that;
@@ -22,14 +22,14 @@
             return found;
         };
 
-        this.getLocations = function () {
-            return $http.get('/api/location').then(function (res) {
-                locations = res.data.locations;
+        that.getLocations = function () {
+            return $http.get('/data/locations.json').then(function (res) {
+                locations = res.data;
                 return locations;
             });
         };
 
-        this.getLocationById = function (id) {
+        that.getLocationById = function (id) {
             var deferred,
                 found;
 
@@ -39,21 +39,21 @@
             if (found) {
                 deferred.resolve(found);
             } else {
-                $http.get('/api/location/' + id).then(function (res) {
-                    locations.push(res.data.location);
-                    deferred.resolve(res.data.location);
+                that.getLocations().then(function (res) {
+                    found = findLocationById(id);
+                    deferred.resolve(found);
                 });
             }
-        
+
             return deferred.promise;
         };
     }
 
-    LocationService.$inject = [
+    DataService.$inject = [
         '$http',
         '$q'
     ];
 
     angular.module('station')
-        .service('LocationService', LocationService);
+        .service('DataService', DataService);
 }());
