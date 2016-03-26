@@ -36,20 +36,26 @@
                             mapFloor.style.left = Math.round((mapPaneWidth) - mapRoom.offsetLeft - (mapRoom.clientWidth / 2)) - 1 + 'px';
                             mapFloor.className = '';
 
+                            scope.$digest();
                         }, 0);
                     };
 
-                    setDimensions();
+
+                    try {
+                        setDimensions(scope.$parent.$parent.structureCtrl.room);
+                        //
+                    } catch (e) {}
 
                     scope.$watch("structureCtrl.room", function (newValue, oldValue) {
                         setDimensions();
+                        controller.buildControls(newValue);
                     });
                 });
             }
         };
     }
 
-    function MinimapController($scope, StructureService) {
+    function MinimapController($scope, StructureService, utils) {
         var structure,
             vm;
 
@@ -92,11 +98,38 @@
         StructureService.setLocationId(vm.locationId).getStructureById(vm.structureId).then(function (data) {
             vm.structure = generateMinimap(data);
         });
+
+        vm.buildControls = function (room) {
+            console.log("Build controls:", room.name);
+            var positions;
+            room = utils.clone(room);
+            positions = ['n', 's', 'e', 'w'];
+            positions.forEach(function (position) {
+                var found = false;
+                room.doors.forEach(function (door) {
+                    if (found) {
+                        return;
+                    }
+                    if (door.position === position) {
+                        found = true;
+                    }
+                });
+                if (found === false) {
+                    room.doors.push({
+                        name: "",
+                        position: position
+                    });
+                }
+            });
+            console.log("Controls built:", room);
+            vm.controls = room;
+        };
     }
 
     MinimapController.$inject = [
         '$scope',
-        'StructureService'
+        'StructureService',
+        'utils'
     ];
 
     angular.module('station')

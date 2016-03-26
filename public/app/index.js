@@ -1,6 +1,19 @@
 (function (angular) {
     'use strict';
 
+    function fetchData() {
+        var $http = angular.injector(["ng"]).get("$http");
+        return $http.get('/api/config', { cache: true }).then(function (res) {
+            angular.module('station').constant("STATION_CONFIG", res.data.config);
+        });
+    }
+
+    function bootstrapApplication() {
+        angular.element(document).ready(function() {
+            angular.bootstrap(document, ["station"]);
+        });
+    }
+
     function ConfigRoutes($stateProvider, $urlRouterProvider) {
 
         $urlRouterProvider.otherwise('/');
@@ -63,5 +76,7 @@
     ])
         .config(ConfigRoutes)
         .run(Run);
+
+    fetchData().then(bootstrapApplication);
 
 }(window.angular));

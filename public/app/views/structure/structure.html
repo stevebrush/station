@@ -1,22 +1,17 @@
-<div class="row">
+<div class="row" ng-if="structureCtrl.isReady">
   <div class="col-sm-6">
     <h1>{{ structureCtrl.room.name }}</h1>
-    <p ng-hide="structureCtrl.room.isScanned">
+    <p ng-if="!structureCtrl.room.isScanned">
       <a class="btn" href ng-click="structureCtrl.scanRoom(structureCtrl.room)">Scan Room</a>
     </p>
     <ul class="nav-showcase" ng-if="structureCtrl.room.isScanned">
-      <li ng-repeat="vessel in structureCtrl.room.vessels">
+      <li ng-repeat="vessel in ::structureCtrl.room.vessels">
         <st-vessel owner="vessel" item-actions="[{ Take: 'takeItem' }]"></st-vessel>
       </li>
     </ul>
   </div>
-  <div class="col-sm-6" ng-if="structureCtrl.isReady">
+  <div class="col-sm-6">
     <st-minimap data-location-id="{{:: structureCtrl.locationId }}" data-structure-id="{{ structureCtrl.structure._id }}"></st-minimap>
-    <ul class="directional-controls">
-      <li ng-repeat="door in structureCtrl.controls.doors" class="direction-{{:: door.position}}">
-        <a ng-if="door.roomId || door.isExit" class="btn" href ng-click="structureCtrl.openDoor(door)">{{:: door.position }}</a>
-        <a ng-if="!door.roomId && !door.isExit" class="btn btn-disabled" href>{{::door.position}}</a>
-      </li>
-    </ul>
+    
   </div>
 </div>

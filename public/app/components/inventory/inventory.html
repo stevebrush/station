@@ -1,45 +1,47 @@
-<ul class="nav-showcase" ng-if="inventoryCtrl.items.length">
-    <li ng-repeat="item in inventoryCtrl.items">
-        <table class="table">
-          <tr>
-            <td>
-              <a href ng-click="inventoryCtrl.selectItem(item)">
-                  {{:: item.name }}<span ng-if="item.quantity > 1">&nbsp;({{:: item.quantity }})</span>
-              </a>
-            </td>
-            <td>
-              {{ item.groupValue }}
-            </td>
-          </tr>
-        </table>
-        <ul ng-show="item.isSelected">
-            <li>
-                <p>{{:: item.description }}</p>
-                <table class="table">
-                  <tr>
-                    <td>
-                      Value:
-                    </td>
-                    <td>
-                      {{:: item.value }}&nbsp;ea</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      Weight:
-                    </td>
-                    <td>
-                      {{:: item.weight }}&nbsp;ea
-                    </td>
-                  </tr>
-                </table>
-                <div ng-repeat="button in inventoryCtrl.buttons track by $index">
-                  <a class="btn" href ng-click="button.method($parent.$index)">{{:: button.label }}</a>
-                </div>
-            </li>
-        </ul>
+<div ng-if="inventoryCtrl.isReady">
+  <ul class="nav-showcase" ng-if="inventoryCtrl.vessel.items.length">
+    <li ng-repeat="item in inventoryCtrl.vessel.items">
+      <table class="table">
+        <tr>
+          <td>
+            <a href ng-click="inventoryCtrl.selectItem(item)">
+              {{:: item.name }}<span ng-if="item.quantity > 1">&nbsp;({{:: item.quantity }})</span>
+            </a>
+          </td>
+          <td>
+            {{ item.groupValue }}
+          </td>
+        </tr>
+      </table>
+      <ul ng-show="item.isSelected">
+        <li>
+          <p>{{:: item.description }}</p>
+          <table class="table">
+            <tr>
+              <td>
+                Value:
+              </td>
+              <td>
+                {{:: item.value }}&nbsp;ea</span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Weight:
+              </td>
+              <td>
+                {{:: item.weight }}&nbsp;ea
+              </td>
+            </tr>
+          </table>
+          <div ng-repeat="button in ::inventoryCtrl.buttons track by $index">
+            <a class="btn" href ng-click="button.method($parent.$index)">{{:: button.label }}</a>
+          </div>
+        </li>
+      </ul>
     </li>
-</ul>
-<p ng-if="!inventoryCtrl.items.length">
+  </ul>
+  <p ng-if="!inventoryCtrl.vessel.items.length">
     (No items found.)
-</p>
+  </p>
+</div>

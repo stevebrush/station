@@ -1,7 +1,7 @@
 (function (angular) {
     'use strict';
 
-    function CharacterService($http, $q, Character) {
+    function CharacterService($http, $q, CharacterFactory) {
         var player,
             that;
 
@@ -11,10 +11,12 @@
             var deferred;
             deferred = $q.defer();
             if (player) {
+                console.log("Player already exists. Woot!");
+                player.backpack.updateStats();
                 deferred.resolve(player);
             } else {
-                $http.get('/api/player').then(function (res) {
-                    player = Character.make(res.data);
+                $http.get('/data/player.json').then(function (res) {
+                    player = CharacterFactory.make(res.data);
                     deferred.resolve(player);
                 });
             }
@@ -25,7 +27,7 @@
     CharacterService.$inject = [
         '$http',
         '$q',
-        'Character'
+        'CharacterFactory'
     ];
 
     angular.module('station')

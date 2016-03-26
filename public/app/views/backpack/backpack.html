@@ -1,11 +1,13 @@
-<table class="table backpack-table">
-  <tr>
-    <td>
-      {{ backpackCtrl.weight }}/{{ backpackCtrl.maxWeight }} Weight
-    </td>
-    <td>
-      {{ backpackCtrl.money }}/{{ backpackCtrl.maxMoney }} Cogs
-    </td>
-  </tr>
-</table>
-<st-inventory items="backpackCtrl.items" actions="[{ Destroy: 'destroyItem' }]"></st-inventory>
+<div ng-if="backpackCtrl.isReady">
+  <table class="table backpack-table">
+    <tr>
+      <td>
+        {{ backpackCtrl.backpack.weight }}/{{ backpackCtrl.maxWeight }} Weight
+      </td>
+      <td>
+        {{ backpackCtrl.backpack.money }}/{{ backpackCtrl.maxMoney }} Cogs
+      </td>
+    </tr>
+  </table>
+  <st-inventory vessel="backpackCtrl.backpack" actions="[{ Destroy: 'destroyItem' }]"></st-inventory>
+</div>

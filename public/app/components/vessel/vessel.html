@@ -1,14 +1,14 @@
 <div class="vessel">
-  <a class="btn" href ng-click="vesselCtrl.open()" ng-class="{ 'btn-muted': !vesselCtrl.owner.items.length }">
-      {{:: vesselCtrl.owner.name }} <span ng-if="!vesselCtrl.owner.items.length">(Empty)</span>
+  <a class="btn" href ng-click="vesselCtrl.vessel.open()" ng-class="{ 'btn-muted': !vesselCtrl.vessel.items.length }">
+      {{:: vesselCtrl.vessel.name }} <span ng-if="!vesselCtrl.vessel.items.length">(Empty)</span>
   </a>
-  <div class="modal" ng-if="vesselCtrl.isOpen && vesselCtrl.owner.items.length">
+  <div class="modal" ng-if="vesselCtrl.vessel.isOpen && vesselCtrl.vessel.items.length">
     <div class="container modal-container">
       <div class="modal-header">
-        {{:: vesselCtrl.owner.name }}
+        {{:: vesselCtrl.vessel.name }}
       </div>
       <div class="modal-body">
-        <st-inventory items="vesselCtrl.owner.items" actions="vesselCtrl.itemActions"></st-inventory>
+        <st-inventory vessel="vesselCtrl.vessel" actions="vesselCtrl.itemActions"></st-inventory>
       </div>
       <div class="modal-footer">
         <div class="row">
@@ -16,7 +16,7 @@
             <a class="btn" href ng-click="vesselCtrl.takeAllItems()">Take all</a>
           </div>
           <div class="col-sm-6">
-            <a class="btn" href ng-click="vesselCtrl.isOpen = false">Close</a>
+            <a class="btn" href ng-click="vesselCtrl.vessel.open()">Close</a>
           </div>
         </div>
       </div>

@@ -1,13 +1,21 @@
-<div class="dungeon-map">
-  <div class="dungeon-map-floor-menu">
-    <div class="dungeon-map-floor-menu-item" ng-repeat="floor in minimapCtrl.structure.floors" ng-class="{ 'text-muted': $index !== structureCtrl.room.floor }">F{{ $index + 1 }}</div>
-  </div>
-  <div class="dungeon-map-floor-container" ng-repeat="floor in minimapCtrl.structure.floors" ng-if="$index === structureCtrl.room.floor">
-      <div id="dungeon-map-floor" class="hidden">
-        <div class="dungeon-map-room" ng-repeat="room in floor.rooms" style="top: {{:: room.top }}px; left: {{:: room.left }}px; width: {{:: room.width }}px; height: {{:: room.height }}px" ng-class="{ selected: room._id === structureCtrl.room._id, 'hidden': !room.isScanned }">
-          <div ng-repeat="door in room.doors" class="dungeon-map-door dungeon-map-door-{{:: door.position}}" ng-class="{ 'dungeon-map-ramp': door.isRamp, 'dungeon-map-exit': door.isExit }">
+<div>
+  <div class="dungeon-map">
+    <div class="dungeon-map-floor-menu">
+      <div class="dungeon-map-floor-menu-item" ng-repeat="floor in minimapCtrl.structure.floors" ng-class="{ 'text-muted': $index !== structureCtrl.room.floor }">F{{ $index + 1 }}</div>
+    </div>
+    <div class="dungeon-map-floor-container" ng-repeat="floor in minimapCtrl.structure.floors" ng-if="$index === structureCtrl.room.floor">
+        <div id="dungeon-map-floor" class="hidden">
+          <div class="dungeon-map-room" ng-repeat="room in floor.rooms" style="top: {{:: room.top }}px; left: {{:: room.left }}px; width: {{:: room.width }}px; height: {{:: room.height }}px" ng-class="{ selected: room._id === structureCtrl.room._id, 'hidden': !room.isScanned }">
+            <div ng-repeat="door in room.doors" class="dungeon-map-door dungeon-map-door-{{:: door.position}}" ng-class="{ 'dungeon-map-ramp': door.isRamp, 'dungeon-map-exit': door.isExit }">
+            </div>
           </div>
         </div>
-      </div>
+    </div>
   </div>
+  <ul class="directional-controls">
+    <li ng-repeat="door in minimapCtrl.controls.doors" class="direction-{{:: door.position}}">
+      <a ng-if="door.roomId || door.isExit" class="btn" href ng-click="structureCtrl.openDoor(door)">{{:: door.position }}</a>
+      <a ng-if="!door.roomId && !door.isExit" class="btn btn-disabled" href>{{:: door.position}}</a>
+    </li>
+  </ul>
 </div>

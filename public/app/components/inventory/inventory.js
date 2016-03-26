@@ -6,22 +6,27 @@
             restrict: 'E',
             bindToController: {
                 'actions': '=',
-                'items': '='
+                'vessel': '='
             },
             templateUrl: '../public/app/components/inventory/inventory.html',
             controller: 'InventoryController as inventoryCtrl'
         };
     }
 
-    function InventoryController(BackpackService, LogService, utils) {
+    function InventoryController(CharacterService, LogService, utils) {
         var buttons,
-            updateGroupValues,
+            player,
             vm;
 
         vm = this;
 
+        CharacterService.getPlayer().then(function (data) {
+            player = data;
+            vm.isReady = true;
+        });
+
         vm.destroyItem = function (index) {
-            vm.items.splice(index, 1);
+            vm.vessel.removeItemByIndex(index);
         };
 
         vm.selectItem = function (item) {
@@ -29,18 +34,8 @@
         };
 
         vm.takeItem = function (index) {
-            var item;
-            item = vm.items[index];
-            item.isSelected = false;
-            BackpackService.addItem(item);
-            LogService.addMessage(item.name + " added to backpack.");
-            vm.destroyItem(index);
-        };
-
-        updateGroupValues = function () {
-            vm.items.forEach(function (item) {
-                item.groupValue = item.quantity * item.value;
-            });
+            player.backpack.addItem(vm.vessel.items[index]);
+            vm.vessel.removeItemByIndex(index);
         };
 
         if (vm.actions) {
@@ -56,12 +51,10 @@
             });
             vm.buttons = buttons;
         }
-
-        updateGroupValues();
     }
 
     InventoryController.$inject = [
-        'BackpackService',
+        'CharacterService',
         'LogService',
         'utils'
     ];

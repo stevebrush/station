@@ -3,7 +3,6 @@
 
     function LocationController($state, LocationService, HeaderService) {
         var vm;
-
         vm = this;
 
         LocationService.getLocationById($state.params.id).then(function (data) {

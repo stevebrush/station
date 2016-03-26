@@ -14,36 +14,27 @@
         };
     }
 
-    function VesselController(BackpackService, LogService, utils) {
-        var vm;
-        vm = this;
-        vm.isOpen = false;
+    function VesselController(CharacterService, utils, VesselFactory) {
+        var player,
+            vm;
 
-        vm.open = function () {
-            vm.isOpen = (vm.isOpen) ? false : true;
-            vm.owner.items.forEach(function (item) {
-                item.parent = vm.owner;
-            });
-        };
+        vm = this;
+        vm.vessel = VesselFactory.make(vm.owner);
+
+        CharacterService.getPlayer().then(function (data) {
+            player = data;
+        });
 
         vm.takeAllItems = function () {
-            vm.owner.items.forEach(function (item, i) {
-                item.isSelected = false;
-                LogService.addMessage(item.name + " added to inventory.");
-                BackpackService.addItem(item);
-                delete vm.owner.items[i];
-            });
-            utils.cleanArray(vm.owner.items);
-            if (vm.owner.items.length === 0) {
-                vm.open();
-            }
+            player.backpack.addItems(vm.vessel.removeAllItems());
+            vm.vessel.open();
         };
     }
 
     VesselController.$inject = [
-        'BackpackService',
-        'LogService',
-        'utils'
+        'CharacterService',
+        'utils',
+        'VesselFactory'
     ];
 
     angular.module('station')
