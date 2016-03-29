@@ -3,14 +3,15 @@
 
 * {
     box-sizing: border-box;
+    user-select: none;
 }
 
 body {
     background-color: $color-primary-inverse;
     color: $color-primary;
-    font-family: monospace;
-    font-size: 13px;
-    line-height: 1.45;
+    font-family: $font-sans-serif;
+    font-size: $font-size-default;
+    line-height: $font-line-height-default;
     margin: 0;
     padding: 0;
 }
@@ -57,21 +58,34 @@ p {
     position: absolute;
     width: 100%;
     margin: 36px 0 46px;
+    padding: 10px;
     bottom: 0;
     top: 0;
+    overflow: auto;
 
     > .container {
         position: relative;
         height: 100%;
+
+        > ui-view {
+            height: 100%;
+        }
     }
 }
 
-#main {
+#content-main {
     overflow: auto;
     height: 80%;
     position: absolute;
-    padding: 10px;
     width: 100%;
+}
+
+#content-sub {
+    height: 20%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
 
@@ -80,7 +94,6 @@ p {
 @import "_backpack";
 @import "_inventory";
 @import "_showcase";
-@import "_directional-controls";
 @import "_modal";
 @import "_utilities";
 @import "_buttons";

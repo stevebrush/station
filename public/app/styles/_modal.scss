@@ -13,12 +13,55 @@
         background-color: $color-primary-lightened;
 
         > .modal-header {
-            padding: 0 10px;
+            padding: 0;
             background-color: $color-primary;
             color: $color-primary-inverse;
             text-align: center;
             height: 36px;
             line-height: 36px;
+            position: relative;
+
+            > .modal-header-btn {
+                background-color: transparent;
+                color: $color-primary-muted;
+                text-decoration: underline;
+                font-size: $font-size-default;
+                line-height: 36px;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                padding: 0;
+                z-index: 1;
+                white-space: nowrap;
+
+                &:first-child {
+                    left: 10px;
+
+                    // &:before {
+                    //     content: "< ";
+                    // }
+                }
+                &:last-child {
+                    right: 10px;
+
+                    // &:after {
+                    //     content: " >";
+                    // }
+                }
+
+                &.current {
+                    text-decoration: none;
+                    color: $color-primary-inverse;
+                    left: 0;
+                    right: 0;
+                    z-index: 0;
+
+                    // &:before,
+                    // &:after {
+                    //     content: "";
+                    // }
+                }
+            }
         }
 
         > .modal-body {

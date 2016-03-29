@@ -46,13 +46,12 @@
 
 .flash {
     animation-name: blinker;
-    animation-duration: 700ms;
+    animation-duration: 500ms;
     animation-timing-function: linear;
     animation-iteration-count: 1;
 }
 
 @keyframes blinker {
-
     50% {
         background-color: $color-highlight;
     }

@@ -12,9 +12,9 @@
                 scope.$watch(function () {
                     return controller.messages[0];
                 }, function (newValue, oldValue) {
-                    element[0].className = "flash";
+                    element[0].className += " flash";
                     setTimeout(function () {
-                        element[0].className = "";
+                        element[0].className = element[0].className.replace(' flash','');
                     }, 1000);
                 });
             }

@@ -14,14 +14,14 @@
 
             defaults = {};
             that = this;
-            that.isOpen = false;
+
             for (var o in options) {
                 if (options.hasOwnProperty(o)) {
                     that[o] = options[o];
                 }
             }
             that.items = that.items || [];
-            that.name = that.name || "backpack";
+            that.name = that.name || "Backpack";
 
             function updateGroupValues() {
                 that.items.forEach(function (item) {
@@ -34,7 +34,6 @@
                 updateGroupValues();
                 that.getMoney();
                 that.getWeight();
-                console.log("Vessel stats for " + that.name, that.money, that.weight);
             };
 
             that.addItem = function (item) {
@@ -80,11 +79,6 @@
                     }
                 }
                 return false;
-            };
-
-            that.open = function () {
-                that.isOpen = (that.isOpen) ? false : true;
-                that.updateStats();
             };
 
             that.removeItemById = function (id) {
@@ -153,10 +147,8 @@
             var vessel;
             vessel = vessels[data._id];
             if (vessel) {
-                console.log("Vessel already exists. Woot!");
                 return vessel;
             }
-            console.log("Creating Vessel with:", data);
             vessel = vessels[data._id] = new Vessel(data);
             return vessel;
         };

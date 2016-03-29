@@ -1,6 +1,6 @@
-<div ng-if="inventoryCtrl.isReady">
-  <ul class="nav-showcase" ng-if="inventoryCtrl.vessel.items.length">
-    <li ng-repeat="item in inventoryCtrl.vessel.items">
+<div>
+  <ul class="nav-showcase" ng-if="inventoryCtrl.owner.items.length">
+    <li ng-repeat="item in inventoryCtrl.owner.items">
       <table class="table">
         <tr>
           <td>
@@ -9,7 +9,7 @@
             </a>
           </td>
           <td>
-            {{ item.groupValue }}
+            {{:: item.groupValue }}
           </td>
         </tr>
       </table>
@@ -34,14 +34,14 @@
               </td>
             </tr>
           </table>
-          <div ng-repeat="button in ::inventoryCtrl.buttons track by $index">
-            <a class="btn" href ng-click="button.method($parent.$index)">{{:: button.label }}</a>
+          <div ng-repeat="action in inventoryCtrl.actions track by $index">
+            <a ng-repeat="(key, value) in action" class="btn" href ng-click="inventoryCtrl[value]($parent.$parent.$index)">{{ key }}</a>
           </div>
         </li>
       </ul>
     </li>
   </ul>
-  <p ng-if="!inventoryCtrl.vessel.items.length">
+  <p ng-if="!inventoryCtrl.owner.items.length">
     (No items found.)
   </p>
 </div>

@@ -1,3 +1,17 @@
+button {
+    border-radius: 0;
+    border: 0;
+    background-color: $color-primary-inverse;
+    font-size: $font-size-default;
+    line-height: $font-line-height-default;
+
+    &:focus,
+    &:hover,
+    &:active {
+        outline: none;
+    }
+}
+
 .btn {
     border: 1px solid transparent;
     text-decoration: none;
@@ -10,11 +24,14 @@
     background-color: $color-primary-inverse;
     color: $color-primary;
     border-color: $color-primary;
+    font-family: $font-sans-serif;
+    font-size: $font-size-default;
 
     &:hover,
     &:focus,
     &:active {
         color: $color-primary;
+        outline: none;
     }
 
     &.btn-muted,

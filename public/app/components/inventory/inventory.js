@@ -6,7 +6,8 @@
             restrict: 'E',
             bindToController: {
                 'actions': '=',
-                'vessel': '='
+                'owner': '=',
+                'visitor': '='
             },
             templateUrl: '../public/app/components/inventory/inventory.html',
             controller: 'InventoryController as inventoryCtrl'
@@ -14,43 +15,27 @@
     }
 
     function InventoryController(CharacterService, LogService, utils) {
-        var buttons,
-            player,
-            vm;
-
+        var vm;
         vm = this;
 
-        CharacterService.getPlayer().then(function (data) {
-            player = data;
-            vm.isReady = true;
-        });
-
         vm.destroyItem = function (index) {
-            vm.vessel.removeItemByIndex(index);
+            var item;
+            item = vm.owner.items[index];
+            if (item.isDroppable === true) {
+                vm.owner.removeItemByIndex(index);
+            } else {
+                LogService.addMessage(item.name + " cannot be destroyed.");
+            }
         };
 
         vm.selectItem = function (item) {
             item.isSelected = (item.isSelected) ? false : true;
         };
 
-        vm.takeItem = function (index) {
-            player.backpack.addItem(vm.vessel.items[index]);
-            vm.vessel.removeItemByIndex(index);
+        vm.moveItem = function (index) {
+            vm.visitor.addItem(vm.owner.items[index]);
+            vm.owner.removeItemByIndex(index);
         };
-
-        if (vm.actions) {
-            buttons = [];
-            vm.actions.forEach(function (action, i) {
-                var k;
-                for (k in action) {
-                    buttons.push({
-                        label: k,
-                        method: vm[action[k]]
-                    });
-                }
-            });
-            vm.buttons = buttons;
-        }
     }
 
     InventoryController.$inject = [

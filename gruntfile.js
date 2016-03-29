@@ -20,7 +20,7 @@ module.exports = function (grunt) {
                     '<%= buildPath %>/js/app.js': [
                         'bower_components/angular/angular.js',
                         'bower_components/angular-ui-router/release/angular-ui-router.js',
-                        'public/app/index.js',
+                        'public/app/app.js',
                         'public/app/scripts/**/*.js',
                         'public/app/components/**/*.js',
                         'public/app/views/**/*.js',

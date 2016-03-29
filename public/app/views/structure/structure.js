@@ -1,7 +1,7 @@
 (function (window, angular) {
     "use strict";
 
-    function StructureController($state, StructureService, CharacterService, LogService, HeaderService, utils) {
+    function StructureController($state, $timeout, StructureService, CharacterService, LogService, HeaderService, utils) {
         var player,
             vm;
 
@@ -14,7 +14,6 @@
 
                 vm.structure = data;
                 vm.room = vm.findRoomById($state.params.roomId);
-                //vm.controls = buildControls(vm.room);
 
                 HeaderService.set({
                     title: vm.structure.name
@@ -37,46 +36,12 @@
                 // });
             });
 
-        function buildControls(room) {
-            var positions;
-            room = utils.clone(room);
-            positions = ['n', 's', 'e', 'w'];
-            positions.forEach(function (position) {
-                var found = false;
-                room.doors.forEach(function (door) {
-                    if (found) {
-                        return;
-                    }
-                    if (door.position === position) {
-                        found = true;
-                    }
-                });
-                if (found === false) {
-                    room.doors.push({
-                        name: "",
-                        position: position
-                    });
-                }
-            });
-            return room;
-        }
-
         vm.openDoor = function (door) {
             var key,
                 room;
 
             door.entryAttempted = true;
             room = vm.findRoomById(door.roomId);
-
-            // Set the previous room.
-            if (room.doors) {
-                room.doors.forEach(function (door) {
-                    door.isPrevious = false;
-                    if (door.roomId === vm.room._id) {
-                        door.isPrevious = true;
-                    }
-                });
-            }
 
             if (door.isLocked) {
                 key = player.backpack.getItemById(door.keyId);
@@ -92,8 +57,6 @@
 
                     // Set the view's room data.
                     vm.room = room;
-                    //vm.controls = buildControls(room);
-                    door.isPrevious = true;
 
                     LogService.addMessage("Used key to " + room.name + ".");
                 } else {
@@ -114,18 +77,19 @@
                 return;
             }
 
-            door.isPrevious = true;
             vm.room = room;
-            //vm.controls = buildControls(room);
+
             if (room.isScanned) {
                 LogService.addMessage(room.description);
             }
         };
 
         vm.scanRoom = function (room) {
-            LogService.addMessage(room.name + " scanned.");
-            LogService.addMessage(room.description);
-            room.isScanned = true;
+            LogService.addMessage("Scanning " + room.name + "...");
+            $timeout(function () {
+                LogService.addMessage(room.description);
+                room.isScanned = true;
+            }, 1000);
         };
 
         vm.findRoomById = function (id) {
@@ -154,6 +118,7 @@
 
     StructureController.$inject = [
         '$state',
+        '$timeout',
         'StructureService',
         'CharacterService',
         'LogService',

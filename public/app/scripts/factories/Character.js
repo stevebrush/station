@@ -42,7 +42,7 @@
             }
             console.log("Create player with:", data);
             data.backpack = data.backpack || {};
-            character = characters[data._id || 'player'] = new Character(data);
+            character = characters[data._id || 'Player'] = new Character(data);
             character.backpack.updateStats();
             return character;
         };

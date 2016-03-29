@@ -1,109 +1,96 @@
 (function (angular) {
     'use strict';
 
-    function stMinimap() {
+    function stMinimap($timeout) {
         return {
             restrict: 'E',
             scope: true,
-            replace: true,
             bindToController: {
-                'structureId': '@',
-                'locationId': '@'
+                'structure': '='
             },
             templateUrl: '../public/app/components/minimap/minimap.html',
             controller: 'MinimapController as minimapCtrl',
-            link: function (scope, element, attrs, controller, transcludeFn) {
-                angular.element(document).ready(function () {
-                    var mapPane,
-                        mapPaneHeight,
-                        mapPaneWidth,
-                        setDimensions;
+            link: function (scope, element, attrs, controller) {
+                var mapPane,
+                    mapPaneHeight,
+                    mapPaneWidth,
+                    setDimensions;
 
+                $timeout(function () {
                     mapPane = element[0].querySelector('.dungeon-map-floor-container');
                     mapPaneHeight = mapPane.clientHeight / 2;
                     mapPaneWidth = mapPane.clientWidth / 2;
+                });
 
-                    setDimensions = function () {
-                        var mapFloor,
-                            mapRoom;
+                setDimensions = function () {
+                    var mapFloor,
+                        mapRoom;
 
-                        window.setTimeout(function () {
-                            mapPane = element[0].querySelector('.dungeon-map-floor-container');
-                            mapRoom = mapPane.querySelector('.selected');
-                            mapFloor = mapPane.children[0];
+                    $timeout(function () {
+                        mapPane = element[0].querySelector('.dungeon-map-floor-container');
+                        mapRoom = mapPane.querySelector('.selected');
+                        mapFloor = mapPane.children[0];
 
-                            mapFloor.style.top = Math.round((mapPaneHeight) - mapRoom.offsetTop - (mapRoom.clientHeight / 2)) - 1 + 'px';
-                            mapFloor.style.left = Math.round((mapPaneWidth) - mapRoom.offsetLeft - (mapRoom.clientWidth / 2)) - 1 + 'px';
-                            mapFloor.className = '';
-
-                            scope.$digest();
-                        }, 0);
-                    };
-
-
-                    try {
-                        setDimensions(scope.$parent.$parent.structureCtrl.room);
-                        //
-                    } catch (e) {}
-
-                    scope.$watch("structureCtrl.room", function (newValue, oldValue) {
-                        setDimensions();
-                        controller.buildControls(newValue);
+                        mapFloor.style.top = Math.round((mapPaneHeight) - mapRoom.offsetTop - (mapRoom.clientHeight / 2)) - 1 + 'px';
+                        mapFloor.style.left = Math.round((mapPaneWidth) - mapRoom.offsetLeft - (mapRoom.clientWidth / 2)) - 1 + 'px';
+                        mapFloor.className = '';
                     });
+                };
+
+                scope.$watchCollection("structureCtrl.room", function (newValue, oldValue) {
+                    setDimensions();
+                    controller.buildControls(newValue);
                 });
             }
         };
     }
 
-    function MinimapController($scope, StructureService, utils) {
-        var structure,
-            vm;
+    function generateMinimap(structure) {
+        var floors;
 
-        vm = this;
+        floors = structure.floors;
 
-        function generateMinimap(structure) {
-            var floors;
+        // Determine room dimensions.
+        floors.forEach(function (floor) {
+            floor.rooms.forEach(function (room) {
+                var height,
+                    left,
+                    margin,
+                    top,
+                    width;
 
-            floors = structure.floors;
+                width = 33;
+                height = 33;
+                margin = 6;
 
-            // Determine room dimensions.
-            floors.forEach(function (floor) {
-                floor.rooms.forEach(function (room) {
-                    var height,
-                        left,
-                        margin,
-                        top,
-                        width;
+                // Get the width of the rooms.
+                left = room.x * (width + margin);
+                top = room.y * (height + margin);
 
-                    width = 33;
-                    height = 33;
-                    margin = 6;
-
-                    // Get the width of the rooms.
-                    left = room.x * (width + margin);
-                    top = room.y * (height + margin);
-
-                    room.left = left;
-                    room.top = top;
-                    room.width = width;
-                    room.height = height;
-                });
+                room.left = left;
+                room.top = top;
+                room.width = width;
+                room.height = height;
             });
-
-            return {
-                floors: floors
-            };
-        }
-
-        StructureService.setLocationId(vm.locationId).getStructureById(vm.structureId).then(function (data) {
-            vm.structure = generateMinimap(data);
         });
 
+        return {
+            floors: floors
+        };
+    }
+
+    function MinimapController($scope, StructureService, utils) {
+        var vm;
+        vm = this;
+
+        vm.blueprint = generateMinimap(vm.structure);
+
         vm.buildControls = function (room) {
-            console.log("Build controls:", room.name);
             var positions;
-            room = utils.clone(room);
+
             positions = ['n', 's', 'e', 'w'];
+            room = utils.clone(room);
+
             positions.forEach(function (position) {
                 var found = false;
                 room.doors.forEach(function (door) {
@@ -121,10 +108,14 @@
                     });
                 }
             });
-            console.log("Controls built:", room);
+
             vm.controls = room;
         };
     }
+
+    stMinimap.$inject = [
+        '$timeout'
+    ];
 
     MinimapController.$inject = [
         '$scope',

@@ -1,22 +1,24 @@
 <div class="vessel">
-  <a class="btn" href ng-click="vesselCtrl.vessel.open()" ng-class="{ 'btn-muted': !vesselCtrl.vessel.items.length }">
-      {{:: vesselCtrl.vessel.name }} <span ng-if="!vesselCtrl.vessel.items.length">(Empty)</span>
-  </a>
-  <div class="modal" ng-if="vesselCtrl.vessel.isOpen && vesselCtrl.vessel.items.length">
+  <button class="btn" ng-click="vesselCtrl.open()">
+      {{:: vesselCtrl.owner.name }}<span ng-if="!vesselCtrl.owner.items.length">&nbsp;(Empty)</span>
+  </button>
+  <div class="modal" ng-if="vesselCtrl.isOpen">
     <div class="container modal-container">
       <div class="modal-header">
-        {{:: vesselCtrl.vessel.name }}
+        <button type="button" class="modal-header-btn" ng-click="vesselCtrl.toggleBackpack()" ng-if="vesselCtrl.isBackpackVisible">{{:: vesselCtrl.visitor.name }}</button>
+        <span class="modal-title modal-header-btn current">{{ vesselCtrl.owner.name }}</span>
+        <button type="button" class="modal-header-btn" ng-click="vesselCtrl.toggleBackpack()" ng-if="!vesselCtrl.isBackpackVisible">{{:: vesselCtrl.visitor.name }}</button>
       </div>
       <div class="modal-body">
-        <st-inventory vessel="vesselCtrl.vessel" actions="vesselCtrl.itemActions"></st-inventory>
+        <st-inventory owner="vesselCtrl.owner" visitor="vesselCtrl.visitor" actions="vesselCtrl.itemActions"></st-inventory>
       </div>
       <div class="modal-footer">
         <div class="row">
           <div class="col-sm-6">
-            <a class="btn" href ng-click="vesselCtrl.takeAllItems()">Take all</a>
+            <button ng-if="!vesselCtrl.isBackpackVisible" class="btn" ng-click="vesselCtrl.takeAllItems()">Take all</button>
           </div>
           <div class="col-sm-6">
-            <a class="btn" href ng-click="vesselCtrl.vessel.open()">Close</a>
+            <button class="btn" ng-click="vesselCtrl.open()">Close</button>
           </div>
         </div>
       </div>

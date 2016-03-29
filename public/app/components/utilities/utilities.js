@@ -9,11 +9,9 @@
         };
     }
 
-    function UtilitiesController(StorageService) {
+    function UtilitiesController() {
         var vm;
-
         vm = this;
-
     }
 
     UtilitiesController.$inject = [];

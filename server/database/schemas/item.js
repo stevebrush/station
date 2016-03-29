@@ -12,6 +12,10 @@
             type: String,
             default: "An indescribable object."
         },
+        isDroppable: {
+            type: Boolean,
+            default: true
+        },
         name: {
             type: String,
             default: "Thing"

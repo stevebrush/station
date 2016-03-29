@@ -1,3 +1,60 @@
+.minimap-wrapper {
+    margin-bottom: 20px;
+
+    ul.directional-controls {
+        position: relative;
+        height: 92px;
+        width: 140px;
+        margin: 10px auto 0;
+
+        > li {
+            margin: 0;
+
+            &.direction-n {
+                > button {
+                    top: 0;
+                    left: 50%;
+                    margin-left: -22px;
+                }
+            }
+
+            &.direction-s {
+                > button {
+                    bottom: 0;
+                    left: 50%;
+                    margin-left: -22px;
+                }
+            }
+
+            &.direction-e {
+                > button {
+                    right: 0;
+                    bottom: 0;
+                }
+            }
+
+            &.direction-w {
+                > button {
+                    left: 0;
+                    bottom: 0;
+                }
+            }
+
+            > button {
+                position: absolute;
+                width: 44px;
+                height: 44px;
+                display: block;
+                padding: 0;
+                line-height: 42px;
+                text-align: center;
+                text-transform: uppercase;
+                margin: 0;
+            }
+        }
+    }
+}
+
 .dungeon-map {
     height: 165px;
     padding: 10px;
@@ -52,17 +109,22 @@
     .dungeon-map-room {
         border: 1px solid transparent;
         position: absolute;
-        background-color: $color-primary-muted;
-        transition: background-color 200ms ease-in, opacity 200ms ease-in;
+        background-color: $color-primary-inverse;
+        transition: opacity 200ms ease-in;
+        opacity: 0;
+
+        &.visible {
+            background-color: $color-primary-muted;
+            opacity: 1;
+        }
 
         &.selected {
-            background-color: $color-primary;
             border-color: $color-primary;
             box-shadow: 0 0px 0px 1px $color-primary-inverse inset;
+            opacity: 1;
 
-            &.hidden {
-                opacity: 1 !important;
-                background-color: $color-primary-inverse;
+            &.visible {
+                background-color: $color-primary;
             }
 
             > .dungeon-map-door {

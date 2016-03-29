@@ -1,10 +1,7 @@
-#log {
-    height: 20%;
-    margin-top: 20px;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+.log {
+    max-height: 100%;
+    position: relative;
+    overflow: hidden;
 
     .cover {
         content: " ";
@@ -15,15 +12,17 @@
         height: 38px;
         z-index: 1;
         background: linear-gradient(transparent, #fff);
+        opacity: 1;
+        transition: opacity 500ms;
     }
 
     &.flash .cover {
-        display: none;
+        opacity: 0;
     }
 
     ul {
         margin: 0;
-        padding: 10px;
+        padding: 0;
         overflow: auto;
         height: 100%;
     }

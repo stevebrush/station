@@ -78,6 +78,7 @@
         var item;
 
         item = new Item({
+            isDroppable: false,
             name: name,
             description: description
         });

@@ -1,16 +1,18 @@
 .row {
-    margin-left: -10px;
-    margin-right: -10px;
+    margin-left: -5px;
+    margin-right: -5px;
+    height: 100%;
 
-    > * {
+    > div {
         min-height: 1px;
+        height: 100%;
+        padding-left: 5px;
+        padding-right: 5px;
+        float: left;
     }
 
     .col-sm-6 {
         width: 50%;
-        padding-left: 10px;
-        padding-right: 10px;
-        float: left;
     }
 
     &:after,

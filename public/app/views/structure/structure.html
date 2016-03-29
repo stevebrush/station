@@ -1,17 +1,17 @@
 <div class="row" ng-if="structureCtrl.isReady">
   <div class="col-sm-6">
-    <h1>{{ structureCtrl.room.name }}</h1>
-    <p ng-if="!structureCtrl.room.isScanned">
-      <a class="btn" href ng-click="structureCtrl.scanRoom(structureCtrl.room)">Scan Room</a>
-    </p>
-    <ul class="nav-showcase" ng-if="structureCtrl.room.isScanned">
-      <li ng-repeat="vessel in ::structureCtrl.room.vessels">
-        <st-vessel owner="vessel" item-actions="[{ Take: 'takeItem' }]"></st-vessel>
-      </li>
-    </ul>
+    <st-log></st-log>
   </div>
   <div class="col-sm-6">
-    <st-minimap data-location-id="{{:: structureCtrl.locationId }}" data-structure-id="{{ structureCtrl.structure._id }}"></st-minimap>
-    
+    <h1>{{ structureCtrl.room.name }}</h1>
+    <st-minimap structure="structureCtrl.structure"></st-minimap>
+    <p ng-if="!structureCtrl.room.isScanned">
+      <button class="btn" ng-click="structureCtrl.scanRoom(structureCtrl.room)">Scan Room</button>
+    </p>
+    <ul class="nav-showcase" ng-if="structureCtrl.room.isScanned">
+      <li ng-repeat="vessel in structureCtrl.room.vessels">
+        <st-vessel owner="vessel"></st-vessel>
+      </li>
+    </ul>
   </div>
 </div>
