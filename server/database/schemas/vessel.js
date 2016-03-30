@@ -13,6 +13,7 @@
         name: {
             type: String,
             default: "Box"
-        }
+        },
+        prototypeId: String
     });
 }());

@@ -36,11 +36,9 @@
             var character;
             character = characters[data._id];
             if (character) {
-                console.log("Character already exists! Yay!");
                 character.backpack.updateStats();
                 return character;
             }
-            console.log("Create player with:", data);
             data.backpack = data.backpack || {};
             character = characters[data._id || 'Player'] = new Character(data);
             character.backpack.updateStats();

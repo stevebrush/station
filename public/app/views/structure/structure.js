@@ -84,12 +84,9 @@
             }
         };
 
-        vm.scanRoom = function (room) {
-            LogService.addMessage("Scanning " + room.name + "...");
-            $timeout(function () {
-                LogService.addMessage(room.description);
-                room.isScanned = true;
-            }, 1000);
+        vm.scanRoom = function () {
+            LogService.addMessage(vm.room.description);
+            vm.room.isScanned = true;
         };
 
         vm.findRoomById = function (id) {

@@ -33,7 +33,22 @@
         };
 
         vm.moveItem = function (index) {
-            vm.visitor.addItem(vm.owner.items[index]);
+            var item;
+            item = vm.owner.items[index];
+            item.isSelected = false;
+            if (item.isDroppable === true) {
+                vm.visitor.addItem(item);
+                vm.owner.removeItemByIndex(index);
+            } else {
+                LogService.addMessage(item.name + " cannot be moved.");
+            }
+        };
+
+        vm.takeItem = function (index) {
+            var item;
+            item = vm.owner.items[index];
+            item.isSelected = false;
+            vm.visitor.addItem(item);
             vm.owner.removeItemByIndex(index);
         };
     }

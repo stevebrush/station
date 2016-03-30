@@ -5,8 +5,20 @@
 .hidden {
     opacity: 0 !important;
 }
+
 .visible {
     opacity: 1 !important;
+}
+
+.no-click-cover {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 999;
+    background-color: $color-primary-inverse;
+    opacity: .35;
 }
 
 .table {

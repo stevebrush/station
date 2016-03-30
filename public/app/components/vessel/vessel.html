@@ -15,7 +15,7 @@
       <div class="modal-footer">
         <div class="row">
           <div class="col-sm-6">
-            <button ng-if="!vesselCtrl.isBackpackVisible" class="btn" ng-click="vesselCtrl.takeAllItems()">Take all</button>
+            <st-interval-button ng-if="!vesselCtrl.isBackpackVisible" label="Take All" label-running="Looting..." num-iterations="2" on-complete="vesselCtrl.takeAllItems"></st-interval-button>
           </div>
           <div class="col-sm-6">
             <button class="btn" ng-click="vesselCtrl.open()">Close</button>

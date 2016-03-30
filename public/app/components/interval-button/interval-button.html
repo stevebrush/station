@@ -1,1 +1,4 @@
-<button type="button" class="btn interval-btn" ng-click="buttonCtrl.start()">{{:: buttonCtrl.label }}</button>
+<button type="button" class="btn interval-btn" ng-click="buttonCtrl.start()">
+  <span class="interval-btn-label">{{ buttonCtrl.label }}</span>
+  <span class="interval-btn-meter" style="width: {{ buttonCtrl.meterWidth }}%;"></span>
+</button>

@@ -18,11 +18,10 @@
 
         vm = this;
         vm.owner = VesselFactory.make(vm.owner);
-        vm.itemActions = [{ Take: 'moveItem' }];
+        vm.itemActions = [{ Take: 'takeItem' }];
         vm.isOpen = false;
 
         CharacterService.getPlayer().then(function (data) {
-            console.log("Player gotten!");
             vm.visitor = data.backpack;
             vm.isReady = true;
         });
@@ -38,7 +37,7 @@
             if (vm.isBackpackVisible) {
                 vm.itemActions = [{ Move: 'moveItem' }];
             } else {
-                vm.itemActions = [{ Take: 'moveItem' }];
+                vm.itemActions = [{ Take: 'takeItem' }];
             }
             swap(vm.owner);
         };
@@ -52,24 +51,8 @@
         };
 
         vm.takeAllItems = function () {
-            var i,
-                stop;
-            i = 0;
-            stop = $interval(function () {
-                var item;
-                if (i < vm.owner.items.length) {
-                    item = vm.owner.items[i];
-                    vm.owner.removeItemByIndex(i);
-                    vm.visitor.addItem(item);
-                } else {
-                    $interval.cancel(stop);
-                    vm.open();
-                }
-                i++;
-            }, 300);
-
-            //vm.visitor.addItems(vm.owner.removeAllItems());
-            //vm.open();
+            vm.visitor.addItems(vm.owner.removeAllItems());
+            vm.open();
         };
     }
 

@@ -1,0 +1,20 @@
+.interval-btn {
+    position: relative;
+
+    > .interval-btn-label {
+        z-index: 1;
+        position: relative;
+        color: $color-primary;
+    }
+
+    > .interval-btn-meter {
+        background-color: $color-primary-muted;
+        width: 0%;
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        transition: width 500ms;
+    }
+}

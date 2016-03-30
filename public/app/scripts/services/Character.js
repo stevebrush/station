@@ -11,7 +11,6 @@
             var deferred;
             deferred = $q.defer();
             if (player) {
-                console.log("Player already exists. Woot!");
                 player.backpack.updateStats();
                 deferred.resolve(player);
             } else {

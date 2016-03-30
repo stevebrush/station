@@ -43,5 +43,9 @@ button {
 
     &.btn-disabled {
         cursor: default;
+        pointer-events: none;
+        border-color: $color-primary-muted;
+        background-color: $color-primary-inverse;
+        color: $color-primary-muted;
     }
 }

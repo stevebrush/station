@@ -4,19 +4,21 @@
     var DatabaseObject,
         Item,
         Queue,
-        utils;
+        utils,
+        VesselTemplate;
 
     utils = require('../utils');
     DatabaseObject = require(__dirname + '/DatabaseObject');
     Queue = require(__dirname + '/Queue');
     Item = require(__dirname + '/Item');
+    VesselTemplate = require('../models/vessel-template');
 
     function Vessel(options) {
         var that;
 
         // Is the client asking for a template?
         if (options.name.indexOf(">") === 0) {
-            this.defaults = Vessel.static.templates[options.name.replace(">", "")];
+            this.defaults = Vessel.static.getTemplateValues(options.name);
             options.name = this.defaults.name;
         }
 
@@ -103,8 +105,24 @@
         return temp;
     };
 
+    Vessel.static.getTemplateValues = function (slug) {
+        var template,
+            obj;
+
+        template = Vessel.static.templates[slug.replace(">", "")];
+        obj = template.toObject();
+
+        obj.onCreate = template.onCreate;
+        obj.prototypeId = obj._id;
+
+        return obj;
+    };
+
     Vessel.static.template = function (name, options) {
-        Vessel.static.templates[name] = options;
+        var template;
+        template = new VesselTemplate(options);
+        template.onCreate = options.onCreate;
+        Vessel.static.templates[name] = template;
         return Vessel.static;
     };
 

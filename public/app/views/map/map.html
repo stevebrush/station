@@ -10,7 +10,7 @@
                   <p>{{::location.description }}</p>
                   <div class="row">
                     <div class="col-sm-6">
-                      <st-interval-button label="Travel" num-iterations="3" options="{ location: location }" on-complete="mapCtrl.travel"></st-interval-button>
+                      <st-interval-button label="Travel" label-running="Traveling..." num-iterations="5" options="{ location: location }" on-complete="mapCtrl.travel"></st-interval-button>
                     </div>
                     <div class="col-sm-6">
                       <a class="btn" href ng-click="location.isSelected = false">Cancel</a>

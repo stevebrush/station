@@ -10,7 +10,7 @@
 
     function bootstrapApplication() {
         angular.element(document).ready(function() {
-            angular.bootstrap(document, ["station"]);
+            angular.bootstrap(document.getElementById('game-wrapper'), ['station']);
         });
     }
 
@@ -59,6 +59,18 @@
         });
     }
 
+    function GameController($scope) {
+        var vm;
+        vm = this;
+        vm.disableInteractions = false;
+        $scope.$on('disable:all', function () {
+            vm.disableInteractions = true;
+        });
+        $scope.$on('enable:all', function () {
+            vm.disableInteractions = false;
+        });
+    }
+
     ConfigRoutes.$inject = [
         '$stateProvider',
         '$urlRouterProvider'
@@ -70,11 +82,16 @@
         '$state'
     ];
 
+    GameController.$inject = [
+        '$scope'
+    ];
+
     angular.module('station', [
         'ui.router',
         'station.templates'
     ])
         .config(ConfigRoutes)
+        .controller('GameController', GameController)
         .run(Run);
 
     fetchData().then(bootstrapApplication);

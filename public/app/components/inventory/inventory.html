@@ -34,8 +34,15 @@
               </td>
             </tr>
           </table>
-          <div ng-repeat="action in inventoryCtrl.actions track by $index">
-            <a ng-repeat="(key, value) in action" class="btn" href ng-click="inventoryCtrl[value]($parent.$parent.$index)">{{ key }}</a>
+          <div class="row">
+            <div class="col-sm-6">
+              <div ng-repeat="action in inventoryCtrl.actions track by $index">
+                <a ng-repeat="(key, value) in action" class="btn" href ng-click="inventoryCtrl[value]($parent.$parent.$index)">{{ key }}</a>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <button type="button" class="btn" ng-click="item.isSelected=false;">Cancel</button>
+            </div>
           </div>
         </li>
       </ul>
