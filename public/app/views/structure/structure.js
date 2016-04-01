@@ -55,7 +55,6 @@
                         }
                     });
 
-                    // Set the view's room data.
                     vm.room = room;
 
                     LogService.addMessage("Used key to " + room.name + ".");
@@ -100,7 +99,6 @@
             }
 
             structuresLength = vm.structure.floors.length;
-
             for (k = 0; k < structuresLength; ++k) {
                 roomsLength = vm.structure.floors[k].rooms.length;
                 for (i = 0; i < roomsLength; ++i) {

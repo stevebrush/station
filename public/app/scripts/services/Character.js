@@ -21,6 +21,10 @@
             }
             return deferred.promise;
         };
+
+        that.getEnemy = function (options) {
+            
+        };
     }
 
     CharacterService.$inject = [

@@ -1,15 +1,18 @@
 (function () {
     'use strict';
 
-    var doorSchema,
+    var characterSchema,
+        doorSchema,
         mongoose,
         vesselSchema;
 
     mongoose = require('mongoose');
     doorSchema = require(__dirname + '/door');
     vesselSchema = require(__dirname + '/vessel');
+    characterSchema = require(__dirname + '/character');
 
     module.exports = mongoose.Schema({
+        characters: [characterSchema],
         description: String,
         doors: [doorSchema],
         floor: {

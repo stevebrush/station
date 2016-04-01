@@ -1,7 +1,8 @@
 (function () {
     'use strict';
 
-    var DatabaseObject,
+    var Character,
+        DatabaseObject,
         Door,
         Entrance,
         Floor,
@@ -16,6 +17,7 @@
     Lockable = require(__dirname + '/Lockable');
     DatabaseObject = require(__dirname + '/DatabaseObject');
 
+    Character = require(__dirname + '/Character');
     Location = require(__dirname + '/Location');
     Structure = require(__dirname + '/Structure');
     Entrance = require(__dirname + '/Entrance');
@@ -32,6 +34,14 @@
     /**
      * Static methods.
      */
+
+    Factory.enemy = function (name, options) {
+        //console.log("Enemy:", new Character(name));
+        //console.log("Character static:", new Character(name));
+        options = options || {};
+        options.name = name;
+        return new Character(options);
+    };
 
     Factory.location = function (name, description) {
         return new Location({

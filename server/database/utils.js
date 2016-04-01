@@ -19,6 +19,16 @@
                 console.log("ERROR: Mixin " + k + " already exists!");
             }
         }
+
+        // Add static methods.
+        if (source.static) {
+            destination.static = destination.static || {};
+            for (k in source.static) {
+                if (source.static.hasOwnProperty(k)) {
+                    destination.static[k] = source.static[k];
+                }
+            }
+        }
     }
 
     function slugify(str) {

@@ -18,7 +18,6 @@
         Queue.call(this);
 
         that = this;
-
         that.ready(function () {
 
             that.queue('vessels', function (vessel) {
@@ -27,6 +26,10 @@
 
             that.queue('doors', function (door) {
                 door.init(that.db.addTo('doors', door.db.values), that);
+            });
+
+            that.queue('characters', function (character) {
+                character.init(that.db.addTo('characters', character.db.values), that);
             });
 
             // Assign each room a floor number.
@@ -179,6 +182,11 @@
 
     Room.prototype.vessels = function (vessels) {
         this.enqueue('vessels', vessels);
+        return this;
+    };
+
+    Room.prototype.characters = function (characters) {
+        this.enqueue('characters', characters);
         return this;
     };
 

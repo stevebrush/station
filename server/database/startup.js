@@ -17,6 +17,16 @@
         Database.models.Config.collection.remove();
         Database.models.Location.collection.remove();
 
+        // Character templates.
+        World
+            .Character
+                .template('rat', {
+                    name: 'Rat',
+                    attributes: {
+                        vitality: 10
+                    }
+                });
+
         // Item templates.
         World
             .Item
@@ -167,6 +177,8 @@
                                 add.vessel(">desk").items([
                                     add.key("Hotel Key")
                                 ])
+                            ]).characters([
+                                add.enemy(">rat")
                             ]).doors([
                                 add.door("s", "garage"),
                                 add.door("e", "bathrooms")

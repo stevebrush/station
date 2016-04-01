@@ -4,7 +4,10 @@
     function DatabaseTemplate(options) {
         var that;
         that = this;
-        that.template = options.template;
+        if (options.name.indexOf(">") === 0) {
+            that.defaults = that.constructor.static.getTemplateValues(options.name);
+            options.name = that.defaults.name;
+        }
     }
 
     DatabaseTemplate.static = DatabaseTemplate.static || {};
@@ -13,9 +16,8 @@
         var template,
             obj;
 
-        template = DatabaseTemplate.static.templates[slug.replace(">", "")];
+        template = this.templates[slug.replace(">", "")];
         obj = template.toObject();
-
         obj.onCreate = template.onCreate;
         obj.prototypeId = obj._id;
 
@@ -24,13 +26,15 @@
 
     DatabaseTemplate.static.template = function (name, options) {
         var template;
-        template = new this.template(options);
+        options = options || {};
+        template = new this.templateModel(options);
         template.onCreate = options.onCreate;
-        DatabaseTemplate.static.templates[name] = template;
-        return DatabaseTemplate.static;
+        this.templates[name] = template;
+        return this;
     };
 
-    Character.static.templates = {};
+    DatabaseTemplate.static.templates = {};
+    DatabaseTemplate.static.templateModel = undefined;
 
     module.exports = DatabaseTemplate;
 }());

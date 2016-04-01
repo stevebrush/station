@@ -13,5 +13,10 @@
         <st-vessel owner="vessel"></st-vessel>
       </li>
     </ul>
+    <ul class="nav-showcase" ng-if="structureCtrl.room.isScanned">
+      <li ng-repeat="character in structureCtrl.room.characters">
+        <st-enemy-button enemy="character"></st-enemy-button>
+      </li>
+    </ul>
   </div>
 </div>

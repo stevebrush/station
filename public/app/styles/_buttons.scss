@@ -49,3 +49,36 @@ button {
         color: $color-primary-muted;
     }
 }
+
+.btn-meter {
+    position: relative;
+
+    > .btn-meter-label {
+        z-index: 1;
+        position: relative;
+        color: $color-primary;
+    }
+
+    > .btn-meter-gauge {
+        display: block;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 0%;
+    }
+}
+
+.btn-interval {
+    > .btn-meter-gauge {
+        background-color: $color-primary-muted;
+        top: 0;
+    }
+}
+
+.btn-enemy {
+    > .btn-meter-gauge {
+        background-color: #f00;
+        width: 100%;
+        height: 4px;
+    }
+}

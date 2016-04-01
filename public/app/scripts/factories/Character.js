@@ -19,10 +19,14 @@
             that.backpack = VesselFactory.make(settings.backpack);
 
             // Player attributes (SPECIAL):
-            that.getAttributes = function () {};
+            that.getAttributes = function () {
+                return settings.attributes;
+            };
 
-            // Player status (health, stamina, poison, loadMaximum):
-            that.getStatus = function () {};
+            // Player status (health, stamina, poison):
+            that.getStatus = function () {
+                return settings.status;
+            };
 
             // Player attack value:
             that.getAttack = function () {};
