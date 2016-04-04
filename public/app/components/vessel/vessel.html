@@ -1,5 +1,5 @@
 <div class="vessel">
-  <button class="btn" ng-click="vesselCtrl.open()">
+  <button class="btn" ng-click="vesselCtrl.open()" ng-class="{ 'btn-muted': !vesselCtrl.owner.items.length }">
       {{:: vesselCtrl.owner.name }}<span ng-if="!vesselCtrl.owner.items.length">&nbsp;(Empty)</span>
   </button>
   <div class="modal" ng-if="vesselCtrl.isOpen">

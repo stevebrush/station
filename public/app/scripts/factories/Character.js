@@ -1,7 +1,7 @@
 (function (angular) {
     'use strict';
 
-    function CharacterFactory(VesselFactory) {
+    function CharacterFactory($interval, LogService, VesselFactory) {
         var characters,
             that;
 
@@ -9,14 +9,22 @@
         characters = {};
 
         function Character(options) {
-            var defaults,
+            var attacking,
+                defaults,
                 settings,
                 that;
 
             that = this;
-            defaults = {};
+            defaults = {
+                status: {}
+            };
             settings = angular.merge({}, defaults, options);
-            that.backpack = VesselFactory.make(settings.backpack);
+            console.log("Making character:", settings);
+            that.backpack = VesselFactory.make(settings);
+            that.name = settings.name;
+            settings.status.health = settings.attributes.vitality;
+            that.status = settings.status;
+            that.attributes = settings.attributes;
 
             // Player attributes (SPECIAL):
             that.getAttributes = function () {
@@ -30,6 +38,21 @@
 
             // Player attack value:
             that.getAttack = function () {};
+
+            that.startAttacking = function (char) {
+                attacking = $interval(function () {
+                    if (Math.random() > 0.5) {
+                        char.status.health--;
+                        LogService.addMessage(that.name + " attacks " + char.name + ". [-1]");
+                    } else {
+                        LogService.addMessage(that.name + " misses " + char.name + ".");
+                    }
+                }, 1000);
+            };
+
+            that.stopAttacking = function () {
+                $interval.cancel(attacking);
+            };
         }
 
         that.getById = function (id) {
@@ -53,6 +76,8 @@
     }
 
     CharacterFactory.$inject = [
+        '$interval',
+        'LogService',
         'VesselFactory'
     ];
 

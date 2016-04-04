@@ -1,22 +1,28 @@
-<div class="row" ng-if="structureCtrl.isReady">
-  <div class="col-sm-6">
-    <st-log></st-log>
+<div id="content-main" ng-if="structureCtrl.isReady">
+  <div class="page-header">
+    <h1 ng-bind="structureCtrl.room.name"></h1>
   </div>
-  <div class="col-sm-6">
-    <h1>{{ structureCtrl.room.name }}</h1>
-    <st-minimap structure="structureCtrl.structure"></st-minimap>
-    <p ng-if="!structureCtrl.room.isScanned">
-      <st-interval-button label="Scan Room" label-running="Scanning..." num-iterations="3" on-complete="structureCtrl.scanRoom"></st-interval-button>
-    </p>
-    <ul class="nav-showcase" ng-if="structureCtrl.room.isScanned">
-      <li ng-repeat="vessel in structureCtrl.room.vessels">
-        <st-vessel owner="vessel"></st-vessel>
-      </li>
-    </ul>
-    <ul class="nav-showcase" ng-if="structureCtrl.room.isScanned">
-      <li ng-repeat="character in structureCtrl.room.characters">
-        <st-enemy-button enemy="character"></st-enemy-button>
-      </li>
-    </ul>
+  <div class="row">
+    <div class="col-sm-6">
+      <st-minimap structure="structureCtrl.structure"></st-minimap>
+    </div>
+    <div class="col-sm-6">
+      <p ng-if="!structureCtrl.room.isScanned">
+        <st-interval-button label="Scan Room" label-running="Scanning..." num-iterations="3" on-complete="structureCtrl.scanRoom"></st-interval-button>
+      </p>
+      <ul class="nav-showcase" ng-if="structureCtrl.room.isScanned">
+        <li ng-repeat="vessel in structureCtrl.room.vessels">
+          <st-vessel owner="vessel"></st-vessel>
+        </li>
+      </ul>
+      <ul class="nav-showcase" ng-if="structureCtrl.room.isScanned">
+        <li ng-repeat="character in structureCtrl.room.characters">
+          <st-enemy model="character"></st-enemy>
+        </li>
+      </ul>
+    </div>
   </div>
+</div>
+<div id="content-sub">
+  <st-log></st-log>
 </div>

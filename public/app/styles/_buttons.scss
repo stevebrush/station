@@ -18,7 +18,7 @@ button {
     display: block;
     line-height:1;
     padding: 10px;
-    height: 36px;
+    height: 34px;
     width: 100%;
     text-align: center;
     background-color: $color-primary-inverse;
@@ -54,7 +54,7 @@ button {
     position: relative;
 
     > .btn-meter-label {
-        z-index: 1;
+        z-index: 2;
         position: relative;
         color: $color-primary;
     }
@@ -65,6 +65,23 @@ button {
         left: 0;
         bottom: 0;
         width: 0%;
+        background-color: #f00;
+        height: 3px;
+        transition: width 150ms;
+        z-index: 1;
+    }
+
+    > .btn-meter-timer {
+        display: block;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 0%;
+        background-color: #f00;
+        transition: width 150ms;
+        background-color: $color-primary-lightened;
+        top: 0;
+        height: 100%;
     }
 }
 
@@ -72,13 +89,11 @@ button {
     > .btn-meter-gauge {
         background-color: $color-primary-muted;
         top: 0;
+        height: 100%;
     }
 }
 
 .btn-enemy {
     > .btn-meter-gauge {
-        background-color: #f00;
-        width: 100%;
-        height: 4px;
     }
 }

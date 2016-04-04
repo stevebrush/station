@@ -3,18 +3,23 @@
 
     function stUtilities() {
         return {
-            restrict: 'AEC',
+            restrict: 'E',
             templateUrl: '../public/app/components/utilities/utilities.html',
             controller: 'UtilitiesController as utilitiesCtrl'
         };
     }
 
-    function UtilitiesController() {
+    function UtilitiesController(CharacterService) {
         var vm;
         vm = this;
+        CharacterService.getPlayer().then(function (data) {
+            vm.player = data;
+        });
     }
 
-    UtilitiesController.$inject = [];
+    UtilitiesController.$inject = [
+        'CharacterService'
+    ];
 
     angular.module('station')
         .controller('UtilitiesController', UtilitiesController)

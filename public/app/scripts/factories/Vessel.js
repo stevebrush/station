@@ -20,6 +20,7 @@
                     that[o] = options[o];
                 }
             }
+            console.log("Vessel options:", options);
             that.items = that.items || [];
             that.name = that.name || "Backpack";
 

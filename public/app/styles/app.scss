@@ -54,11 +54,18 @@ p {
     max-width: 375px;
 }
 
+.page-header {
+    text-align: center;
+    border-bottom: 1px solid $color-primary;
+    margin-bottom: 10px;
+    margin-left: -10px;
+    margin-right: -10px;
+}
+
 #game-pane {
     position: absolute;
     width: 100%;
     margin: 36px 0 46px;
-    padding: 10px;
     bottom: 0;
     top: 0;
     overflow: auto;
@@ -78,6 +85,7 @@ p {
     height: 80%;
     position: absolute;
     width: 100%;
+    padding: 10px;
 }
 
 #content-sub {
@@ -86,6 +94,7 @@ p {
     bottom: 0;
     left: 0;
     right: 0;
+    padding: 10px;
 }
 
 

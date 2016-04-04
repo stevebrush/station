@@ -1,4 +1,7 @@
 {
+    "attributes": {
+        "vitality": 10
+    },
     "name": "Blasko",
     "backpack": {}
 }

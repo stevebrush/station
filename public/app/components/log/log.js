@@ -9,7 +9,7 @@
             controller: 'LogController as logCtrl',
             link: function (scope, element, attrs, controller) {
                 // Flash the log when there's a new message.
-                scope.$watch(function () {
+                scope.$watchCollection(function () {
                     return controller.messages[0];
                 }, function (newValue, oldValue) {
                     element[0].className += " flash";

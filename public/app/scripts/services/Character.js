@@ -23,7 +23,10 @@
         };
 
         that.getEnemy = function (options) {
-            
+            var deferred;
+            deferred = $q.defer();
+            deferred.resolve(CharacterFactory.make(options));
+            return deferred.promise;
         };
     }
 
