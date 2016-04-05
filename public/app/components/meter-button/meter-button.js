@@ -43,7 +43,6 @@
                 vm.action.call({});
                 vm.isWaiting = true;
                 vm.meterTimerWidth = 100;
-
                 $timeout(function () {
                     vm.isWaiting = false;
                     vm.meterTimerWidth = 0;

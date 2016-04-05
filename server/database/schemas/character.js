@@ -12,9 +12,21 @@
             vitality: {
                 type: Number,
                 default: 1
+            },
+            strength: {
+                type: Number,
+                default: 1
             }
         },
         backpack: Object,
+        isDead: {
+            type: Boolean,
+            default: false
+        },
+        isPlayer: {
+            type: Boolean,
+            default: false
+        },
         name: {
             type: String,
             default: "Person"
@@ -22,6 +34,12 @@
         roomId: {
             type: Schema.Types.ObjectId,
             ref: "Room"
+        },
+        status: {
+            health: {
+                type: Number,
+                default: 1
+            }
         }
     }, {
         collection: 'Character'

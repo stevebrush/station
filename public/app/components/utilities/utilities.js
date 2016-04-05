@@ -9,15 +9,22 @@
         };
     }
 
-    function UtilitiesController(CharacterService) {
-        var vm;
+    function UtilitiesController($scope, CharacterService) {
+        var player,
+            vm;
         vm = this;
         CharacterService.getPlayer().then(function (data) {
-            vm.player = data;
+            player = data;
+            vm.health = player.getStatus('health');
+            vm.vitality = player.getAttribute('vitality');
+        });
+        $scope.$on('player:attacked', function () {
+            vm.health = player.getStatus('health');
         });
     }
 
     UtilitiesController.$inject = [
+        '$scope',
         'CharacterService'
     ];
 

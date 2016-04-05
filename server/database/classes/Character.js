@@ -18,7 +18,9 @@
         DatabaseObject.call(this, options);
 
         that = this;
-        that.ready(function () {});
+        that.ready(function () {
+            that.db.document().status.health = that.settings.attributes.vitality;
+        });
     }
 
 

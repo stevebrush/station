@@ -1,7 +1,7 @@
 (function (angular) {
     'use strict';
 
-    function CharacterFactory($interval, LogService, VesselFactory) {
+    function CharacterFactory($interval, $rootScope, LogService, VesselFactory) {
         var characters,
             that;
 
@@ -15,38 +15,59 @@
                 that;
 
             that = this;
-            defaults = {
-                status: {}
-            };
+            defaults = {};
             settings = angular.merge({}, defaults, options);
-            console.log("Making character:", settings);
+
             that.backpack = VesselFactory.make(settings);
             that.name = settings.name;
-            settings.status.health = settings.attributes.vitality;
-            that.status = settings.status;
-            that.attributes = settings.attributes;
 
-            // Player attributes (SPECIAL):
+            that.takeDamage = function (val) {
+                settings.status.health -= val;
+                if (settings.isPlayer) {
+                    $rootScope.$broadcast('player:attacked');
+                }
+                return settings.status.health;
+            };
+
             that.getAttributes = function () {
                 return settings.attributes;
             };
 
-            // Player status (health, stamina, poison):
-            that.getStatus = function () {
+            that.getAttribute = function (def) {
+                return settings.attributes[def];
+            };
+
+            that.getStatus = function (def) {
+                if (def) {
+                    return settings.status[def];
+                }
                 return settings.status;
             };
 
             // Player attack value:
             that.getAttack = function () {};
 
-            that.startAttacking = function (char) {
-                attacking = $interval(function () {
-                    if (Math.random() > 0.5) {
-                        char.status.health--;
-                        LogService.addMessage(that.name + " attacks " + char.name + ". [-1]");
-                    } else {
-                        LogService.addMessage(that.name + " misses " + char.name + ".");
+            that.attack = function (character) {
+                var health;
+                if (Math.random() > 0.15) {
+                    health = character.takeDamage(settings.attributes.strength);
+                    LogService.addMessage(that.name + " attacks " + character.name + ". [-" + settings.attributes.strength + "]");
+                    if (health <= 0) {
+                        character.stopAttacking();
+                        character.backpack.name = character.name + " Corpse";
+                        character.isDead = true;
                     }
+                } else {
+                    health = character.getStatus('health');
+                    LogService.addMessage(that.name + " misses " + character.name + ".");
+                }
+                return health;
+            };
+
+            // This method should never be run by player.
+            that.startAttacking = function (character) {
+                attacking = $interval(function () {
+                    that.attack(character);
                 }, 1000);
             };
 
@@ -77,6 +98,7 @@
 
     CharacterFactory.$inject = [
         '$interval',
+        '$rootScope',
         'LogService',
         'VesselFactory'
     ];

@@ -13,41 +13,30 @@
         };
     }
 
-    function EnemyController(CharacterService, LogService) {
+    function EnemyController(CharacterService) {
         var vm;
-
         vm = this;
-        vm.meterWidth = 100;
 
         CharacterService.getEnemy(vm.model).then(function (data) {
             vm.enemy = data;
             CharacterService.getPlayer().then(function (data) {
                 vm.player = data;
-                vm.enemy.startAttacking(data);
+                if (!vm.enemy.isDead) {
+                    vm.health = vm.enemy.getStatus('health');
+                    vm.vitality = vm.enemy.getAttribute('vitality');
+                    vm.enemy.startAttacking(vm.player);
+                }
+                vm.isReady = true;
             });
         });
 
         vm.attackEnemy = function () {
-            if (Math.random() > 0.5) {
-                vm.enemy.getStatus().health -= 2;
-                LogService.addMessage(vm.player.name + " attacks " + vm.enemy.name + ". [-2]");
-                if (vm.enemy.getStatus().health <= 0) {
-                    vm.meterWidth = 0;
-                    vm.enemy.stopAttacking();
-                    vm.enemy.backpack.name = vm.enemy.name + " Corpse";
-                    vm.isDead = true;
-                } else {
-                    vm.meterWidth = (vm.enemy.getStatus().health / vm.enemy.getAttributes().vitality) * 100;
-                }
-            } else {
-                LogService.addMessage(vm.player.name + " misses " + vm.enemy.name + ".");
-            }
+            vm.health = vm.player.attack(vm.enemy);
         };
     }
 
     EnemyController.$inject = [
-        'CharacterService',
-        'LogService'
+        'CharacterService'
     ];
 
     angular.module('station')

@@ -1,4 +1,4 @@
-<div>
-  <st-meter-button ng-if="!enemyCtrl.isDead" model="enemyCtrl.enemy.status.health" max="enemyCtrl.enemy.attributes.vitality" label="enemyCtrl.enemy.name" action="enemyCtrl.attackEnemy"></st-meter-button>
-  <st-vessel ng-if="enemyCtrl.isDead" owner="enemyCtrl.enemy.backpack"></st-vessel>
+<div ng-if="enemyCtrl.isReady">
+  <st-meter-button ng-if="!enemyCtrl.enemy.isDead" model="enemyCtrl.health" max="enemyCtrl.vitality" label="enemyCtrl.enemy.name" action="enemyCtrl.attackEnemy"></st-meter-button>
+  <st-vessel ng-if="enemyCtrl.enemy.isDead" owner="enemyCtrl.enemy.backpack"></st-vessel>
 </div>

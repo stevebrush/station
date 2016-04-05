@@ -1,7 +1,12 @@
 {
     "attributes": {
-        "vitality": 10
+        "vitality": 10,
+        "strength": 2
     },
+    "backpack": {},
+    "isPlayer": true,
     "name": "Blasko",
-    "backpack": {}
+    "status": {
+        "health": 10
+    }
 }
