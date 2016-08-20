@@ -1,7 +1,7 @@
 (function (angular) {
     'use strict';
 
-    function CharacterFactory($interval, $rootScope, LogService, VesselFactory) {
+    function CharacterFactory($interval, $q, $rootScope, $timeout, LogService, VesselFactory) {
         var characters,
             that;
 
@@ -18,23 +18,54 @@
             defaults = {};
             settings = angular.merge({}, defaults, options);
 
-            that.backpack = VesselFactory.make(settings);
+            settings.backpack.name = settings.name;
+            settings.backpack._id = settings._id;
+            that.backpack = VesselFactory.make(settings.backpack);
+
             that.name = settings.name;
 
-            that.takeDamage = function (val) {
-                settings.status.health -= val;
-                if (settings.isPlayer) {
-                    $rootScope.$broadcast('player:attacked');
-                }
-                return settings.status.health;
-            };
+            that.attack = function (character) {
+                var deferred;
+                deferred = $q.defer();
 
-            that.getAttributes = function () {
-                return settings.attributes;
+                $timeout(function () {
+                    var data;
+                    data = {};
+
+                    // Chance to hit target.
+                    if (Math.random() > 0.15) {
+                        data.health = character.takeDamage(settings.attributes.strength);
+                        data.message = '-' + settings.attributes.strength;
+                        LogService.addMessage(that.name + " attacks " + character.name + ". [-" + settings.attributes.strength + "]");
+                        if (data.health <= 0) {
+                            character.stopAttacking();
+                            character.backpack.name = character.name + " Corpse";
+                            character.isDead = true;
+                        }
+                        deferred.resolve(data);
+
+                    } else {
+                        data.health = character.getStatus('health');
+                        data.message = 'miss';
+                        LogService.addMessage(that.name + " misses " + character.name + ".");
+                        deferred.resolve(data);
+                    }
+
+                    if (character.isPlayer()) {
+                        $rootScope.$broadcast('player:attacked', data);
+                    }
+
+                }, 1500); // weapon dps
+
+                return deferred.promise;
             };
 
             that.getAttribute = function (def) {
                 return settings.attributes[def];
+            };
+
+            that.getAttributes = function () {
+                return settings.attributes;
             };
 
             that.getStatus = function (def) {
@@ -44,35 +75,24 @@
                 return settings.status;
             };
 
-            // Player attack value:
-            that.getAttack = function () {};
-
-            that.attack = function (character) {
-                var health;
-                if (Math.random() > 0.15) {
-                    health = character.takeDamage(settings.attributes.strength);
-                    LogService.addMessage(that.name + " attacks " + character.name + ". [-" + settings.attributes.strength + "]");
-                    if (health <= 0) {
-                        character.stopAttacking();
-                        character.backpack.name = character.name + " Corpse";
-                        character.isDead = true;
-                    }
-                } else {
-                    health = character.getStatus('health');
-                    LogService.addMessage(that.name + " misses " + character.name + ".");
-                }
-                return health;
+            that.isPlayer = function () {
+                return settings.isPlayer;
             };
 
-            // This method should never be run by player.
-            that.startAttacking = function (character) {
+            that.startAttacking = function (character, callback) {
+                that.attack(character).then(callback);
                 attacking = $interval(function () {
-                    that.attack(character);
-                }, 1000);
+                    that.attack(character).then(callback);
+                }, 1500); // dps
             };
 
             that.stopAttacking = function () {
                 $interval.cancel(attacking);
+            };
+
+            that.takeDamage = function (val) {
+                settings.status.health -= val;
+                return settings.status.health;
             };
         }
 
@@ -98,7 +118,9 @@
 
     CharacterFactory.$inject = [
         '$interval',
+        '$q',
         '$rootScope',
+        '$timeout',
         'LogService',
         'VesselFactory'
     ];

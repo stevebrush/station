@@ -12,14 +12,18 @@
     function UtilitiesController($scope, CharacterService) {
         var player,
             vm;
+
         vm = this;
+
         CharacterService.getPlayer().then(function (data) {
             player = data;
             vm.health = player.getStatus('health');
             vm.vitality = player.getAttribute('vitality');
         });
-        $scope.$on('player:attacked', function () {
-            vm.health = player.getStatus('health');
+
+        $scope.$on('player:attacked', function (e, args) {
+            vm.health = args.health;
+            vm.message = args.message;
         });
     }
 

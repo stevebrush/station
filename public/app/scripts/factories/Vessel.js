@@ -14,6 +14,7 @@
 
             defaults = {};
             that = this;
+            that.options = options;
 
             for (var o in options) {
                 if (options.hasOwnProperty(o)) {

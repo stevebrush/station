@@ -10,16 +10,18 @@
       <p ng-if="!structureCtrl.room.isScanned">
         <st-interval-button label="Scan Room" label-running="Scanning..." num-iterations="3" on-complete="structureCtrl.scanRoom"></st-interval-button>
       </p>
-      <ul class="nav-showcase" ng-if="structureCtrl.room.isScanned">
-        <li ng-repeat="vessel in structureCtrl.room.vessels">
-          <st-vessel owner="vessel"></st-vessel>
-        </li>
-      </ul>
-      <ul class="nav-showcase" ng-if="structureCtrl.room.isScanned">
-        <li ng-repeat="character in structureCtrl.room.characters">
-          <st-enemy model="character"></st-enemy>
-        </li>
-      </ul>
+      <div ng-if="structureCtrl.room.isScanned">
+        <ul class="nav-showcase">
+          <li ng-repeat="vessel in structureCtrl.room.vessels">
+            <st-vessel owner="vessel"></st-vessel>
+          </li>
+        </ul>
+        <ul class="nav-showcase">
+          <li ng-repeat="character in structureCtrl.room.characters">
+            <st-enemy model="character"></st-enemy>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>

@@ -1,5 +1,6 @@
 <button type="button" class="btn btn-meter" ng-class="{ 'btn-disabled': buttonCtrl.isWaiting }" ng-click="buttonCtrl.performAction()">
+  <div class="btn-message" ng-class="{ on: buttonCtrl.message.isVisible }" ng-bind="buttonCtrl.message.text"></div>
   <span class="btn-meter-label">{{ buttonCtrl.label }}</span>
-  <span class="btn-meter-gauge" style="width: {{ buttonCtrl.meterGaugeWidth }}%;"></span>
-  <span class="btn-meter-timer" style="width: {{ buttonCtrl.meterTimerWidth }}%"></span>
+  <span class="btn-meter-gauge" style="width: {{ buttonCtrl.meterWidth }}%;"></span>
+  <!-- <span class="btn-meter-timer" style="width: {{ buttonCtrl.meterTimerWidth }}%"></span> -->
 </button>

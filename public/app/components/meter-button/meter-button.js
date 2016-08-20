@@ -4,24 +4,23 @@
     function stMeterButton() {
         return {
             restrict: 'E',
-            replace: true,
             scope: true,
             bindToController: {
                 action: '=',
                 label: '=',
                 max: '=',
-                model: '='
+                model: '=',
+                alert: '='
             },
             templateUrl: '../public/app/components/meter-button/meter-button.html',
             controller: 'MeterButtonController as buttonCtrl',
             link: function (scope, element, attr, controller) {
-                scope.$watchCollection(attr.model, function (a, b) {
+                scope.$watchCollection(attr.model, function () {
                     controller.updateGauge();
-                    element[0].className += " flash";
-                    setTimeout(function () {
-                        element[0].className = element[0].className.replace(' flash', '');
-                    }, 500);
                 });
+                scope.$watch(attr.alert, function (a) {
+                    controller.showMessage(a);
+                }, true);
             }
         };
     }
@@ -29,24 +28,39 @@
     function MeterButtonController($timeout) {
         var vm;
         vm = this;
-        vm.meterTimerWidth = 0;
-        vm.meterGaugeWidth = 100;
+        vm.meterWidth = 100;
+
         vm.updateGauge = function () {
             if (vm.model <= 0) {
-                vm.meterGaugeWidth = 0;
+                vm.meterWidth = 0;
             } else {
-                vm.meterGaugeWidth = vm.model / vm.max * 100;
+                vm.meterWidth = vm.model / vm.max * 100;
             }
         };
+
+        vm.showMessage = function (message) {
+            if (!message) {
+                return;
+            }
+            vm.message = {
+                text: message,
+                isVisible: false
+            };
+            $timeout(function () {
+                vm.message.isVisible = true;
+                $timeout(function () {
+                    vm.message.isVisible = false;
+                    vm.alert = undefined; // Reset the scope
+                }, 1000);
+            }, 10);
+        };
+
         vm.performAction = function () {
             if (!vm.isWaiting) {
-                vm.action.call({});
                 vm.isWaiting = true;
-                vm.meterTimerWidth = 100;
-                $timeout(function () {
+                vm.action.call({}).then(function () {
                     vm.isWaiting = false;
-                    vm.meterTimerWidth = 0;
-                }, 800);
+                });
             }
         };
     }

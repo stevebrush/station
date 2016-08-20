@@ -18,7 +18,12 @@
                 default: 1
             }
         },
-        backpack: Object,
+        backpack: {
+            items: {
+                type: Array,
+                default: []
+            }
+        },
         isDead: {
             type: Boolean,
             default: false

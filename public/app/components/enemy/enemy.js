@@ -16,7 +16,6 @@
     function EnemyController(CharacterService) {
         var vm;
         vm = this;
-
         CharacterService.getEnemy(vm.model).then(function (data) {
             vm.enemy = data;
             CharacterService.getPlayer().then(function (data) {
@@ -31,7 +30,10 @@
         });
 
         vm.attackEnemy = function () {
-            vm.health = vm.player.attack(vm.enemy);
+            return vm.player.attack(vm.enemy).then(function (data) {
+                vm.health = data.health;
+                vm.message = data.message;
+            });
         };
     }
 

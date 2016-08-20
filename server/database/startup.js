@@ -24,6 +24,21 @@
                     name: 'Rat',
                     attributes: {
                         vitality: 10
+                    },
+                    items: [],
+                    onCreate: function () {
+                        this.items = World.Vessel.mayContain([
+                            {
+                                name: ">ballpoint-pen",
+                                quantity: World.Item.getRandomQuantity(1),
+                                chance: 0.65
+                            },
+                            {
+                                name: ">notebook-paper",
+                                quantity: World.Item.getRandomQuantity(3),
+                                chance: 0.79
+                            }
+                        ]);
                     }
                 });
 

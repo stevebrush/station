@@ -9,6 +9,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
 
     grunt.initConfig({
+        srcPath: grunt.option('srcpath') || 'public/app',
         buildPath: grunt.option('buildpath') || 'public/build',
         concat_sourcemap: {
             options: {
@@ -20,10 +21,10 @@ module.exports = function (grunt) {
                     '<%= buildPath %>/js/app.js': [
                         'bower_components/angular/angular.js',
                         'bower_components/angular-ui-router/release/angular-ui-router.js',
-                        'public/app/app.js',
-                        'public/app/scripts/**/*.js',
-                        'public/app/components/**/*.js',
-                        'public/app/views/**/*.js',
+                        '<%= srcPath %>/app.js',
+                        '<%= srcPath %>/scripts/**/*.js',
+                        '<%= srcPath %>/components/**/*.js',
+                        '<%= srcPath %>/views/**/*.js',
                         'tmp/templates.js'
                     ]
                 }
@@ -33,7 +34,7 @@ module.exports = function (grunt) {
             fonts: {
                 files: [{
                     expand: true,
-                    cwd: 'public/app/fonts',
+                    cwd: '<%= srcPath %>/fonts',
                     src: ['*'],
                     dest: '<%= buildPath %>/fonts/'
                 }]
@@ -41,7 +42,7 @@ module.exports = function (grunt) {
             data: {
                 files: [{
                     expand: true,
-                    cwd: 'public/app/data/',
+                    cwd: '<%= srcPath %>/data/',
                     src: ['**/*.json'],
                     dest: '<%= buildPath %>/data/'
                 }]
@@ -65,7 +66,7 @@ module.exports = function (grunt) {
                         removeStyleLinkTypeAttributes: true
                     }
                 },
-                src: ['public/app/views/**/*.html', 'public/app/components/**/*.html'],
+                src: ['<%= srcPath %>/views/**/*.html', '<%= srcPath %>/components/**/*.html'],
                 dest: 'tmp/templates.js'
             }
         },
@@ -75,7 +76,7 @@ module.exports = function (grunt) {
             },
             app: {
                 files: {
-                    '<%= buildPath %>/css/app.min.css': 'public/app/styles/app.scss'
+                    '<%= buildPath %>/css/app.min.css': '<%= srcPath %>/styles/app.scss'
                 }
             }
         },
@@ -94,15 +95,15 @@ module.exports = function (grunt) {
         },
         watch: {
             sass: {
-                files: ['public/app/**/*.scss'],
+                files: ['<%= srcPath %>/**/*.scss'],
                 tasks: ['sass']
             },
             scripts: {
-                files: ['public/app/**/*.js'],
+                files: ['<%= srcPath %>/**/*.js'],
                 tasks: ['concat_sourcemap:app', 'uglify:app']
             },
             templates: {
-                files: ['public/app/views/**/*.html', 'public/app/components/**/*.html'],
+                files: ['<%= srcPath %>/views/**/*.html', '<%= srcPath %>/components/**/*.html'],
                 tasks: ['html2js', 'concat_sourcemap:app', 'uglify:app']
             }
         }
